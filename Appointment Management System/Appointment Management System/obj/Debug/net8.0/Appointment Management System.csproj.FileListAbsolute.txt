@@ -1,0 +1,15 @@
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\bin\Debug\net8.0\Appointment Management System.exe
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\bin\Debug\net8.0\Appointment Management System.deps.json
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\bin\Debug\net8.0\Appointment Management System.runtimeconfig.json
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\bin\Debug\net8.0\Appointment Management System.dll
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\bin\Debug\net8.0\Appointment Management System.pdb
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\Appointment Management System.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\Appointment Management System.AssemblyInfoInputs.cache
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\Appointment Management System.AssemblyInfo.cs
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\Appointment Management System.csproj.CoreCompileInputs.cache
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\Appointment Management System.sourcelink.json
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\Appointment Management System.dll
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\refint\Appointment Management System.dll
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\Appointment Management System.pdb
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\Appointment Management System.genruntimeconfig.cache
+C:\Users\DIMITRIOS\Desktop\aa-external-coaching\Appointment Management System\Appointment Management System\obj\Debug\net8.0\ref\Appointment Management System.dll
