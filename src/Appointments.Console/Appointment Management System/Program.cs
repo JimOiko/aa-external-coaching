@@ -2,8 +2,8 @@
 using Appointment_Management_System;
 using Appointment_Management_System.Models;
 
-List<Customer> customers = new List<Customer>();
-List<Appointment> appointments = new List<Appointment>();
+List<Customer> customers = [];
+List<Appointment> appointments = [];
 Console.WriteLine("Appointment Management System");
 Console.WriteLine("==========================");
 while (true)
