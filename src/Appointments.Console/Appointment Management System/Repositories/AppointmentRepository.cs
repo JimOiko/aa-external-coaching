@@ -49,8 +49,63 @@ namespace Appointment_Management_System.Repositories
             Console.Write("Enter optional notes: ");
             string notes = Console.ReadLine();
 
-            appointments.Add(new Appointment(customer, serviceType, date, time, notes));
-            Console.WriteLine("Appointment created successfully.");
+            if (serviceType == ServiceType.Massage)
+            {
+                CreateMassageAppointment(appointments, customer, date, time, notes);
+            }
+            else if (serviceType == ServiceType.PersonalTraining)
+            {
+                CreatePersonalTrainingAppointment(appointments, customer, date, time, notes);
+            }
+        }
+
+        private void CreateMassageAppointment(List<Appointment> appointments, Customer customer, DateTime date, string time, string notes)
+        {
+            Console.WriteLine("Massage Services: 1. Relaxing Massage, 2. Hot Stone Therapy, 3. Reflexology");
+            Console.Write("Enter massage service type (1-3): ");
+            int massageServiceChoice;
+            if (!int.TryParse(Console.ReadLine(), out massageServiceChoice) || massageServiceChoice < 1 || massageServiceChoice > 3)
+            {
+                Console.WriteLine("Invalid massage service type.");
+                return;
+            }
+            MassageServices massageServices = (MassageServices)(massageServiceChoice - 1);
+
+            Console.WriteLine("Masseuse Preference: 1. Male, 2. Female");
+            Console.Write("Enter massage Masseuse Preference (1-2): ");
+            int masseusePreferenceChoice;
+            if (!int.TryParse(Console.ReadLine(), out masseusePreferenceChoice) || masseusePreferenceChoice < 1 || masseusePreferenceChoice > 2)
+            {
+                Console.WriteLine("Invalid preference.");
+                return;
+            }
+
+            MasseusePreference masseusePreference = (MasseusePreference)(massageServiceChoice - 1);
+
+            appointments.Add(new MassageAppointment(customer, ServiceType.Massage, date, time, notes, massageServices, masseusePreference));
+            Console.WriteLine("Massage appointment created successfully.");
+        }
+
+        private void CreatePersonalTrainingAppointment(List<Appointment> appointments, Customer customer, DateTime date, string time, string notes)
+        {
+            Console.WriteLine("Training Duration: 1. 30 minutes, 2. 1 hour, 3. 1 hour and 30 minutes");
+            Console.Write("Enter training duration (1-3): ");
+            int trainingDurationChoice;
+            if (!int.TryParse(Console.ReadLine(), out trainingDurationChoice) || trainingDurationChoice < 1 || trainingDurationChoice > 3)
+            {
+                Console.WriteLine("Invalid training duration.");
+                return;
+            }
+            TrainingDuration trainingDuration = (TrainingDuration)(trainingDurationChoice - 1);
+
+            Console.Write("Enter customer comments: ");
+            string customerComments = Console.ReadLine();
+
+            Console.Write("Enter any injuries or pains: ");
+            string injuriesOrPains = Console.ReadLine();
+
+            appointments.Add(new PersonalTrainingAppointment(customer, ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains));
+            Console.WriteLine("Personal training appointment created successfully.");
         }
 
         public void Read(List<Appointment> appointments)
@@ -68,7 +123,8 @@ namespace Appointment_Management_System.Repositories
                 Console.WriteLine(new string('-', 80));
                 foreach (var appointment in appointments)
                 {
-                    Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20}", appointment.Id, appointment.Customer.Name, appointment.ServiceType, appointment.Date.ToShortDateString(), appointment.Time, appointment.Notes);
+                    //   Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20}", appointment.Id, appointment.Customer.Name, appointment.ServiceType, appointment.Date.ToShortDateString(), appointment.Time, appointment.Notes);
+                    Console.WriteLine(appointment);
                 }
             }
         }
