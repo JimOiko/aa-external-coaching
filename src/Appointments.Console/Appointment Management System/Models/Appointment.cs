@@ -9,7 +9,6 @@ namespace Appointment_Management_System.Models
     public class Appointment
     {
         private static int NextId = 1; //so as not to use guid
-        private static int UsingResource = 0;
         public int Id { get; set; }
         public Customer Customer { get; set; }
         public ServiceType ServiceType { get; set; }

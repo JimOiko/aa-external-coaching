@@ -1,6 +1,17 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Appointment_Management_System;
+using Appointment_Management_System.Interfaces;
 using Appointment_Management_System.Models;
+using Appointment_Management_System.Repositories;
+using Microsoft.Extensions.DependencyInjection;
+
+var serviceProvider = new ServiceCollection()
+              .AddSingleton<IManagementRepository<Customer>, CustomerRepository>()
+              .AddSingleton<IManagementRepository<Appointment>, AppointmentRepository>()
+              .BuildServiceProvider();
+
+var customerRepo = serviceProvider.GetService<IManagementRepository<Customer>>();
+var appointmentRepo = serviceProvider.GetService<IManagementRepository<Appointment>>();
 
 List<Customer> customers = [];
 List<Appointment> appointments = [];
@@ -25,28 +36,28 @@ while (true)
     switch (choice)
     {
         case "1":
-            Utilities.CreateCustomer(customers);
+            customerRepo.Create(customers);
             break;
         case "2":
-            Utilities.ReadCustomers(customers);
+            customerRepo.Read(customers);
             break;
         case "3":
-            Utilities.UpdateCustomer(customers);
+            customerRepo.Update(customers);
             break;
         case "4":
-            Utilities.DeleteCustomer(customers);
+            customerRepo.Delete(customers);
             break;
         case "5":
-            Utilities.CreateAppointment(customers,appointments);
+            appointmentRepo.Create(appointments,customers);
             break;
         case "6":
-            Utilities.ViewAppointments(appointments);
+            appointmentRepo.Read(appointments);
             break;
         case "7":
-            Utilities.UpdateAppointment(appointments);
+            appointmentRepo.Update(appointments);
             break;
         case "8":
-            Utilities.DeleteAppointment(appointments);
+            appointmentRepo.Delete(appointments);
             break;
         case "9":
             Console.WriteLine("Exiting... Press any key to close.");
