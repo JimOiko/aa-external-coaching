@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Appointment_Management_System.Models
+{
+    public enum ServiceType
+    {
+        Massage,
+        PersonalTraining
+    }
+
+    public enum MassageServices
+    {
+        RelaxingMassage,
+        HotStoneTherapy,
+        Reflexology
+    }
+
+    public enum MasseusePreference
+    {
+        Male,
+        Female        
+    }
+
+    public enum TrainingDuration
+    {
+        ThirtyMinutes,
+        OneHour,
+        OneHourThirtyMinutes
+    }
+}
