@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/Appointments.Console/.vs
+/src/Appointments.Console/Appointment Management System/bin/Debug/net8.0
+/src/Appointments.Console/Appointment Management System/obj/Debug/net8.0
