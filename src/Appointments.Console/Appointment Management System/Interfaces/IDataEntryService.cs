@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Interfaces
 {
-    public interface IManagementRepository<T>
+    public interface IDataEntryService
     {
-        void Add(T item);
-        List<T> Get();
-        T? GetById(string email);
-        void Delete(T customer);
+        void Create();
+        void Read();
+        void Update();
+        void Delete();
     }
 }

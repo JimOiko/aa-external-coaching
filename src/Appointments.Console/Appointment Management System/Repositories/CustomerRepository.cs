@@ -10,102 +10,27 @@ namespace AppointmentManagementSystem.Repositories
 {
     public class CustomerRepository: IManagementRepository<Customer>
     {
-         public void Create(List<Customer> customers, List<Customer>? item = null)
+        private readonly List<Customer> _customers =[];
+
+        public void Add(Customer customer)
         {
-            Console.WriteLine("Create Customer");
-            Console.WriteLine("---------------");
-
-            Console.Write("Enter Name:");
-            string name = Console.ReadLine()??"";
-            string email;
-            while (true)
-            {
-                Console.Write("Enter Email: ");
-                email = Console.ReadLine()??"";
-                if (Utilities.IsValidEmail(email))
-                {
-                    break;
-                }
-                Console.WriteLine("Invalid email format. Please try again.");
-            }
-            string phoneNumber;
-            while (true)
-            {
-                Console.Write("Enter Phone Number: ");
-                phoneNumber = Console.ReadLine()??"";
-                if (Utilities.IsValidPhoneNumber(phoneNumber))
-                {
-                    break;
-                }
-                Console.WriteLine("Invalid phone number. Please try again.");
-            }
-
-            customers.Add(new Customer(name, email, phoneNumber));
-            Console.WriteLine("Customer created successfully.");
+            _customers.Add(customer);
         }
 
-        public void Read(List<Customer> customers)
+        public List<Customer> Get()
         {
-            Console.WriteLine("Customer List");
-            Console.WriteLine("-------------");
-            if (customers.Count == 0)
-            {
-                Console.WriteLine("No customers found.");
-            }
-            else
-            {
-                Console.WriteLine("{0,-20} {1,-30} {2,-15}", "Name", "Email", "Phone Number");
-                Console.WriteLine(new string('-', 65));
-                foreach (var customer in customers)
-                {
-                    Console.WriteLine("{0,-20} {1,-30} {2,-15}", customer.Name, customer.Email, customer.PhoneNumber);
-                }
-            }
+            return _customers;
         }
 
-        public void Update(List<Customer> customers)
+        public Customer? GetById(string id)
         {
-            Console.WriteLine("Update Customer");
-            Console.WriteLine("---------------");
-            Console.Write("Enter the email of the customer to update: ");
-            string email = Console.ReadLine()??"";
-
-            Customer? customer = customers.Find(c => c.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
-            if (customer != null)
-            {
-                Console.Write("Enter new Name: ");
-                customer.Name = Console.ReadLine()??"";
-                Console.Write("Enter new Email: ");
-                customer.Email = Console.ReadLine()??"";
-                Console.Write("Enter new Phone Number: ");
-                customer.PhoneNumber = Console.ReadLine()??"";
-
-                Console.WriteLine("Customer updated successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Customer not found.");
-            }
+            var existingCustomer = _customers.FirstOrDefault(c => c.Email.Equals(id, StringComparison.OrdinalIgnoreCase));
+            return existingCustomer;
         }
 
-        public void Delete(List<Customer> customers)
+        public void Delete(Customer customer)
         {
-            Console.WriteLine("Delete Customer");
-            Console.WriteLine("---------------");
-
-            Console.Write("Enter the email of the customer to delete: ");
-            string email = Console.ReadLine()??"";
-
-            Customer? customer = customers.Find(c => c.Email.ToLower() == email.ToLower());
-            if (customer != null)
-            {
-                customers.Remove(customer);
-                Console.WriteLine("Customer deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Customer not found.");
-            }
+            _customers.Remove(customer);
         }
     }
 }
