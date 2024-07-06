@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Appointment_Management_System;
-using Appointment_Management_System.Interfaces;
-using Appointment_Management_System.Models;
-using Appointment_Management_System.Repositories;
+using AppointmentManagementSystem;
+using AppointmentManagementSystem.Interfaces;
+using AppointmentManagementSystem.Models;
+using AppointmentManagementSystem.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 var serviceProvider = new ServiceCollection()
@@ -12,6 +12,9 @@ var serviceProvider = new ServiceCollection()
 
 var customerRepo = serviceProvider.GetService<IManagementRepository<Customer>>();
 var appointmentRepo = serviceProvider.GetService<IManagementRepository<Appointment>>();
+
+if (customerRepo == null) throw new Exception("Customer repository is not initialized.");
+if (appointmentRepo == null) throw new Exception("Appointment repository is not initialized.");
 
 List<Customer> customers = [];
 List<Appointment> appointments = [];
@@ -31,7 +34,7 @@ while (true)
     Console.WriteLine("9. Exit");
     Console.Write("Select an option (1-9): ");
 
-    string choice = Console.ReadLine();
+    string choice = Console.ReadLine()??"";
     Console.WriteLine();
     switch (choice)
     {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Appointment_Management_System.Models;
+using AppointmentManagementSystem.Models;
 
-namespace Appointment_Management_System
+namespace AppointmentManagementSystem
 {
     public class Utilities
     {
