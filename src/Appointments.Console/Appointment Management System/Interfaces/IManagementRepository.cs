@@ -11,7 +11,7 @@ namespace AppointmentManagementSystem.Interfaces
     {
         void Add(T item);
         List<T> Get();
-        T? GetById(string email);
-        void Delete(T customer);
+        T? GetById(string id);
+        void Delete(T item);
     }
 }
