@@ -89,7 +89,7 @@ namespace AppointmentManagementSystem.Services
                 return;
             }
 
-            MasseusePreference masseusePreference = (MasseusePreference)(massageServiceChoice - 1);
+            MasseusePreference masseusePreference = (MasseusePreference)(masseusePreferenceChoice - 1);
 
             _appointmentRepo.Add(new MassageAppointment(customer, ServiceType.Massage, date, time, notes, massageServices, masseusePreference));
             Console.WriteLine("Massage appointment created successfully.");
@@ -218,7 +218,7 @@ namespace AppointmentManagementSystem.Services
                     return;
                 }
 
-                if (newServiceType != appointment.ServiceType)
+                if (!string.IsNullOrWhiteSpace(serviceTypeInput) && newServiceType != appointment.ServiceType)
                 {
                     newAppointment = new MassageAppointment(
                                 appointment.Customer,
@@ -263,7 +263,7 @@ namespace AppointmentManagementSystem.Services
 
                 Console.Write("Enter new injuries or pains (leave blank to keep current): ");
                 string injuriesOrPains = Console.ReadLine() ?? "";
-                if (newServiceType != appointment.ServiceType)
+                if (!string.IsNullOrWhiteSpace(serviceTypeInput) && newServiceType != appointment.ServiceType)
                 {
                     newAppointment = new PersonalTrainingAppointment(
                                 appointment.Customer,
