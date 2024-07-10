@@ -1,5 +1,5 @@
-﻿using Appointment_Management_System.Interfaces;
-using Appointment_Management_System.Models;
+﻿using AppointmentManagementSystem.Interfaces;
+using AppointmentManagementSystem.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,19 +8,25 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Appointment_Management_System.Repositories
+namespace AppointmentManagementSystem.Repositories
 {
     public class AppointmentRepository: IManagementRepository<Appointment>
     {
-        public void Create( List<Appointment> appointments, List<Customer> customers)
+        public void Create( List<Appointment> appointments, List<Customer>? customers = null)
         {
+            if (customers== null)
+            {
+                Console.Write("There Are no customers yet to create Appointments");
+                return;
+            }
+
             Console.WriteLine("Create Appointment");
             Console.WriteLine("------------------");
 
             Console.Write("Enter the email of the customer: ");
-            string customerEmail = Console.ReadLine();
+            string customerEmail = Console.ReadLine()??"";
 
-            Customer customer = customers.Find(c => c.Email.Equals(customerEmail, StringComparison.OrdinalIgnoreCase));
+            Customer? customer = customers.Find(c => c.Email.Equals(customerEmail, StringComparison.OrdinalIgnoreCase));
             if (customer == null)
             {
                 Console.WriteLine("Customer not found.");
@@ -46,10 +52,10 @@ namespace Appointment_Management_System.Repositories
             }
 
             Console.Write("Enter time (HH:mm): ");
-            string time = Console.ReadLine();
+            string time = Console.ReadLine()??"";
 
             Console.Write("Enter optional notes: ");
-            string notes = Console.ReadLine();
+            string? notes = Console.ReadLine()??"";
 
             if (serviceType == ServiceType.Massage)
             {
@@ -101,10 +107,10 @@ namespace Appointment_Management_System.Repositories
             TrainingDuration trainingDuration = (TrainingDuration)(trainingDurationChoice - 1);
 
             Console.Write("Enter customer comments: ");
-            string customerComments = Console.ReadLine();
+            string customerComments = Console.ReadLine()??"";
 
             Console.Write("Enter any injuries or pains: ");
-            string injuriesOrPains = Console.ReadLine();
+            string injuriesOrPains = Console.ReadLine()??"";
 
             appointments.Add(new PersonalTrainingAppointment(customer, ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains));
             Console.WriteLine("Personal training appointment created successfully.");
@@ -159,7 +165,7 @@ namespace Appointment_Management_System.Repositories
                 return;
             }
 
-            Appointment appointment = appointments.Find(a => a.Id == id);
+            Appointment? appointment = appointments.Find(a => a.Id == id);
             if (appointment == null)
             {
                 Console.WriteLine("Appointment not found.");
@@ -168,7 +174,7 @@ namespace Appointment_Management_System.Repositories
 
             Console.WriteLine("Service Types: 1. Massage, 2. Personal Training");
             Console.Write("Enter new service type (leave blank to keep current): ");
-            string serviceTypeInput = Console.ReadLine();
+            string serviceTypeInput = Console.ReadLine()??"";
             ServiceType? newServiceType = null;
 
             if (!string.IsNullOrWhiteSpace(serviceTypeInput))
@@ -185,7 +191,7 @@ namespace Appointment_Management_System.Repositories
             }
 
             Console.Write("Enter new date (yyyy-mm-dd) (leave blank to keep current): ");
-            string dateInput = Console.ReadLine();
+            string dateInput = Console.ReadLine()??"";
             if (!string.IsNullOrWhiteSpace(dateInput))
             {
                 DateTime date;
@@ -198,14 +204,14 @@ namespace Appointment_Management_System.Repositories
             }
 
             Console.Write("Enter new time (HH:mm) (leave blank to keep current): ");
-            string time = Console.ReadLine();
+            string time = Console.ReadLine()??"";
             if (!string.IsNullOrWhiteSpace(time))
             {
                 appointment.Time = time;
             }
 
             Console.Write("Enter new optional notes (leave blank to keep current): ");
-            string notes = Console.ReadLine();
+            string notes = Console.ReadLine()??"";
             if (!string.IsNullOrWhiteSpace(notes))
             {
                 appointment.Notes = notes;
@@ -213,11 +219,11 @@ namespace Appointment_Management_System.Repositories
 
             if (newServiceType.HasValue && newServiceType.Value == ServiceType.Massage)
             {
-                MassageAppointment newAppointment = null;
+                MassageAppointment? newAppointment = null;
                 
                 Console.WriteLine("Massage Services: 1. Relaxing Massage, 2. Hot Stone Therapy, 3. Reflexology");
                 Console.Write("Enter new massage service: ");
-                string massageServiceInput = Console.ReadLine();
+                string massageServiceInput = Console.ReadLine()??"";
                 if (!string.IsNullOrWhiteSpace(massageServiceInput))
                 {
                     if (int.TryParse(massageServiceInput, out int massageServiceChoice) 
@@ -255,17 +261,20 @@ namespace Appointment_Management_System.Repositories
                 }
 
                 Console.Write("Enter new masseuse preference (1 for Male, 2 for Female): ");
-                string preferenceInput = Console.ReadLine();
+                string preferenceInput = Console.ReadLine()??"";
                 if (!string.IsNullOrWhiteSpace(preferenceInput))
                 {
                     if (int.TryParse(preferenceInput, out int preferenceChoice) && (preferenceChoice == 1 || preferenceChoice == 2))
                     {
                         if (newServiceType != appointment.ServiceType)
                         {
-                            newAppointment.Preference = (MasseusePreference)(preferenceChoice - 1);
-                            appointments.Add(newAppointment);
-                            appointments.Remove(appointment);
-                            Console.WriteLine("Massage Appointment updated successfully.");
+                            if (newAppointment != null)
+                            {
+                                newAppointment.Preference = (MasseusePreference)(preferenceChoice - 1);
+                                appointments.Add(newAppointment);
+                                appointments.Remove(appointment);
+                                Console.WriteLine("Massage Appointment updated successfully.");
+                            }
                         }
                         else
                         {
@@ -288,11 +297,11 @@ namespace Appointment_Management_System.Repositories
             }
             else if (newServiceType.HasValue && newServiceType.Value == ServiceType.PersonalTraining)
             {
-                PersonalTrainingAppointment newAppointment = null;
+                PersonalTrainingAppointment? newAppointment = null;
 
                 Console.WriteLine("Training Duration: 1. 30 minutes, 2. 1 hour, 3. 1 hour and 30 minutes");
                 Console.Write("Enter new training duration (leave blank to keep current): ");
-                string durationInput = Console.ReadLine();
+                string durationInput = Console.ReadLine()??"";
                 if (!string.IsNullOrWhiteSpace(durationInput))
                 {
                     if (int.TryParse(durationInput, out int durationChoice)
@@ -327,12 +336,13 @@ namespace Appointment_Management_System.Repositories
                 }
 
                 Console.Write("Enter new customer comments (leave blank to keep current): ");
-                string comments = Console.ReadLine();
+                string comments = Console.ReadLine()??"";
                 if (!string.IsNullOrWhiteSpace(comments))
                 {
                     if (newServiceType != appointment.ServiceType)
                     {
-                        newAppointment.CustomerComments = comments;
+                        if(newAppointment!=null)
+                            newAppointment.CustomerComments = comments;
                     }
                     else
                     {
@@ -342,14 +352,17 @@ namespace Appointment_Management_System.Repositories
                 }
 
                 Console.Write("Enter new injuries or pains (leave blank to keep current): ");
-                string injuriesOrPains = Console.ReadLine();
+                string injuriesOrPains = Console.ReadLine()??"";
                 if (!string.IsNullOrWhiteSpace(injuriesOrPains))
                 {
                     if (newServiceType != appointment.ServiceType)
                     {
-                        newAppointment.InjuriesOrPains= injuriesOrPains;
-                        appointments.Add(newAppointment);
-                        appointments.Remove(appointment);
+                        if (newAppointment != null)
+                        {
+                            newAppointment.InjuriesOrPains = injuriesOrPains;
+                            appointments.Add(newAppointment);
+                            appointments.Remove(appointment);
+                        }
                     }
                     else
                     {
@@ -374,7 +387,7 @@ namespace Appointment_Management_System.Repositories
                 return;
             }
 
-            Appointment appointment = appointments.Find(a => a.Id == id);
+            Appointment? appointment = appointments.Find(a => a.Id == id);
             if (appointment != null)
             {
                 appointments.Remove(appointment);

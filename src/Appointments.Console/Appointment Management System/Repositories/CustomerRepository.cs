@@ -1,12 +1,12 @@
-﻿using Appointment_Management_System.Interfaces;
-using Appointment_Management_System.Models;
+﻿using AppointmentManagementSystem.Interfaces;
+using AppointmentManagementSystem.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Appointment_Management_System.Repositories
+namespace AppointmentManagementSystem.Repositories
 {
     public class CustomerRepository: IManagementRepository<Customer>
     {
@@ -16,12 +16,12 @@ namespace Appointment_Management_System.Repositories
             Console.WriteLine("---------------");
 
             Console.Write("Enter Name:");
-            string name = Console.ReadLine();
+            string name = Console.ReadLine()??"";
             string email;
             while (true)
             {
                 Console.Write("Enter Email: ");
-                email = Console.ReadLine();
+                email = Console.ReadLine()??"";
                 if (Utilities.IsValidEmail(email))
                 {
                     break;
@@ -32,7 +32,7 @@ namespace Appointment_Management_System.Repositories
             while (true)
             {
                 Console.Write("Enter Phone Number: ");
-                phoneNumber = Console.ReadLine();
+                phoneNumber = Console.ReadLine()??"";
                 if (Utilities.IsValidPhoneNumber(phoneNumber))
                 {
                     break;
@@ -68,17 +68,17 @@ namespace Appointment_Management_System.Repositories
             Console.WriteLine("Update Customer");
             Console.WriteLine("---------------");
             Console.Write("Enter the email of the customer to update: ");
-            string email = Console.ReadLine();
+            string email = Console.ReadLine()??"";
 
-            Customer customer = customers.Find(c => c.Email.ToLower() == email.ToLower());
+            Customer? customer = customers.Find(c => c.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase));
             if (customer != null)
             {
                 Console.Write("Enter new Name: ");
-                customer.Name = Console.ReadLine();
+                customer.Name = Console.ReadLine()??"";
                 Console.Write("Enter new Email: ");
-                customer.Email = Console.ReadLine();
+                customer.Email = Console.ReadLine()??"";
                 Console.Write("Enter new Phone Number: ");
-                customer.PhoneNumber = Console.ReadLine();
+                customer.PhoneNumber = Console.ReadLine()??"";
 
                 Console.WriteLine("Customer updated successfully.");
             }
@@ -94,9 +94,9 @@ namespace Appointment_Management_System.Repositories
             Console.WriteLine("---------------");
 
             Console.Write("Enter the email of the customer to delete: ");
-            string email = Console.ReadLine();
+            string email = Console.ReadLine()??"";
 
-            Customer customer = customers.Find(c => c.Email.ToLower() == email.ToLower());
+            Customer? customer = customers.Find(c => c.Email.ToLower() == email.ToLower());
             if (customer != null)
             {
                 customers.Remove(customer);

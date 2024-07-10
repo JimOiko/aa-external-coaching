@@ -1,4 +1,4 @@
-﻿namespace Appointment_Management_System.Models
+﻿namespace AppointmentManagementSystem.Models
 {
     public class PersonalTrainingAppointment : Appointment
     {

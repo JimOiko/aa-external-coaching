@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Appointment_Management_System.Models
+namespace AppointmentManagementSystem.Models
 {
     public class Customer
     {

@@ -1,11 +1,11 @@
-﻿using Appointment_Management_System.Models;
+﻿using AppointmentManagementSystem.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Appointment_Management_System.Interfaces
+namespace AppointmentManagementSystem.Interfaces
 {
     public interface IManagementRepository<T>
     {
