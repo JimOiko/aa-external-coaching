@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Models
 {
-    public class Customer
+    public class Customer(string name, string email, string phoneNumber):ICloneable
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public Customer(string name, string email, string phoneNumber)
+        public string Name { get; set; } = name;
+        public string Email { get; set; } = email;
+        public string PhoneNumber { get; set; } = phoneNumber;
+
+        public object Clone()
         {
-            Name = name;
-            Email = email;
-            PhoneNumber = phoneNumber;
+            return this.MemberwiseClone();
         }
 
         public override string ToString()

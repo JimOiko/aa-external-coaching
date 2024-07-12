@@ -21,7 +21,7 @@ namespace AppointmentManagementSystem.Repositories
 
         public List<Appointment> Get()
         {
-            return _appointments;
+            return (List<Appointment>)_appointments.Clone();
         }
 
         public Appointment? GetById(string id)

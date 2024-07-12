@@ -9,13 +9,16 @@ using Microsoft.Extensions.DependencyInjection;
 var serviceProvider = new ServiceCollection()
               .AddSingleton<IManagementRepository<Customer>, CustomerRepository>()
               .AddSingleton<IManagementRepository<Appointment>, AppointmentRepository>()
+              .AddSingleton<CustomerDataEntryService>()
+              .AddSingleton<AppointmentDataEntryService>()
               .AddSingleton<IDataEntryService, CustomerDataEntryService>()
               .AddSingleton<IDataEntryService, AppointmentDataEntryService>()
+              .AddSingleton<IDataEntryServiceFactory, DataEntryServiceFactory>()
               .BuildServiceProvider();
 
-var services = serviceProvider.GetServices<IDataEntryService>();
-var customerDataEntryService = services.First(o => o.GetType() == typeof(CustomerDataEntryService));
-var appointmentDataEntryService = services.First(o => o.GetType() == typeof(AppointmentDataEntryService));
+var factory = serviceProvider.GetRequiredService<IDataEntryServiceFactory>();
+var customerDataEntryService = factory.Create(DataEntryServiceType.Customer);
+var appointmentDataEntryService = factory.Create(DataEntryServiceType.Appointment);
 
 if (customerDataEntryService == null) throw new NullReferenceException("Customer Data Entry Service is not initialized.");
 if (appointmentDataEntryService == null) throw new NullReferenceException("Appointment Data Entry Service is not initialized.");

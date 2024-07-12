@@ -19,7 +19,7 @@ namespace AppointmentManagementSystem.Repositories
 
         public List<Customer> Get()
         {
-            return _customers;
+            return (List<Customer>)_customers.Clone();
         }
 
         public Customer? GetById(string id)
