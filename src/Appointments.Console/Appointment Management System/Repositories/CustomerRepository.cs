@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Repositories
 {
-    public class CustomerRepository: IManagementRepository<Customer>
+    public class CustomerRepository: ICustomerRepository
     {
         private readonly List<Customer> _customers =[];
 
+        #region CRUD
         public void Add(Customer customer)
         {
             _customers.Add(customer);
@@ -32,5 +33,15 @@ namespace AppointmentManagementSystem.Repositories
         {
             _customers.Remove(customer);
         }
+        #endregion CRUD
+
+        #region Reporting
+        public int GetCount()
+        {
+            return _customers.Count;
+        }
+
+        #endregion Reporting
+
     }
 }

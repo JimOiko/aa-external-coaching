@@ -10,10 +10,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppointmentManagementSystem.Repositories
 {
-    public class AppointmentRepository : IManagementRepository<Appointment>
+    public class AppointmentRepository : IAppointmentRepository
     {
         private readonly List<Appointment> _appointments = [];
 
+        #region CRUD
         public void Add(Appointment appointment)
         {
             _appointments.Add(appointment);
@@ -40,6 +41,13 @@ namespace AppointmentManagementSystem.Repositories
         {
             _appointments.Remove(appointment);
         }
-     
+        #endregion CRUD
+
+        #region Reporting
+        public int GetCountByDate(DateTime date)
+        {
+            return _appointments.Count(a => a.Date.Date == date.Date);
+        }
+        #endregion Reporting
     }
 }

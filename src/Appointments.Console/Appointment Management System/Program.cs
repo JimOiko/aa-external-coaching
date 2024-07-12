@@ -7,14 +7,19 @@ using AppointmentManagementSystem.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 var serviceProvider = new ServiceCollection()
-              .AddSingleton<IManagementRepository<Customer>, CustomerRepository>()
-              .AddSingleton<IManagementRepository<Appointment>, AppointmentRepository>()
+              .AddSingleton<ICustomerRepository, CustomerRepository>()
+              .AddSingleton<IAppointmentRepository, AppointmentRepository>()
               .AddSingleton<ICustomerDataEntryService, CustomerDataEntryService>()
               .AddSingleton<IAppointmentDataEntryService, AppointmentDataEntryService>()
+              .AddSingleton<ICustomerReportService, CustomerReportService>()
+              .AddSingleton<IAppointmentReportService, AppointmentReportService>()
               .BuildServiceProvider();
+
 
 var customerDataEntryService = serviceProvider.GetService<ICustomerDataEntryService>();
 var appointmentDataEntryService = serviceProvider.GetService<IAppointmentDataEntryService>();
+var customerReportService = serviceProvider.GetRequiredService<ICustomerReportService>();
+var appointmentReportService = serviceProvider.GetRequiredService<IAppointmentReportService>();
 
 if (customerDataEntryService == null) throw new NullReferenceException("Customer Data Entry Service is not initialized.");
 if (appointmentDataEntryService == null) throw new NullReferenceException("Appointment Data Entry Service is not initialized.");
@@ -32,8 +37,10 @@ while (true)
     Console.WriteLine("6. View Appointments");
     Console.WriteLine("7. Update Appointment");
     Console.WriteLine("8. Delete Appointment");
-    Console.WriteLine("9. Exit");
-    Console.Write("Select an option (1-9): ");
+    Console.WriteLine("9. Generate Customer Report");
+    Console.WriteLine("10. Generate Appointment Report by Date");
+    Console.WriteLine("11. Exit");
+    Console.Write("Select an option (1-11): ");
 
     string choice = Console.ReadLine()??"";
     Console.WriteLine();
@@ -64,9 +71,19 @@ while (true)
             appointmentDataEntryService.Delete();
             break;
         case "9":
-            Console.WriteLine("Exiting... Press any key to close.");
-            Console.ReadKey();
-            return;
+            customerReportService.GetRegisteredCustomer();
+            break;
+        case "10":
+            Console.Write("Enter the date (yyyy-MM-dd): ");
+            if (DateTime.TryParse(Console.ReadLine(), out DateTime date))
+            {
+                appointmentReportService.GetAppointmentsCountByDate(date);
+            }
+            else
+            {
+                Console.WriteLine("Invalid date format.");
+            }
+            break;
         default:
             Console.WriteLine("Invalid option, please try again.");
             break;

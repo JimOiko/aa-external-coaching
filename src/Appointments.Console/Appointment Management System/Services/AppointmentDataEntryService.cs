@@ -8,16 +8,10 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Services
 {
-    public class AppointmentDataEntryService: IAppointmentDataEntryService
+    public class AppointmentDataEntryService(IAppointmentRepository appointmentRepo, ICustomerRepository customerRepo) : IAppointmentDataEntryService
     {
-        private readonly IManagementRepository<Appointment> _appointmentRepo;
-        private readonly IManagementRepository<Customer> _customerRepo;
-
-        public AppointmentDataEntryService(IManagementRepository<Appointment> appointmentRepo, IManagementRepository<Customer> customerRepo)
-        {
-            _appointmentRepo = appointmentRepo;
-            _customerRepo = customerRepo;
-        }
+        private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
+        private readonly ICustomerRepository _customerRepo = customerRepo;
 
         public void Create()
         {
@@ -337,5 +331,6 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Appointment not found.");
             }
         }
+
     }
 }

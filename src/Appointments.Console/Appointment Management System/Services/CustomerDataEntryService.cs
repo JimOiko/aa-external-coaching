@@ -8,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Services
 {
-    public class CustomerDataEntryService: ICustomerDataEntryService
+    public class CustomerDataEntryService(ICustomerRepository customerRepo): ICustomerDataEntryService
     {
-        private readonly IManagementRepository<Customer> _customerRepo;
-
-        public CustomerDataEntryService(IManagementRepository<Customer> customerRepo)
-        {
-            _customerRepo = customerRepo;
-        }
+        private readonly ICustomerRepository _customerRepo = customerRepo;
 
         public void Create()
         {
