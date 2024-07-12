@@ -23,8 +23,6 @@ var appointmentDataEntryService = factory.Create(DataEntryServiceType.Appointmen
 if (customerDataEntryService == null) throw new NullReferenceException("Customer Data Entry Service is not initialized.");
 if (appointmentDataEntryService == null) throw new NullReferenceException("Appointment Data Entry Service is not initialized.");
 
-List<Customer> customers = [];
-List<Appointment> appointments = [];
 Console.WriteLine("Appointment Management System");
 Console.WriteLine("==========================");
 while (true)
