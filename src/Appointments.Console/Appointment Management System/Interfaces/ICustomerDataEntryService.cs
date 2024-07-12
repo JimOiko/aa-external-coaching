@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Interfaces
 {
-    public interface IDataEntryService
+    public interface ICustomerDataEntryService
     {
         void Create();
         void Read();

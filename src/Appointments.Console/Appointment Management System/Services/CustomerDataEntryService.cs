@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Services
 {
-    public class CustomerDataEntryService: IDataEntryService
+    public class CustomerDataEntryService: ICustomerDataEntryService
     {
         private readonly IManagementRepository<Customer> _customerRepo;
 

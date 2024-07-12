@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Interfaces
 {
-    public interface IDataEntryServiceFactory
+    public interface IAppointmentDataEntryService
     {
-        IDataEntryService Create(DataEntryServiceType serviceType);
+        void Create();
+        void Read();
+        void Update();
+        void Delete();
     }
-
 }
