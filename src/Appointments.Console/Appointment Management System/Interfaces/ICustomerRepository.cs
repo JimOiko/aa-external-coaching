@@ -13,7 +13,7 @@ namespace AppointmentManagementSystem.Interfaces
         List<Customer> Get();
         Customer? GetById(string id);
         void Delete(Customer item);
-        public int GetCount();
-
+        int GetCount();
+        List<Customer> GetNewCustomersByDate(DateTime date);
     }
 }

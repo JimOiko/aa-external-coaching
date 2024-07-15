@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Repositories
 {
-    public class CustomerRepository: ICustomerRepository
+    public class CustomerRepository : ICustomerRepository
     {
-        private readonly List<Customer> _customers =[];
+        private readonly List<Customer> _customers = [];
 
         #region CRUD
         public void Add(Customer customer)
@@ -41,7 +41,10 @@ namespace AppointmentManagementSystem.Repositories
             return _customers.Count;
         }
 
-        #endregion Reporting
-
+        public List<Customer> GetNewCustomersByDate(DateTime date)
+        {
+            return _customers.Where(c => c.RegistrationDate.Date == date.Date).Select(c => (Customer)c.Clone()).ToList();
+        }
     }
+    #endregion Reporting
 }

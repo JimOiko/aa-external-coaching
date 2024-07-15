@@ -48,6 +48,94 @@ namespace AppointmentManagementSystem.Repositories
         {
             return _appointments.Count(a => a.Date.Date == date.Date);
         }
+
+        public int GetCountByType(ServiceType serviceType)
+        {
+            return _appointments.Where(a=>a.ServiceType == serviceType).Count();
+        }
+
+        public MasseusePreference GetCommonPreferenceForMasseuseSex()
+        {
+            var massageAppointments = _appointments
+           .OfType<MassageAppointment>()
+           .ToList();
+            return massageAppointments
+                .Where(a => a.ServiceType == ServiceType.Massage)
+                .GroupBy(a => a.Preference)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefault();
+        }
+
+        public TrainingDuration GetCommonPreferenceForPTDuration()
+        {
+            var ptAppointments = _appointments
+           .OfType<PersonalTrainingAppointment>()
+           .ToList();
+            return ptAppointments
+                .Where(a => a.ServiceType == ServiceType.PersonalTraining)
+                .GroupBy(a => a.TrainingDuration)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefault();
+        }
+
+        public Dictionary<ServiceType, (DateTime? Date, int Count)> GetMaxAppointmentsDateByServiceType()
+        {
+            var result = new Dictionary<ServiceType, (DateTime? Date, int Count)>();
+
+            var serviceTypes = Enum.GetValues(typeof(ServiceType)).Cast<ServiceType>();
+
+            foreach (var serviceType in serviceTypes)
+            {
+                var groupedByDate = _appointments
+                    .Where(a => a.ServiceType == serviceType)
+                    .GroupBy(a => a.Date.Date)
+                    .Select(g => new { Date = g.Key, Count = g.Count() })
+                    .OrderByDescending(g => g.Count)
+                    .FirstOrDefault();
+
+                result[serviceType] = groupedByDate != null ? (groupedByDate.Date, groupedByDate.Count) : (null, 0);
+            }
+
+            return result;
+        }
+
+        public MassageServices GetMassageTypePreference()
+        {
+            var massageAppointments = _appointments
+           .OfType<MassageAppointment>()
+           .ToList();
+            return massageAppointments
+                .Where(a => a.ServiceType == ServiceType.Massage)
+                .GroupBy(a => a.MassageServices)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefault();
+        }
+
+        public (DayOfWeek Day, int Count) GetMaxAppointmentsDayOfWeek()
+        {
+            var groupedByDayOfWeek = _appointments
+                .GroupBy(a => a.Date.DayOfWeek)
+                .Select(g => new { Day = g.Key, Count = g.Count() })
+                .OrderByDescending(g => g.Count)
+                .FirstOrDefault();
+
+            return groupedByDayOfWeek != null ? (groupedByDayOfWeek.Day, groupedByDayOfWeek.Count) : (default, 0);
+        }
+
+        public (DayOfWeek Day, int Count) GetMinAppointmentsDayOfWeek()
+        {
+            var groupedByDayOfWeek = _appointments
+                .GroupBy(a => a.Date.DayOfWeek)
+                .Select(g => new { Day = g.Key, Count = g.Count() })
+                .OrderBy(g => g.Count)
+                .FirstOrDefault();
+
+            return groupedByDayOfWeek != null ? (groupedByDayOfWeek.Day, groupedByDayOfWeek.Count) : (default, 0);
+        }
+
         #endregion Reporting
     }
 }

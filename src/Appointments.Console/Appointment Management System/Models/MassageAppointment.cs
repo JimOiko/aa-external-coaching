@@ -1,15 +1,10 @@
 ﻿namespace AppointmentManagementSystem.Models
 {
-    public class MassageAppointment : Appointment
+    public class MassageAppointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes,
+        MassageServices massageServices, MasseusePreference preference) : Appointment(customer, serviceType, date, time, notes)
     {
-        public MassageServices MassageServices { get; set; }
-        public MasseusePreference Preference { get; set; }
-        public MassageAppointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes,
-            MassageServices massageServices, MasseusePreference preference) : base(customer, serviceType, date, time, notes)
-        {
-            MassageServices = massageServices;
-            Preference = preference;
-        }
+        public MassageServices MassageServices { get; set; } = massageServices;
+        public MasseusePreference Preference { get; set; } = preference;
 
         public override string ToString()
         {

@@ -44,7 +44,7 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Invalid phone number. Please try again.");
             }
 
-            var customer = new Customer(name, email, phoneNumber);
+            var customer = new Customer(name, email, phoneNumber, DateTime.Now);
             _customerRepo.Add(customer);
         }
 

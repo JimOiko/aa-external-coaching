@@ -39,6 +39,13 @@ while (true)
     Console.WriteLine("8. Delete Appointment");
     Console.WriteLine("9. Generate Customer Report");
     Console.WriteLine("10. Generate Appointment Report by Date");
+    Console.WriteLine("11. Get Number of Appointments By Type");
+    Console.WriteLine("12. Get Most Common Masseuse Preference Sex");
+    Console.WriteLine("13. Get Most Common Preferenece for Training Duration On Personal");
+    Console.WriteLine("14. Get Date with max Appointments for both Types");
+    Console.WriteLine("15. Get Most Common Massage Service Preference");
+    Console.WriteLine("16. Generate Appointments Day of Week Report");
+    Console.WriteLine("17. Get New Customers On Specific Date");
     Console.WriteLine("11. Exit");
     Console.Write("Select an option (1-11): ");
 
@@ -84,6 +91,39 @@ while (true)
                 Console.WriteLine("Invalid date format.");
             }
             break;
+        case "11":
+            appointmentReportService.GetNumberOfAppointmentsByType();
+            break;
+        case "12":
+            appointmentReportService.GetCommonPreferenceForMasseuseSex();
+            break;
+        case "13":
+            appointmentReportService.GetCommonPreferenceForTrainingDuration();
+            break;
+        case "14":
+            appointmentReportService.GetMaxAppointmentsDateByServiceType();
+            break;
+        case "15":
+            appointmentReportService.GetMassageTypePreference();
+            break;
+        case "16":
+            appointmentReportService.GetAppointmentsDayOfWeekReport();
+            break;
+        case "17":
+            Console.Write("Enter the date (yyyy-MM-dd): ");
+            if (DateTime.TryParse(Console.ReadLine(), out DateTime dateRegistered))
+            {
+                customerReportService.GetNewCustomersByDate(dateRegistered);
+            }
+            else
+            {
+                Console.WriteLine("Invalid date format.");
+            }
+            break;
+        case "18":
+            Console.WriteLine("Exiting... Press any key to close.");
+            Console.ReadKey();
+            return;
         default:
             Console.WriteLine("Invalid option, please try again.");
             break;

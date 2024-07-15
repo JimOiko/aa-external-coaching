@@ -9,6 +9,7 @@ namespace AppointmentManagementSystem.Interfaces
     public interface ICustomerReportService
     {
         void GetRegisteredCustomer();
+        void GetNewCustomersByDate(DateTime date);
 
     }
 }
