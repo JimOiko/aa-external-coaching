@@ -1,4 +1,4 @@
-﻿namespace AppointmentManagementSystem.Models
+﻿namespace AppointmentManagementSystem.DomainObjects
 {
     public class PersonalTrainingAppointment : Appointment
     {

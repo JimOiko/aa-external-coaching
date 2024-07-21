@@ -1,14 +1,7 @@
-﻿using AppointmentManagementSystem.Interfaces;
-using AppointmentManagementSystem.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using AppointmentManagementSystem.DomainObjects;
+using AppointmentManagementSystem.Infastructure.Interfaces;
 
-namespace AppointmentManagementSystem.Repositories
+namespace AppointmentManagementSystem.Infastructure
 {
     public class AppointmentRepository : IAppointmentRepository
     {

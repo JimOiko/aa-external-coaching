@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using AppointmentManagementSystem;
+using AppointmentManagementSystem.Infastructure;
+using AppointmentManagementSystem.Infastructure.Interfaces;
 using AppointmentManagementSystem.Interfaces;
-using AppointmentManagementSystem.Models;
-using AppointmentManagementSystem.Repositories;
 using AppointmentManagementSystem.Services;
 using Microsoft.Extensions.DependencyInjection;
 

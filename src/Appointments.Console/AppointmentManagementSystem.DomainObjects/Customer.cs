@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace AppointmentManagementSystem.Models
+﻿
+namespace AppointmentManagementSystem.DomainObjects
 {
     public class Customer(string name, string email, string phoneNumber, DateTime registrationDate) :ICloneable
     {

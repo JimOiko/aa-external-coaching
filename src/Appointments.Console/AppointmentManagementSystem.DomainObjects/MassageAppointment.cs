@@ -1,4 +1,4 @@
-﻿namespace AppointmentManagementSystem.Models
+﻿namespace AppointmentManagementSystem.DomainObjects
 {
     public class MassageAppointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes,
         MassageServices massageServices, MasseusePreference preference) : Appointment(customer, serviceType, date, time, notes)

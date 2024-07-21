@@ -1,11 +1,6 @@
-﻿using AppointmentManagementSystem.Interfaces;
-using AppointmentManagementSystem.Models;
-using AppointmentManagementSystem.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AppointmentManagementSystem.DomainObjects;
+using AppointmentManagementSystem.Infastructure.Interfaces;
+using AppointmentManagementSystem.Interfaces;
 
 namespace AppointmentManagementSystem.Services
 {

@@ -1,5 +1,6 @@
-﻿using AppointmentManagementSystem.Interfaces;
-using AppointmentManagementSystem.Models;
+﻿using AppointmentManagementSystem.DomainObjects;
+using AppointmentManagementSystem.Infastructure.Interfaces;
+using AppointmentManagementSystem.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

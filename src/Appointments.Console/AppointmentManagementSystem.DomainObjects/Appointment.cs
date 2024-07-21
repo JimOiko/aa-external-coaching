@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppointmentManagementSystem.Models
+namespace AppointmentManagementSystem.DomainObjects
 {
     public class Appointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes) : ICloneable
     {
