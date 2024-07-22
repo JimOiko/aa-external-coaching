@@ -20,7 +20,7 @@ namespace AppointmentManagementSystem.Interfaces
         int GetCountByDate(DateTime date);
         int GetCountByType(ServiceType serviceType);
         MasseusePreference GetCommonPreferenceForMasseuseSex();
-        TrainingDuration GetCommonPreferenceForPTDuration();
+        TrainingDuration? GetCommonPreferenceForPTDuration();
         Dictionary<ServiceType, (DateTime? Date, int Count)> GetMaxAppointmentsDateByServiceType();
         MassageServices GetMassageTypePreference();
         (DayOfWeek Day, int Count) GetMaxAppointmentsDayOfWeek();

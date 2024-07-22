@@ -59,6 +59,7 @@ namespace AppointmentManagementSystem.Repositories
             var massageAppointments = _appointments
            .OfType<MassageAppointment>()
            .ToList();
+
             return massageAppointments
                 .Where(a => a.ServiceType == ServiceType.Massage)
                 .GroupBy(a => a.Preference)
@@ -67,11 +68,15 @@ namespace AppointmentManagementSystem.Repositories
                 .FirstOrDefault();
         }
 
-        public TrainingDuration GetCommonPreferenceForPTDuration()
+        public TrainingDuration? GetCommonPreferenceForPTDuration()
         {
             var ptAppointments = _appointments
            .OfType<PersonalTrainingAppointment>()
            .ToList();
+
+            if (ptAppointments == null)
+                return null;
+
             return ptAppointments
                 .Where(a => a.ServiceType == ServiceType.PersonalTraining)
                 .GroupBy(a => a.TrainingDuration)

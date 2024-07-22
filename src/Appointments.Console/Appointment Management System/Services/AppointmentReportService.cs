@@ -35,7 +35,10 @@ namespace AppointmentManagementSystem.Services
         public void GetCommonPreferenceForTrainingDuration()
         {
             var commonPreference = _appointmentRepo.GetCommonPreferenceForPTDuration();
-            Console.WriteLine($"Most Common Preference for Personal Training Duration: {commonPreference}");
+            if( commonPreference != null )
+                Console.WriteLine($"Most Common Preference for Personal Training Duration: {commonPreference}");
+            else
+                Console.WriteLine("Not enough Data to extract this Stat");
         }
 
         public void GetMaxAppointmentsDateByServiceType()
