@@ -3,21 +3,22 @@ using AppointmentManagementSystem;
 using AppointmentManagementSystem.Interfaces;
 using AppointmentManagementSystem.Models;
 using AppointmentManagementSystem.Repositories;
+using AppointmentManagementSystem.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 var serviceProvider = new ServiceCollection()
               .AddSingleton<IManagementRepository<Customer>, CustomerRepository>()
               .AddSingleton<IManagementRepository<Appointment>, AppointmentRepository>()
+              .AddSingleton<ICustomerDataEntryService, CustomerDataEntryService>()
+              .AddSingleton<IAppointmentDataEntryService, AppointmentDataEntryService>()
               .BuildServiceProvider();
 
-var customerRepo = serviceProvider.GetService<IManagementRepository<Customer>>();
-var appointmentRepo = serviceProvider.GetService<IManagementRepository<Appointment>>();
+var customerDataEntryService = serviceProvider.GetService<ICustomerDataEntryService>();
+var appointmentDataEntryService = serviceProvider.GetService<IAppointmentDataEntryService>();
 
-if (customerRepo == null) throw new Exception("Customer repository is not initialized.");
-if (appointmentRepo == null) throw new Exception("Appointment repository is not initialized.");
+if (customerDataEntryService == null) throw new NullReferenceException("Customer Data Entry Service is not initialized.");
+if (appointmentDataEntryService == null) throw new NullReferenceException("Appointment Data Entry Service is not initialized.");
 
-List<Customer> customers = [];
-List<Appointment> appointments = [];
 Console.WriteLine("Appointment Management System");
 Console.WriteLine("==========================");
 while (true)
@@ -39,28 +40,28 @@ while (true)
     switch (choice)
     {
         case "1":
-            customerRepo.Create(customers);
+            customerDataEntryService.Create();
             break;
         case "2":
-            customerRepo.Read(customers);
+            customerDataEntryService.Read();
             break;
         case "3":
-            customerRepo.Update(customers);
+            customerDataEntryService.Update();
             break;
         case "4":
-            customerRepo.Delete(customers);
+            customerDataEntryService.Delete();
             break;
         case "5":
-            appointmentRepo.Create(appointments,customers);
+            appointmentDataEntryService.Create();
             break;
         case "6":
-            appointmentRepo.Read(appointments);
+            appointmentDataEntryService.Read();
             break;
         case "7":
-            appointmentRepo.Update(appointments);
+            appointmentDataEntryService.Update();
             break;
         case "8":
-            appointmentRepo.Delete(appointments);
+            appointmentDataEntryService.Delete();
             break;
         case "9":
             Console.WriteLine("Exiting... Press any key to close.");

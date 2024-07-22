@@ -31,4 +31,10 @@ namespace AppointmentManagementSystem.Models
         OneHour,
         OneHourThirtyMinutes
     }
+
+    public enum DataEntryServiceType
+    {
+        Customer,
+        Appointment
+    }
 }
