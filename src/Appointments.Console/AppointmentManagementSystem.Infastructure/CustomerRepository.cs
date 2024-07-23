@@ -1,44 +1,51 @@
-﻿using AppointmentManagementSystem.DomainObjects;
+﻿using AppManagementSystem.DbObjects;
+using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.Infastructure.Interfaces;
 
 namespace AppointmentManagementSystem.Infastructure
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository(AppointmentManagementContext db) : ICustomerRepository
     {
-        private readonly List<Customer> _customers = [];
-
         #region CRUD
         public void Add(Customer customer)
         {
-            _customers.Add(customer);
+            db.Customer.Add(customer);
+            db.SaveChanges();
         }
 
         public List<Customer> Get()
         {
-            return (List<Customer>)_customers.Clone();
+            return [.. db.Customer];
         }
 
         public Customer? GetById(string id)
         {
-            var existingCustomer = _customers.FirstOrDefault(c => c.Email.Equals(id, StringComparison.OrdinalIgnoreCase));
+            var existingCustomer = db.Customer.FirstOrDefault(c => c.Email.ToLower() == id.ToLower());
             return existingCustomer;
+        }
+
+        public void Update(Customer customer)
+        {
+            db.Customer.Update(customer);
+            db.SaveChanges();
         }
 
         public void Delete(Customer customer)
         {
-            _customers.Remove(customer);
+            db.Customer.Remove(customer);
+            db.SaveChanges();
         }
         #endregion CRUD
 
         #region Reporting
         public int GetCount()
         {
-            return _customers.Count;
+            return db.Customer.Count();
         }
 
         public List<Customer> GetNewCustomersByDate(DateTime date)
         {
-            return _customers.Where(c => c.RegistrationDate.Date == date.Date).Select(c => (Customer)c.Clone()).ToList();
+            return [.. db.Customer.Where(c => c.RegistrationDate.Date == date.Date).Select(c => c)];
         }
     }
     #endregion Reporting

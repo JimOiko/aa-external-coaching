@@ -1,21 +1,35 @@
-﻿using AppointmentManagementSystem.DomainObjects;
+﻿using AppManagementSystem.DbObjects;
+using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.Infastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppointmentManagementSystem.Infastructure
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentRepository(AppointmentManagementContext db) : IAppointmentRepository
     {
-        private readonly List<Appointment> _appointments = [];
 
         #region CRUD
         public void Add(Appointment appointment)
         {
-            _appointments.Add(appointment);
+            // Check if the customer is already being tracked
+            var trackedCustomer = db.Customer.Local.FirstOrDefault(c => c.Id == appointment.Customer.Id);
+            if (trackedCustomer != null)
+            {
+                // Use the tracked entity instead of the new instance
+                appointment.Customer = trackedCustomer;
+            }
+            else
+            {
+                // Attach the customer to the context if not already tracked
+                db.Customer.Attach(appointment.Customer);
+            }
+            db.Appointment.Add(appointment);
+            db.SaveChanges();
         }
 
         public List<Appointment> Get()
         {
-            return (List<Appointment>)_appointments.Clone();
+            return [.. db.Appointment.Include(a => a.Customer)];
         }
 
         public Appointment? GetById(string id)
@@ -26,30 +40,37 @@ namespace AppointmentManagementSystem.Infastructure
                 // Handle invalid id here if necessary
                 return null;
             }
-            var existingCustomer = _appointments.FirstOrDefault(a => a.Id == idInt);
+            var existingCustomer = db.Appointment.FirstOrDefault(a => a.AppointmentId == idInt);
             return existingCustomer;
+        }
+
+        public void Update(Appointment appointment)
+        {
+            db.Appointment.Update(appointment);
+            db.SaveChanges();
         }
 
         public void Delete(Appointment appointment)
         {
-            _appointments.Remove(appointment);
+            db.Appointment.Remove(appointment);
+            db.SaveChanges();
         }
         #endregion CRUD
 
         #region Reporting
         public int GetCountByDate(DateTime date)
         {
-            return _appointments.Count(a => a.Date.Date == date.Date);
+            return db.Appointment.Count(a => a.Date.Date == date.Date);
         }
 
         public int GetCountByType(ServiceType serviceType)
         {
-            return _appointments.Where(a=>a.ServiceType == serviceType).Count();
+            return db.Appointment.Where(a=>a.ServiceType == serviceType).Count();
         }
 
         public MasseusePreference GetCommonPreferenceForMasseuseSex()
         {
-            var massageAppointments = _appointments
+            var massageAppointments = db.Appointment
            .OfType<MassageAppointment>()
            .ToList();
             return massageAppointments
@@ -62,7 +83,7 @@ namespace AppointmentManagementSystem.Infastructure
 
         public TrainingDuration GetCommonPreferenceForPTDuration()
         {
-            var ptAppointments = _appointments
+            var ptAppointments = db.Appointment
            .OfType<PersonalTrainingAppointment>()
            .ToList();
             return ptAppointments
@@ -81,7 +102,7 @@ namespace AppointmentManagementSystem.Infastructure
 
             foreach (var serviceType in serviceTypes)
             {
-                var groupedByDate = _appointments
+                var groupedByDate = db.Appointment
                     .Where(a => a.ServiceType == serviceType)
                     .GroupBy(a => a.Date.Date)
                     .Select(g => new { Date = g.Key, Count = g.Count() })
@@ -96,7 +117,7 @@ namespace AppointmentManagementSystem.Infastructure
 
         public MassageServices GetMassageTypePreference()
         {
-            var massageAppointments = _appointments
+            var massageAppointments = db.Appointment
            .OfType<MassageAppointment>()
            .ToList();
             return massageAppointments
@@ -109,7 +130,7 @@ namespace AppointmentManagementSystem.Infastructure
 
         public (DayOfWeek Day, int Count) GetMaxAppointmentsDayOfWeek()
         {
-            var groupedByDayOfWeek = _appointments
+            var groupedByDayOfWeek = db.Appointment.AsEnumerable() //Not the best solution need to reconsider
                 .GroupBy(a => a.Date.DayOfWeek)
                 .Select(g => new { Day = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
@@ -120,7 +141,7 @@ namespace AppointmentManagementSystem.Infastructure
 
         public (DayOfWeek Day, int Count) GetMinAppointmentsDayOfWeek()
         {
-            var groupedByDayOfWeek = _appointments
+            var groupedByDayOfWeek = db.Appointment.AsEnumerable()
                 .GroupBy(a => a.Date.DayOfWeek)
                 .Select(g => new { Day = g.Key, Count = g.Count() })
                 .OrderBy(g => g.Count)

@@ -1,24 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.DomainObjects
 {
-    public class Appointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes) : ICloneable
+    public class Appointment : ICloneable
     {
-        private static int NextId = 1; //so as not to use guid
-        public int Id { get; set; } = Interlocked.Increment(ref NextId);
-        public Customer Customer { get; set; } = customer;
-        public ServiceType ServiceType { get; set; } = serviceType;
-        public DateTime Date { get; set; } = date;
-        public string Time { get; set; } = time;
-        public string Notes { get; set; } = notes;
+
+        // Parameterless constructor
+        public Appointment()
+        {
+        }
+
+        public Appointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes)
+        {
+            Customer = customer;
+            ServiceType = serviceType;
+            Date = date;
+            Time = time;
+            Notes = notes;
+        }
+
+        [Key]
+        public int AppointmentId { get; set; } // Primary key
+        public Customer Customer { get; set; }
+        public ServiceType ServiceType { get; set; }
+        public DateTime Date { get; set; }
+        public string Time { get; set; }
+        public string Notes { get; set; }
 
         public override string ToString()
         {
-            return $"ID: {Id}, Customer: {Customer.Name}, Service: {ServiceType}, Date: {Date.ToShortDateString()}, Time: {Time}, Notes: {Notes}";
+            return $"ID: {AppointmentId}, Customer: {Customer.Name}, Service: {ServiceType}, Date: {Date.ToShortDateString()}, Time: {Time}, Notes: {Notes}";
         }
 
         public object Clone()

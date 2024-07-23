@@ -133,14 +133,14 @@ namespace AppointmentManagementSystem.Services
                     if (appointment is MassageAppointment massageAppointment)
                     {
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
-                                          massageAppointment.Id, massageAppointment.Customer.Name, massageAppointment.ServiceType,
+                                          massageAppointment.AppointmentId, massageAppointment.Customer.Name, massageAppointment.ServiceType,
                                           massageAppointment.Date.ToShortDateString(), massageAppointment.Time, massageAppointment.Notes,
                                           massageAppointment.MassageServices, massageAppointment.Preference, "N/A", "N/A", "N/A");
                     }
                     else if (appointment is PersonalTrainingAppointment trainingAppointment)
                     {
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
-                                          trainingAppointment.Id, trainingAppointment.Customer.Name, trainingAppointment.ServiceType,
+                                          trainingAppointment.AppointmentId, trainingAppointment.Customer.Name, trainingAppointment.ServiceType,
                                           trainingAppointment.Date.ToShortDateString(), trainingAppointment.Time, trainingAppointment.Notes,
                                           "N/A", "N/A", trainingAppointment.TrainingDuration, trainingAppointment.CustomerComments,
                                           trainingAppointment.InjuriesOrPains);
@@ -233,6 +233,7 @@ namespace AppointmentManagementSystem.Services
                     var massageAppointment = (MassageAppointment)appointment;
                     massageAppointment.MassageServices = (MassageServices)(massageServiceChoice - 1);
                     massageAppointment.Preference = (MasseusePreference)(preferenceChoice - 1);
+                    _appointmentRepo.Update(massageAppointment);
                 }
             }
             else
@@ -279,6 +280,7 @@ namespace AppointmentManagementSystem.Services
                     trainingAppointment.TrainingDuration = (TrainingDuration)(durationChoice - 1);
                     trainingAppointment.CustomerComments = string.IsNullOrWhiteSpace(comments) ? trainingAppointment.CustomerComments : comments;
                     trainingAppointment.InjuriesOrPains = string.IsNullOrWhiteSpace(injuriesOrPains) ? trainingAppointment.InjuriesOrPains: injuriesOrPains; ;
+                    _appointmentRepo.Update(trainingAppointment);
                 }
             }
             Console.WriteLine("Appointment updated successfully.");

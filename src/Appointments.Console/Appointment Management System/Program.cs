@@ -1,12 +1,15 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using AppManagementSystem.DbObjects;
 using AppointmentManagementSystem;
 using AppointmentManagementSystem.Infastructure;
 using AppointmentManagementSystem.Infastructure.Interfaces;
 using AppointmentManagementSystem.Interfaces;
 using AppointmentManagementSystem.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 var serviceProvider = new ServiceCollection()
+            .AddTransient<AppointmentManagementContext>()
               .AddSingleton<ICustomerRepository, CustomerRepository>()
               .AddSingleton<IAppointmentRepository, AppointmentRepository>()
               .AddSingleton<ICustomerDataEntryService, CustomerDataEntryService>()

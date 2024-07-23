@@ -100,6 +100,7 @@ namespace AppointmentManagementSystem.Services
                     Console.WriteLine("Invalid phone number. Please try again.");
                 }
                 existingCustomer.PhoneNumber = phoneNumber;
+                _customerRepo.Update(existingCustomer);
             }
             else
             {

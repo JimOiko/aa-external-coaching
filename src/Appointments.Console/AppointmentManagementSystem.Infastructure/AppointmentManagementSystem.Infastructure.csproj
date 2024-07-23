@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AppManagementSystem.DbObjects\AppointmentManagementSystem.DbObjects.csproj" />
     <ProjectReference Include="..\AppointmentManagementSystem.DomainObjects\AppointmentManagementSystem.DomainObjects.csproj" />
   </ItemGroup>
 

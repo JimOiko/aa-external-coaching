@@ -1,10 +1,21 @@
-﻿namespace AppointmentManagementSystem.DomainObjects
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace AppointmentManagementSystem.DomainObjects
 {
-    public class MassageAppointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes,
-        MassageServices massageServices, MasseusePreference preference) : Appointment(customer, serviceType, date, time, notes)
+    public class MassageAppointment: Appointment
     {
-        public MassageServices MassageServices { get; set; } = massageServices;
-        public MasseusePreference Preference { get; set; } = preference;
+
+        public MassageAppointment() { }
+
+        public MassageAppointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes,
+        MassageServices massageServices, MasseusePreference preference) : base(customer,
+                                                                               serviceType,
+                                                                               date,
+                                                                               time,
+                                                                               notes) { }
+
+        public MassageServices MassageServices { get; set; }
+        public MasseusePreference Preference { get; set; }
 
         public override string ToString()
         {

@@ -8,6 +8,7 @@ namespace AppointmentManagementSystem.Infastructure.Interfaces
         void Add(Appointment item);
         List<Appointment> Get();
         Appointment? GetById(string id);
+        void Update(Appointment item);
         void Delete(Appointment item);
         #endregion CRUD
 
