@@ -8,16 +8,10 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Services
 {
-    public class AppointmentDataEntryService: IAppointmentDataEntryService
+    public class AppointmentDataEntryService(IAppointmentRepository appointmentRepo, ICustomerRepository customerRepo) : IAppointmentDataEntryService
     {
-        private readonly IManagementRepository<Appointment> _appointmentRepo;
-        private readonly IManagementRepository<Customer> _customerRepo;
-
-        public AppointmentDataEntryService(IManagementRepository<Appointment> appointmentRepo, IManagementRepository<Customer> customerRepo)
-        {
-            _appointmentRepo = appointmentRepo;
-            _customerRepo = customerRepo;
-        }
+        private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
+        private readonly ICustomerRepository _customerRepo = customerRepo;
 
         public void Create()
         {
@@ -139,14 +133,14 @@ namespace AppointmentManagementSystem.Services
                     {
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
                                           massageAppointment.Id, massageAppointment.Customer.Name, massageAppointment.ServiceType,
-                                          massageAppointment.Date.ToShortDateString(), massageAppointment.Time, massageAppointment.Notes,
+                                          massageAppointment.Date.DateTime.ToShortDateString(), massageAppointment.Time, massageAppointment.Notes,
                                           massageAppointment.MassageServices, massageAppointment.Preference, "N/A", "N/A", "N/A");
                     }
                     else if (appointment is PersonalTrainingAppointment trainingAppointment)
                     {
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
                                           trainingAppointment.Id, trainingAppointment.Customer.Name, trainingAppointment.ServiceType,
-                                          trainingAppointment.Date.ToShortDateString(), trainingAppointment.Time, trainingAppointment.Notes,
+                                          trainingAppointment.Date.DateTime.ToShortDateString(), trainingAppointment.Time, trainingAppointment.Notes,
                                           "N/A", "N/A", trainingAppointment.TrainingDuration, trainingAppointment.CustomerComments,
                                           trainingAppointment.InjuriesOrPains);
                     }
@@ -337,5 +331,6 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Appointment not found.");
             }
         }
+
     }
 }

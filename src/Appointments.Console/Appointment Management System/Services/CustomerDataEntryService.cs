@@ -8,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Services
 {
-    public class CustomerDataEntryService: ICustomerDataEntryService
+    public class CustomerDataEntryService(ICustomerRepository customerRepo): ICustomerDataEntryService
     {
-        private readonly IManagementRepository<Customer> _customerRepo;
-
-        public CustomerDataEntryService(IManagementRepository<Customer> customerRepo)
-        {
-            _customerRepo = customerRepo;
-        }
+        private readonly ICustomerRepository _customerRepo = customerRepo;
 
         public void Create()
         {
@@ -49,7 +44,7 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Invalid phone number. Please try again.");
             }
 
-            var customer = new Customer(name, email, phoneNumber);
+            var customer = new Customer(name, email, phoneNumber, DateTimeOffset.Now);
             _customerRepo.Add(customer);
         }
 
@@ -64,11 +59,11 @@ namespace AppointmentManagementSystem.Services
             }
             else
             {
-                Console.WriteLine("{0,-20} {1,-30} {2,-15}", "Name", "Email", "Phone Number");
-                Console.WriteLine(new string('-', 65));
+                Console.WriteLine("{0,-20} {1,-30} {2,-15} {3,-20}", "Name", "Email", "Phone Number", "Registration Date");
+                Console.WriteLine(new string('-', 95));
                 foreach (var customer in customers)
                 {
-                    Console.WriteLine("{0,-20} {1,-30} {2,-15}", customer.Name, customer.Email, customer.PhoneNumber);
+                    Console.WriteLine("{0,-20} {1,-30} {2,-15} {3,-20}", customer.Name, customer.Email, customer.PhoneNumber, customer.RegistrationDate);
                 }
             }
         }
