@@ -13,10 +13,10 @@ namespace AppointmentManagementSystem.Services
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
 
-        public void GetAppointmentsCountByDate(DateTime date)
+        public void GetAppointmentsCountByDate(DateTimeOffset date)
         {
             var appointmentCount = _appointmentRepo.GetCountByDate(date);
-            Console.WriteLine($"Total Number of Appointments on {date.ToShortDateString()}: {appointmentCount}");
+            Console.WriteLine($"Total Number of Appointments on {date.DateTime.ToShortDateString()}: {appointmentCount}");
         }
 
         public void GetNumberOfAppointmentsByType()
@@ -45,13 +45,12 @@ namespace AppointmentManagementSystem.Services
         {
             var maxAppointmentsByServiceType = _appointmentRepo.GetMaxAppointmentsDateByServiceType();
 
-            foreach (var serviceType in maxAppointmentsByServiceType.Keys)
+            foreach (var maxAppointment in maxAppointmentsByServiceType)
             {
-                var (date, count) = maxAppointmentsByServiceType[serviceType];
-                Console.WriteLine($"Service Type: {serviceType}");
-                if (date.HasValue)
+                Console.WriteLine($"Service Type: {maxAppointment.ServiceType}");
+                if (maxAppointment.Count != 0)
                 {
-                    Console.WriteLine($"Date with Max Appointments: {date.Value.ToShortDateString()}, Count: {count}");
+                    Console.WriteLine($"Date with Max Appointments: {maxAppointment.Date?.DateTime.ToShortDateString()}, Count: {maxAppointment?.Count}");
                 }
                 else
                 {

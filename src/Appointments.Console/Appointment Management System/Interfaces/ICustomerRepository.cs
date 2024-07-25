@@ -14,6 +14,6 @@ namespace AppointmentManagementSystem.Interfaces
         Customer? GetById(string id);
         void Delete(Customer item);
         int GetCount();
-        List<Customer> GetNewCustomersByDate(DateTime date);
+        List<Customer> GetNewCustomersByDate(DateTimeOffset date);
     }
 }

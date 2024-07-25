@@ -1,6 +1,6 @@
 ﻿namespace AppointmentManagementSystem.Models
 {
-    public class MassageAppointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes,
+    public class MassageAppointment(Customer customer, ServiceType serviceType, DateTimeOffset date, string time, string notes,
         MassageServices massageServices, MasseusePreference preference) : Appointment(customer, serviceType, date, time, notes)
     {
         public MassageServices MassageServices { get; set; } = massageServices;

@@ -41,7 +41,7 @@ namespace AppointmentManagementSystem.Repositories
             return _customers.Count;
         }
 
-        public List<Customer> GetNewCustomersByDate(DateTime date)
+        public List<Customer> GetNewCustomersByDate(DateTimeOffset date)
         {
             return _customers.Where(c => c.RegistrationDate.Date == date.Date).Select(c => (Customer)c.Clone()).ToList();
         }

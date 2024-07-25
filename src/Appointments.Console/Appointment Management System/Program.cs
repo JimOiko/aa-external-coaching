@@ -82,7 +82,7 @@ while (true)
             break;
         case "10":
             Console.Write("Enter the date (yyyy-MM-dd): ");
-            if (DateTime.TryParse(Console.ReadLine(), out DateTime date))
+            if (DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset date))
             {
                 appointmentReportService.GetAppointmentsCountByDate(date);
             }
@@ -111,7 +111,7 @@ while (true)
             break;
         case "17":
             Console.Write("Enter the date (yyyy-MM-dd): ");
-            if (DateTime.TryParse(Console.ReadLine(), out DateTime dateRegistered))
+            if (DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset dateRegistered))
             {
                 customerReportService.GetNewCustomersByDate(dateRegistered);
             }

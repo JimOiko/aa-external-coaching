@@ -8,12 +8,12 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppointmentManagementSystem.Models
 {
-    public class Customer(string name, string email, string phoneNumber, DateTime registrationDate) :ICloneable
+    public class Customer(string name, string email, string phoneNumber, DateTimeOffset registrationDate) :ICloneable
     {
         public string Name { get; set; } = name;
         public string Email { get; set; } = email;
         public string PhoneNumber { get; set; } = phoneNumber;
-        public DateTime RegistrationDate { get; set; } = registrationDate;
+        public DateTimeOffset RegistrationDate { get; set; } = registrationDate;
         public object Clone()
         {
             return this.MemberwiseClone();
@@ -21,7 +21,7 @@ namespace AppointmentManagementSystem.Models
 
         public override string ToString()
         {
-            return $"Name: {Name}, Email: {Email}, Phone Number: {PhoneNumber}";
+            return $"Name: {Name}, Email: {Email}, Phone Number: {PhoneNumber}, Registration Date: {RegistrationDate}";
         }
     }
 }

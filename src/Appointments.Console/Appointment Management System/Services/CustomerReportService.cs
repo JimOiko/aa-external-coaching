@@ -19,10 +19,10 @@ namespace AppointmentManagementSystem.Services
             Console.WriteLine($"Total Number of Registered Customers: {customerCount}");
         }
 
-        public void GetNewCustomersByDate(DateTime date)
+        public void GetNewCustomersByDate(DateTimeOffset date)
         {
             var newCustomers = _customerRepo.GetNewCustomersByDate(date);
-            Console.WriteLine($"New Customers Registered on {date.ToShortDateString()}:");
+            Console.WriteLine($"New Customers Registered on {date.DateTime.ToShortDateString()}:");
             if (newCustomers.Count == 0)
             {
                 Console.WriteLine("No new customers registered on this date.");
