@@ -4,7 +4,7 @@
     {
         public PersonalTrainingAppointment() { }
 
-        public PersonalTrainingAppointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes,
+        public PersonalTrainingAppointment(Customer customer, ServiceType serviceType, DateTimeOffset date, string time, string notes,
                                        TrainingDuration trainingDuration, string customerComments, string injuriesOrPains)
         : base(customer, serviceType, date, time, notes)
         {
@@ -20,7 +20,7 @@
 
         public override string ToString()
         {
-            return $"ID: {AppointmentId}, Customer: {Customer.Name}, Service: {ServiceType}, Date: {Date.ToShortDateString()}, Time: {Time}, " +
+            return $"ID: {AppointmentId}, Customer: {Customer.Name}, Service: {ServiceType}, Date: {Date.DateTime.ToShortDateString()}, Time: {Time}, " +
                    $"Notes: {Notes}, Duration: {GetTrainingDurationDescription()}, Comments: {CustomerComments}, Injuries/Pains: {InjuriesOrPains}";
         }
 

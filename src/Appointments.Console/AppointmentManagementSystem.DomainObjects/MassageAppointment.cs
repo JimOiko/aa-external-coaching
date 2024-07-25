@@ -7,7 +7,7 @@ namespace AppointmentManagementSystem.DomainObjects
 
         public MassageAppointment() { }
 
-        public MassageAppointment(Customer customer, ServiceType serviceType, DateTime date, string time, string notes,
+        public MassageAppointment(Customer customer, ServiceType serviceType, DateTimeOffset date, string time, string notes,
         MassageServices massageServices, MasseusePreference preference) : base(customer,
                                                                                serviceType,
                                                                                date,

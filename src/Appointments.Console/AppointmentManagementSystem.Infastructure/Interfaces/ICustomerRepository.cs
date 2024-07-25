@@ -10,6 +10,6 @@ namespace AppointmentManagementSystem.Infastructure.Interfaces
         void Update(Customer item);
         void Delete(Customer item);
         int GetCount();
-        List<Customer> GetNewCustomersByDate(DateTime date);
+        List<Customer> GetNewCustomersByDate(DateTimeOffset date);
     }
 }

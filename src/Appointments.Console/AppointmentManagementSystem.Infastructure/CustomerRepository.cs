@@ -43,7 +43,7 @@ namespace AppointmentManagementSystem.Infastructure
             return db.Customer.Count();
         }
 
-        public List<Customer> GetNewCustomersByDate(DateTime date)
+        public List<Customer> GetNewCustomersByDate(DateTimeOffset date)
         {
             return [.. db.Customer.Where(c => c.RegistrationDate.Date == date.Date).Select(c => c)];
         }

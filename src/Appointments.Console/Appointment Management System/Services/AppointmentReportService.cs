@@ -8,10 +8,10 @@ namespace AppointmentManagementSystem.Services
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
 
-        public void GetAppointmentsCountByDate(DateTime date)
+        public void GetAppointmentsCountByDate(DateTimeOffset date)
         {
             var appointmentCount = _appointmentRepo.GetCountByDate(date);
-            Console.WriteLine($"Total Number of Appointments on {date.ToShortDateString()}: {appointmentCount}");
+            Console.WriteLine($"Total Number of Appointments on {date.DateTime.ToShortDateString()}: {appointmentCount}");
         }
 
         public void GetNumberOfAppointmentsByType()
@@ -30,20 +30,22 @@ namespace AppointmentManagementSystem.Services
         public void GetCommonPreferenceForTrainingDuration()
         {
             var commonPreference = _appointmentRepo.GetCommonPreferenceForPTDuration();
-            Console.WriteLine($"Most Common Preference for Personal Training Duration: {commonPreference}");
+            if( commonPreference != null )
+                Console.WriteLine($"Most Common Preference for Personal Training Duration: {commonPreference}");
+            else
+                Console.WriteLine("Not enough Data to extract this Stat");
         }
 
         public void GetMaxAppointmentsDateByServiceType()
         {
             var maxAppointmentsByServiceType = _appointmentRepo.GetMaxAppointmentsDateByServiceType();
 
-            foreach (var serviceType in maxAppointmentsByServiceType.Keys)
+            foreach (var maxAppointment in maxAppointmentsByServiceType)
             {
-                var (date, count) = maxAppointmentsByServiceType[serviceType];
-                Console.WriteLine($"Service Type: {serviceType}");
-                if (date.HasValue)
+                Console.WriteLine($"Service Type: {maxAppointment.ServiceType}");
+                if (maxAppointment.Count != 0)
                 {
-                    Console.WriteLine($"Date with Max Appointments: {date.Value.ToShortDateString()}, Count: {count}");
+                    Console.WriteLine($"Date with Max Appointments: {maxAppointment.Date?.DateTime.ToShortDateString()}, Count: {maxAppointment?.Count}");
                 }
                 else
                 {

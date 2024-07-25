@@ -134,14 +134,14 @@ namespace AppointmentManagementSystem.Services
                     {
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
                                           massageAppointment.AppointmentId, massageAppointment.Customer.Name, massageAppointment.ServiceType,
-                                          massageAppointment.Date.ToShortDateString(), massageAppointment.Time, massageAppointment.Notes,
+                                          massageAppointment.Date.DateTime.ToShortDateString(), massageAppointment.Time, massageAppointment.Notes,
                                           massageAppointment.MassageServices, massageAppointment.Preference, "N/A", "N/A", "N/A");
                     }
                     else if (appointment is PersonalTrainingAppointment trainingAppointment)
                     {
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
                                           trainingAppointment.AppointmentId, trainingAppointment.Customer.Name, trainingAppointment.ServiceType,
-                                          trainingAppointment.Date.ToShortDateString(), trainingAppointment.Time, trainingAppointment.Notes,
+                                          trainingAppointment.Date.DateTime.ToShortDateString(), trainingAppointment.Time, trainingAppointment.Notes,
                                           "N/A", "N/A", trainingAppointment.TrainingDuration, trainingAppointment.CustomerComments,
                                           trainingAppointment.InjuriesOrPains);
                     }

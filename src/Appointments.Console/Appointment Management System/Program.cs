@@ -49,8 +49,8 @@ while (true)
     Console.WriteLine("15. Get Most Common Massage Service Preference");
     Console.WriteLine("16. Generate Appointments Day of Week Report");
     Console.WriteLine("17. Get New Customers On Specific Date");
-    Console.WriteLine("11. Exit");
-    Console.Write("Select an option (1-11): ");
+    Console.WriteLine("18. Exit");
+    Console.Write("Select an option (1-18): ");
 
     string choice = Console.ReadLine()??"";
     Console.WriteLine();
@@ -85,7 +85,7 @@ while (true)
             break;
         case "10":
             Console.Write("Enter the date (yyyy-MM-dd): ");
-            if (DateTime.TryParse(Console.ReadLine(), out DateTime date))
+            if (DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset date))
             {
                 appointmentReportService.GetAppointmentsCountByDate(date);
             }
@@ -114,7 +114,7 @@ while (true)
             break;
         case "17":
             Console.Write("Enter the date (yyyy-MM-dd): ");
-            if (DateTime.TryParse(Console.ReadLine(), out DateTime dateRegistered))
+            if (DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset dateRegistered))
             {
                 customerReportService.GetNewCustomersByDate(dateRegistered);
             }

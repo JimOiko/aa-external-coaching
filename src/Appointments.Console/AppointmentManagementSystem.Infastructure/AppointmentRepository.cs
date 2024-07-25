@@ -58,7 +58,7 @@ namespace AppointmentManagementSystem.Infastructure
         #endregion CRUD
 
         #region Reporting
-        public int GetCountByDate(DateTime date)
+        public int GetCountByDate(DateTimeOffset date)
         {
             return db.Appointment.Count(a => a.Date.Date == date.Date);
         }
@@ -70,10 +70,8 @@ namespace AppointmentManagementSystem.Infastructure
 
         public MasseusePreference GetCommonPreferenceForMasseuseSex()
         {
-            var massageAppointments = db.Appointment
-           .OfType<MassageAppointment>()
-           .ToList();
-            return massageAppointments
+            return db.Appointment
+                .OfType<MassageAppointment>()
                 .Where(a => a.ServiceType == ServiceType.Massage)
                 .GroupBy(a => a.Preference)
                 .OrderByDescending(g => g.Count())
@@ -81,12 +79,11 @@ namespace AppointmentManagementSystem.Infastructure
                 .FirstOrDefault();
         }
 
-        public TrainingDuration GetCommonPreferenceForPTDuration()
+        public TrainingDuration? GetCommonPreferenceForPTDuration()
         {
-            var ptAppointments = db.Appointment
-           .OfType<PersonalTrainingAppointment>()
-           .ToList();
-            return ptAppointments
+
+            return db.Appointment
+                .OfType<PersonalTrainingAppointment>()
                 .Where(a => a.ServiceType == ServiceType.PersonalTraining)
                 .GroupBy(a => a.TrainingDuration)
                 .OrderByDescending(g => g.Count())
@@ -94,33 +91,33 @@ namespace AppointmentManagementSystem.Infastructure
                 .FirstOrDefault();
         }
 
-        public Dictionary<ServiceType, (DateTime? Date, int Count)> GetMaxAppointmentsDateByServiceType()
+        public IEnumerable<ServiceTypeMaxAppointments> GetMaxAppointmentsDateByServiceType()
         {
-            var result = new Dictionary<ServiceType, (DateTime? Date, int Count)>();
 
-            var serviceTypes = Enum.GetValues(typeof(ServiceType)).Cast<ServiceType>();
+            return Enum.GetValues(typeof(ServiceType)).Cast<ServiceType>()
+             .Select(serviceType =>
+             {
+                 var appointment = db.Appointment
+                     .Where(a => a.ServiceType == serviceType)
+                     .GroupBy(a => a.Date.Date)
+                     .OrderByDescending(g => g.Count())
+                     .Select(g => new { Date = g.Key, Count = g.Count() })
+                     .FirstOrDefault();
 
-            foreach (var serviceType in serviceTypes)
-            {
-                var groupedByDate = db.Appointment
-                    .Where(a => a.ServiceType == serviceType)
-                    .GroupBy(a => a.Date.Date)
-                    .Select(g => new { Date = g.Key, Count = g.Count() })
-                    .OrderByDescending(g => g.Count)
-                    .FirstOrDefault();
-
-                result[serviceType] = groupedByDate != null ? (groupedByDate.Date, groupedByDate.Count) : (null, 0);
-            }
-
-            return result;
+                 return new ServiceTypeMaxAppointments
+                 {
+                     ServiceType = serviceType,
+                     Date = appointment?.Date,
+                     Count = appointment?.Count ?? 0
+                 };
+             })
+             .ToList();
         }
 
         public MassageServices GetMassageTypePreference()
         {
-            var massageAppointments = db.Appointment
-           .OfType<MassageAppointment>()
-           .ToList();
-            return massageAppointments
+            return db.Appointment
+                .OfType<MassageAppointment>()
                 .Where(a => a.ServiceType == ServiceType.Massage)
                 .GroupBy(a => a.MassageServices)
                 .OrderByDescending(g => g.Count())

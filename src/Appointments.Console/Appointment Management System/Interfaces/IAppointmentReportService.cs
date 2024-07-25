@@ -3,7 +3,7 @@ namespace AppointmentManagementSystem.Interfaces
 {
     public interface IAppointmentReportService
     {
-        void GetAppointmentsCountByDate(DateTime date);
+        void GetAppointmentsCountByDate(DateTimeOffset date);
         void GetNumberOfAppointmentsByType();
         void GetCommonPreferenceForMasseuseSex();
         void GetCommonPreferenceForTrainingDuration();

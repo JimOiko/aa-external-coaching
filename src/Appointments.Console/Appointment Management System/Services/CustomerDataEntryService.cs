@@ -40,7 +40,7 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Invalid phone number. Please try again.");
             }
 
-            var customer = new Customer(name, email, phoneNumber, DateTime.Now);
+            var customer = new Customer(name, email, phoneNumber, DateTimeOffset.Now);
             _customerRepo.Add(customer);
         }
 
@@ -55,11 +55,11 @@ namespace AppointmentManagementSystem.Services
             }
             else
             {
-                Console.WriteLine("{0,-20} {1,-30} {2,-15}", "Name", "Email", "Phone Number");
-                Console.WriteLine(new string('-', 65));
+                Console.WriteLine("{0,-20} {1,-30} {2,-15} {3,-20}", "Name", "Email", "Phone Number", "Registration Date");
+                Console.WriteLine(new string('-', 95));
                 foreach (var customer in customers)
                 {
-                    Console.WriteLine("{0,-20} {1,-30} {2,-15}", customer.Name, customer.Email, customer.PhoneNumber);
+                    Console.WriteLine("{0,-20} {1,-30} {2,-15} {3,-20}", customer.Name, customer.Email, customer.PhoneNumber, customer.RegistrationDate);
                 }
             }
         }
