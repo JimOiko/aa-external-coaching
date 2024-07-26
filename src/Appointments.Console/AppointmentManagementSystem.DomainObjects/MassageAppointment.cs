@@ -5,17 +5,21 @@ namespace AppointmentManagementSystem.DomainObjects
     public class MassageAppointment: Appointment
     {
 
-        public MassageAppointment() { }
+        private MassageAppointment() { }
 
-        public MassageAppointment(Customer customer, ServiceType serviceType, DateTimeOffset date, string time, string notes,
-        MassageServices massageServices, MasseusePreference preference) : base(customer,
+        public MassageAppointment(int customerId, ServiceTypeEnum serviceType, DateTimeOffset date, string? time, string? notes,
+        MassageServicesEnum massageServices, MasseusePreferenceEnum preference) : base(customerId,
                                                                                serviceType,
                                                                                date,
                                                                                time,
-                                                                               notes) { }
+                                                                               notes)
+        {
+            MassageServices = massageServices;
+            Preference = preference;
+        }
 
-        public MassageServices MassageServices { get; set; }
-        public MasseusePreference Preference { get; set; }
+        public MassageServicesEnum MassageServices { get; set; }
+        public MasseusePreferenceEnum Preference { get; set; }
 
         public override string ToString()
         {

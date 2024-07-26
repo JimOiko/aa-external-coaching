@@ -16,8 +16,8 @@ namespace AppointmentManagementSystem.Services
 
         public void GetNumberOfAppointmentsByType()
         {
-            var massageCount = _appointmentRepo.GetCountByType(ServiceType.Massage);
-            var ptCount = _appointmentRepo.GetCountByType(ServiceType.PersonalTraining);
+            var massageCount = _appointmentRepo.GetCountByType(ServiceTypeEnum.Massage);
+            var ptCount = _appointmentRepo.GetCountByType(ServiceTypeEnum.PersonalTraining);
             Console.WriteLine($"Total Number of Massage Appointments: {massageCount}");
             Console.WriteLine($"Total Number of Persontal Training Appointments: {ptCount}");
         }

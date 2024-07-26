@@ -6,7 +6,8 @@ namespace AppointmentManagementSystem.Infastructure.Interfaces
     {
         void Add(Customer item);
         List<Customer> Get();
-        Customer? GetById(string id);
+        Customer? GetById(int id);
+        Customer? GetByEmail(string email);
         void Update(Customer item);
         void Delete(Customer item);
         int GetCount();

@@ -2,25 +2,25 @@
 {
     public class PersonalTrainingAppointment : Appointment
     {
-        public PersonalTrainingAppointment() { }
+        private PersonalTrainingAppointment() { }
 
-        public PersonalTrainingAppointment(Customer customer, ServiceType serviceType, DateTimeOffset date, string time, string notes,
-                                       TrainingDuration trainingDuration, string customerComments, string injuriesOrPains)
-        : base(customer, serviceType, date, time, notes)
+        public PersonalTrainingAppointment(int customerId, ServiceTypeEnum serviceType, DateTimeOffset date, string? time, string? notes,
+                                       TrainingDurationEnum? trainingDuration, string? customerComments, string? injuriesOrPains)
+        : base(customerId, serviceType, date, time, notes)
         {
             TrainingDuration = trainingDuration;
             CustomerComments = customerComments;
             InjuriesOrPains = injuriesOrPains;
         }
 
-        public TrainingDuration TrainingDuration { get; set; }
-        public string CustomerComments { get; set; }
-        public string InjuriesOrPains { get; set; }
+        public TrainingDurationEnum? TrainingDuration { get; set; }
+        public string? CustomerComments { get; set; }
+        public string? InjuriesOrPains { get; set; }
         
 
         public override string ToString()
         {
-            return $"ID: {AppointmentId}, Customer: {Customer.Name}, Service: {ServiceType}, Date: {Date.DateTime.ToShortDateString()}, Time: {Time}, " +
+            return $"ID: {AppointmentId}, Service: {ServiceType}, Date: {Date.DateTime.ToShortDateString()}, Time: {Time}, " +
                    $"Notes: {Notes}, Duration: {GetTrainingDurationDescription()}, Comments: {CustomerComments}, Injuries/Pains: {InjuriesOrPains}";
         }
 
@@ -28,11 +28,11 @@
         {
             switch (TrainingDuration)
             {
-                case TrainingDuration.ThirtyMinutes:
+                case TrainingDurationEnum.ThirtyMinutes:
                     return "30 minutes";
-                case TrainingDuration.OneHour:
+                case TrainingDurationEnum.OneHour:
                     return "1 hour";
-                case TrainingDuration.OneHourThirtyMinutes:
+                case TrainingDurationEnum.OneHourThirtyMinutes:
                     return "1 hour and 30 minutes";
                 default:
                     return "Unknown";

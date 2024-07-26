@@ -12,13 +12,11 @@ namespace AppointmentManagementSystem.DomainObjects
     {
 
         // Parameterless constructor
-        public Appointment()
-        {
-        }
+        internal Appointment() { }
 
-        public Appointment(Customer customer, ServiceType serviceType, DateTimeOffset date, string time, string notes)
+        public Appointment(int customerId, ServiceTypeEnum serviceType, DateTimeOffset date, string? time, string? notes)
         {
-            Customer = customer;
+            CustomerId = customerId;
             ServiceType = serviceType;
             Date = date;
             Time = time;
@@ -27,20 +25,22 @@ namespace AppointmentManagementSystem.DomainObjects
 
         [Key]
         public int AppointmentId { get; set; } // Primary key
-        public Customer Customer { get; set; }
-        public ServiceType ServiceType { get; set; }
+
+        [ForeignKey("Customer")]
+        public int CustomerId { get; set; }
+        public ServiceTypeEnum ServiceType { get; set; }
         public DateTimeOffset Date { get; set; }
-        public string Time { get; set; }
-        public string Notes { get; set; }
+        public string? Time { get; set; }
+        public string? Notes { get; set; }
 
         public override string ToString()
         {
-            return $"ID: {AppointmentId}, Customer: {Customer.Name}, Service: {ServiceType}, Date: {Date.DateTime.ToShortDateString()}, Time: {Time}, Notes: {Notes}";
+            return $"ID: {AppointmentId}, Service: {ServiceType}, Date: {Date.DateTime.ToShortDateString()}, Time: {Time}, Notes: {Notes}";
         }
 
         public object Clone()
         {
-            return MemberwiseClone() ;
+            return MemberwiseClone();
         }
 
     }

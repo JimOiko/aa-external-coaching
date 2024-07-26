@@ -11,25 +11,25 @@ namespace AppointmentManagementSystem.Infastructure
         #region CRUD
         public void Add(Appointment appointment)
         {
-            // Check if the customer is already being tracked
-            var trackedCustomer = db.Customer.Local.FirstOrDefault(c => c.Id == appointment.Customer.Id);
-            if (trackedCustomer != null)
-            {
-                // Use the tracked entity instead of the new instance
-                appointment.Customer = trackedCustomer;
-            }
-            else
-            {
-                // Attach the customer to the context if not already tracked
-                db.Customer.Attach(appointment.Customer);
-            }
+            //// Check if the customer is already being tracked
+            //var trackedCustomer = db.Customer.Local.FirstOrDefault(c => c.Id == appointment.CustomerId);
+            //if (trackedCustomer != null)
+            //{
+            //    // Use the tracked entity instead of the new instance
+            //    appointment.CustomerId = trackedCustomer.Id;
+            //}
+            //else
+            //{
+            //    // Attach the customer to the context if not already tracked
+            //    db.Customer.Attach(appointment.CustomerId);
+            //}
             db.Appointment.Add(appointment);
             db.SaveChanges();
         }
 
         public List<Appointment> Get()
         {
-            return [.. db.Appointment.Include(a => a.Customer)];
+            return [.. db.Appointment];
         }
 
         public Appointment? GetById(string id)
@@ -40,8 +40,8 @@ namespace AppointmentManagementSystem.Infastructure
                 // Handle invalid id here if necessary
                 return null;
             }
-            var existingCustomer = db.Appointment.FirstOrDefault(a => a.AppointmentId == idInt);
-            return existingCustomer;
+            
+            return db.Appointment.FirstOrDefault(a => a.AppointmentId == idInt);
         }
 
         public void Update(Appointment appointment)
@@ -63,28 +63,28 @@ namespace AppointmentManagementSystem.Infastructure
             return db.Appointment.Count(a => a.Date.Date == date.Date);
         }
 
-        public int GetCountByType(ServiceType serviceType)
+        public int GetCountByType(ServiceTypeEnum serviceType)
         {
             return db.Appointment.Where(a=>a.ServiceType == serviceType).Count();
         }
 
-        public MasseusePreference GetCommonPreferenceForMasseuseSex()
+        public MasseusePreferenceEnum GetCommonPreferenceForMasseuseSex()
         {
             return db.Appointment
                 .OfType<MassageAppointment>()
-                .Where(a => a.ServiceType == ServiceType.Massage)
+                .Where(a => a.ServiceType == ServiceTypeEnum.Massage)
                 .GroupBy(a => a.Preference)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
                 .FirstOrDefault();
         }
 
-        public TrainingDuration? GetCommonPreferenceForPTDuration()
+        public TrainingDurationEnum? GetCommonPreferenceForPTDuration()
         {
 
             return db.Appointment
                 .OfType<PersonalTrainingAppointment>()
-                .Where(a => a.ServiceType == ServiceType.PersonalTraining)
+                .Where(a => a.ServiceType == ServiceTypeEnum.PersonalTraining)
                 .GroupBy(a => a.TrainingDuration)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
@@ -94,7 +94,7 @@ namespace AppointmentManagementSystem.Infastructure
         public IEnumerable<ServiceTypeMaxAppointments> GetMaxAppointmentsDateByServiceType()
         {
 
-            return Enum.GetValues(typeof(ServiceType)).Cast<ServiceType>()
+            return Enum.GetValues(typeof(ServiceTypeEnum)).Cast<ServiceTypeEnum>()
              .Select(serviceType =>
              {
                  var appointment = db.Appointment
@@ -114,11 +114,11 @@ namespace AppointmentManagementSystem.Infastructure
              .ToList();
         }
 
-        public MassageServices GetMassageTypePreference()
+        public MassageServicesEnum GetMassageTypePreference()
         {
             return db.Appointment
                 .OfType<MassageAppointment>()
-                .Where(a => a.ServiceType == ServiceType.Massage)
+                .Where(a => a.ServiceType == ServiceTypeEnum.Massage)
                 .GroupBy(a => a.MassageServices)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)

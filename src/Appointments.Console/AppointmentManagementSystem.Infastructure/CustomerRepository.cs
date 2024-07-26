@@ -18,10 +18,11 @@ namespace AppointmentManagementSystem.Infastructure
             return [.. db.Customer];
         }
 
-        public Customer? GetById(string id)
+        public Customer? GetById(int id) => db.Customer.FirstOrDefault(c => c.Id == id);
+
+        public Customer? GetByEmail(string email)
         {
-            var existingCustomer = db.Customer.FirstOrDefault(c => c.Email.ToLower() == id.ToLower());
-            return existingCustomer;
+            return db.Customer.FirstOrDefault(c => c.Email.ToLower() == email.ToLower()); ;
         }
 
         public void Update(Customer customer)

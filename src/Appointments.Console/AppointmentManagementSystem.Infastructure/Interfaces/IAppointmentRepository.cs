@@ -14,11 +14,11 @@ namespace AppointmentManagementSystem.Infastructure.Interfaces
 
         #region Reporting
         int GetCountByDate(DateTimeOffset date);
-        int GetCountByType(ServiceType serviceType);
-        MasseusePreference GetCommonPreferenceForMasseuseSex();
-        TrainingDuration? GetCommonPreferenceForPTDuration();
+        int GetCountByType(ServiceTypeEnum serviceType);
+        MasseusePreferenceEnum GetCommonPreferenceForMasseuseSex();
+        TrainingDurationEnum? GetCommonPreferenceForPTDuration();
         IEnumerable<ServiceTypeMaxAppointments> GetMaxAppointmentsDateByServiceType();
-        MassageServices GetMassageTypePreference();
+        MassageServicesEnum GetMassageTypePreference();
         (DayOfWeek Day, int Count) GetMaxAppointmentsDayOfWeek();
         (DayOfWeek Day, int Count) GetMinAppointmentsDayOfWeek();
         #endregion Reporting

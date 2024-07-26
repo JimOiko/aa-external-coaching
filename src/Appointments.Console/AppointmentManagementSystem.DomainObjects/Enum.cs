@@ -6,35 +6,29 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.DomainObjects
 {
-    public enum ServiceType
+    public enum ServiceTypeEnum
     {
         Massage,
         PersonalTraining
     }
 
-    public enum MassageServices
+    public enum MassageServicesEnum
     {
         RelaxingMassage,
         HotStoneTherapy,
         Reflexology
     }
 
-    public enum MasseusePreference
+    public enum MasseusePreferenceEnum
     {
         Male,
         Female        
     }
 
-    public enum TrainingDuration
+    public enum TrainingDurationEnum
     {
         ThirtyMinutes,
         OneHour,
         OneHourThirtyMinutes
-    }
-
-    public enum DataEntryServiceType
-    {
-        Customer,
-        Appointment
     }
 }

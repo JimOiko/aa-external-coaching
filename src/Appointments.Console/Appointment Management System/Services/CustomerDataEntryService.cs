@@ -71,7 +71,7 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter the email of the customer to update: ");
             string email = Console.ReadLine() ?? "";
 
-            var existingCustomer = _customerRepo.GetById(email);
+            var existingCustomer = _customerRepo.GetByEmail(email);
             if (existingCustomer != null)
             {
                 Console.Write("Enter new Name: ");
@@ -116,7 +116,7 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter the email of the customer to delete: ");
             string email = Console.ReadLine() ?? "";
 
-            var customer = _customerRepo.GetById(email);
+            var customer = _customerRepo.GetByEmail(email);
             if (customer != null)
             {
                 _customerRepo.Delete(customer);
