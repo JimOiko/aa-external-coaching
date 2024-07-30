@@ -11,18 +11,6 @@ namespace AppointmentManagementSystem.Infastructure
         #region CRUD
         public void Add(Appointment appointment)
         {
-            //// Check if the customer is already being tracked
-            //var trackedCustomer = db.Customer.Local.FirstOrDefault(c => c.Id == appointment.CustomerId);
-            //if (trackedCustomer != null)
-            //{
-            //    // Use the tracked entity instead of the new instance
-            //    appointment.CustomerId = trackedCustomer.Id;
-            //}
-            //else
-            //{
-            //    // Attach the customer to the context if not already tracked
-            //    db.Customer.Attach(appointment.CustomerId);
-            //}
             db.Appointment.Add(appointment);
             db.SaveChanges();
         }

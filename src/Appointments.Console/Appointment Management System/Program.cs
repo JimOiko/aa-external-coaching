@@ -6,10 +6,20 @@ using AppointmentManagementSystem.Infastructure.Interfaces;
 using AppointmentManagementSystem.Interfaces;
 using AppointmentManagementSystem.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+
+var configuration = new ConfigurationBuilder()
+   .SetBasePath(Directory.GetCurrentDirectory())
+   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+   .Build();
+
 var serviceProvider = new ServiceCollection()
-            .AddTransient<AppointmentManagementContext>()
+      .AddSingleton<IConfiguration>(configuration)
+      .AddDbContext<AppointmentManagementContext>(options =>
+        options.UseSqlServer(configuration.GetConnectionString("AppointmentManagementDatabase")))
+            //.AddTransient<AppointmentManagementContext>()
               .AddSingleton<ICustomerRepository, CustomerRepository>()
               .AddSingleton<IAppointmentRepository, AppointmentRepository>()
               .AddSingleton<ICustomerDataEntryService, CustomerDataEntryService>()

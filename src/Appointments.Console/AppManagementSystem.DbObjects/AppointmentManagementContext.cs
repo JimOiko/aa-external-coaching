@@ -2,6 +2,7 @@
 using AppointmentManagementSystem.DomainObjects;
 using System.Reflection.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Configuration;
 
 namespace AppManagementSystem.DbObjects
 {
@@ -11,10 +12,15 @@ namespace AppManagementSystem.DbObjects
         public DbSet<Appointment> Appointment { get; set; }
         public DbSet<MassageAppointment> MassageAppointment { get; set; }
         public DbSet<PersonalTrainingAppointment> PersonalTrainingAppointment { get; set; }
+        private readonly IConfiguration _configuration;
 
+        public AppointmentManagementContext(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = "Data Source = DESKTOP-KPO7S6Q;TrustServerCertificate=True;Initial Catalog=AppointmentManagement; Integrated Security = True;";
+            var connectionString = _configuration.GetConnectionString("AppointmentManagementDatabase");
             optionsBuilder.UseSqlServer(connectionString);
         }
 
