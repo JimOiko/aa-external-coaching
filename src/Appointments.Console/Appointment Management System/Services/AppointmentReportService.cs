@@ -4,6 +4,7 @@ using AppointmentManagementSystem.Interfaces;
 
 namespace AppointmentManagementSystem.Services
 {
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public class AppointmentReportService(IAppointmentRepository appointmentRepo): IAppointmentReportService
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
@@ -16,8 +17,8 @@ namespace AppointmentManagementSystem.Services
 
         public void GetNumberOfAppointmentsByType()
         {
-            var massageCount = _appointmentRepo.GetCountByType(ServiceTypeEnum.Massage);
-            var ptCount = _appointmentRepo.GetCountByType(ServiceTypeEnum.PersonalTraining);
+            var massageCount = _appointmentRepo.GetCountByType(AllEnums.ServiceType.Massage);
+            var ptCount = _appointmentRepo.GetCountByType(AllEnums.ServiceType.PersonalTraining);
             Console.WriteLine($"Total Number of Massage Appointments: {massageCount}");
             Console.WriteLine($"Total Number of Persontal Training Appointments: {ptCount}");
         }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using AppointmentManagementSystem.DomainObjects;
-using System.Reflection.Metadata;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 
 namespace AppManagementSystem.DbObjects
 {
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+
     public class AppointmentManagementContext : DbContext
     {
         public DbSet<Customer> Customer { get; set; }
@@ -14,15 +14,12 @@ namespace AppManagementSystem.DbObjects
         public DbSet<PersonalTrainingAppointment> PersonalTrainingAppointment { get; set; }
         private readonly IConfiguration _configuration;
 
-        public AppointmentManagementContext(IConfiguration configuration)
+        public AppointmentManagementContext(DbContextOptions<AppointmentManagementContext> options, IConfiguration configuration)
+            : base(options)
         {
             _configuration = configuration;
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var connectionString = _configuration.GetConnectionString("AppointmentManagementDatabase");
-            optionsBuilder.UseSqlServer(connectionString);
-        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,8 +38,8 @@ namespace AppManagementSystem.DbObjects
 
             // Seed data for ServiceType enum (Optional)
             modelBuilder.Entity<ServiceType>().HasData(
-                Enum.GetValues(typeof(ServiceTypeEnum))
-                    .Cast<ServiceTypeEnum>()
+                Enum.GetValues(typeof(AllEnums.ServiceType))
+                    .Cast<AllEnums.ServiceType>()
                     .Select(e => new ServiceType()
                     {
                         ServiceTypeId = e,
@@ -52,8 +49,8 @@ namespace AppManagementSystem.DbObjects
 
             modelBuilder.Entity<MasseusePreference>().HasKey(m => m.PreferenceId);
             modelBuilder.Entity<MasseusePreference>().HasData(
-                Enum.GetValues(typeof(MasseusePreferenceEnum))
-                    .Cast<MasseusePreferenceEnum>()
+                Enum.GetValues(typeof(AllEnums.MasseusePreference))
+                    .Cast<AllEnums.MasseusePreference>()
                     .Select(e => new MasseusePreference()
                     {
                         PreferenceId = e,
@@ -62,8 +59,8 @@ namespace AppManagementSystem.DbObjects
             );
             modelBuilder.Entity<MassageServices>().HasKey(m => m.MassageServiceId);
             modelBuilder.Entity<MassageServices>().HasData(
-                Enum.GetValues(typeof(MassageServicesEnum))
-                    .Cast<MassageServicesEnum>()
+                Enum.GetValues(typeof(AllEnums.MassageServices))
+                    .Cast<AllEnums.MassageServices>()
                     .Select(e => new MassageServices()
                     {
                         MassageServiceId = e,
@@ -72,11 +69,11 @@ namespace AppManagementSystem.DbObjects
             );
 
             modelBuilder.Entity<TrainingDuration>().HasData(
-                Enum.GetValues(typeof(TrainingDurationEnum))
-                    .Cast<TrainingDurationEnum>()
+                Enum.GetValues(typeof(AllEnums.TrainingDuration))
+                    .Cast<AllEnums.TrainingDuration>()
                     .Select(e => new TrainingDuration()
                     {
-                        trainingDurationId = e,
+                        TrainingDurationId = e,
                         Name = e.ToString(),
                     })
             );

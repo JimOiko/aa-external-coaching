@@ -1,14 +1,13 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
+﻿
 namespace AppointmentManagementSystem.DomainObjects
 {
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public class MassageAppointment: Appointment
     {
-
         private MassageAppointment() { }
 
-        public MassageAppointment(int customerId, ServiceTypeEnum serviceType, DateTimeOffset date, string? time, string? notes,
-        MassageServicesEnum massageServices, MasseusePreferenceEnum preference) : base(customerId,
+        public MassageAppointment(int customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
+        AllEnums.MassageServices massageServices, AllEnums.MasseusePreference preference) : base(customerId,
                                                                                serviceType,
                                                                                date,
                                                                                time,
@@ -18,8 +17,8 @@ namespace AppointmentManagementSystem.DomainObjects
             Preference = preference;
         }
 
-        public MassageServicesEnum MassageServices { get; set; }
-        public MasseusePreferenceEnum Preference { get; set; }
+        public AllEnums.MassageServices MassageServices { get; set; }
+        public AllEnums.MasseusePreference Preference { get; set; }
 
         public override string ToString()
         {

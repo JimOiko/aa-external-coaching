@@ -2,6 +2,7 @@
 
 namespace AppointmentManagementSystem.Infastructure.Interfaces
 {
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public interface IAppointmentRepository
     {
         #region CRUD
@@ -14,11 +15,11 @@ namespace AppointmentManagementSystem.Infastructure.Interfaces
 
         #region Reporting
         int GetCountByDate(DateTimeOffset date);
-        int GetCountByType(ServiceTypeEnum serviceType);
-        MasseusePreferenceEnum GetCommonPreferenceForMasseuseSex();
-        TrainingDurationEnum? GetCommonPreferenceForPTDuration();
+        int GetCountByType(AllEnums.ServiceType serviceType);
+        AllEnums.MasseusePreference GetCommonPreferenceForMasseuseSex();
+        AllEnums.TrainingDuration? GetCommonPreferenceForPTDuration();
         IEnumerable<ServiceTypeMaxAppointments> GetMaxAppointmentsDateByServiceType();
-        MassageServicesEnum GetMassageTypePreference();
+        AllEnums.MassageServices GetMassageTypePreference();
         (DayOfWeek Day, int Count) GetMaxAppointmentsDayOfWeek();
         (DayOfWeek Day, int Count) GetMinAppointmentsDayOfWeek();
         #endregion Reporting

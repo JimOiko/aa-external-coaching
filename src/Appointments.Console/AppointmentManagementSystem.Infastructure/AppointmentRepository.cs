@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppointmentManagementSystem.Infastructure
 {
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public class AppointmentRepository(AppointmentManagementContext db) : IAppointmentRepository
     {
 
@@ -51,28 +52,28 @@ namespace AppointmentManagementSystem.Infastructure
             return db.Appointment.Count(a => a.Date.Date == date.Date);
         }
 
-        public int GetCountByType(ServiceTypeEnum serviceType)
+        public int GetCountByType(AllEnums.ServiceType serviceType)
         {
             return db.Appointment.Where(a=>a.ServiceType == serviceType).Count();
         }
 
-        public MasseusePreferenceEnum GetCommonPreferenceForMasseuseSex()
+        public AllEnums.MasseusePreference GetCommonPreferenceForMasseuseSex()
         {
             return db.Appointment
                 .OfType<MassageAppointment>()
-                .Where(a => a.ServiceType == ServiceTypeEnum.Massage)
+                .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
                 .GroupBy(a => a.Preference)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
                 .FirstOrDefault();
         }
 
-        public TrainingDurationEnum? GetCommonPreferenceForPTDuration()
+        public AllEnums.TrainingDuration? GetCommonPreferenceForPTDuration()
         {
 
             return db.Appointment
                 .OfType<PersonalTrainingAppointment>()
-                .Where(a => a.ServiceType == ServiceTypeEnum.PersonalTraining)
+                .Where(a => a.ServiceType == AllEnums.ServiceType.PersonalTraining)
                 .GroupBy(a => a.TrainingDuration)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
@@ -82,7 +83,7 @@ namespace AppointmentManagementSystem.Infastructure
         public IEnumerable<ServiceTypeMaxAppointments> GetMaxAppointmentsDateByServiceType()
         {
 
-            return Enum.GetValues(typeof(ServiceTypeEnum)).Cast<ServiceTypeEnum>()
+            return Enum.GetValues(typeof(AllEnums.ServiceType)).Cast<AllEnums.ServiceType>()
              .Select(serviceType =>
              {
                  var appointment = db.Appointment
@@ -102,11 +103,11 @@ namespace AppointmentManagementSystem.Infastructure
              .ToList();
         }
 
-        public MassageServicesEnum GetMassageTypePreference()
+        public AllEnums.MassageServices GetMassageTypePreference()
         {
             return db.Appointment
                 .OfType<MassageAppointment>()
-                .Where(a => a.ServiceType == ServiceTypeEnum.Massage)
+                .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
                 .GroupBy(a => a.MassageServices)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)

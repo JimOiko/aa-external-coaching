@@ -19,7 +19,6 @@ var serviceProvider = new ServiceCollection()
       .AddSingleton<IConfiguration>(configuration)
       .AddDbContext<AppointmentManagementContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("AppointmentManagementDatabase")))
-            //.AddTransient<AppointmentManagementContext>()
               .AddSingleton<ICustomerRepository, CustomerRepository>()
               .AddSingleton<IAppointmentRepository, AppointmentRepository>()
               .AddSingleton<ICustomerDataEntryService, CustomerDataEntryService>()

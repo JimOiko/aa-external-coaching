@@ -4,28 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppointmentManagementSystem.DomainObjects
+namespace AppointmentManagementSystem.DomainObjects.Enums
 {
-    public enum ServiceTypeEnum
+    public enum ServiceType
     {
         Massage,
         PersonalTraining
     }
 
-    public enum MassageServicesEnum
+    public enum MassageServices
     {
         RelaxingMassage,
         HotStoneTherapy,
         Reflexology
     }
 
-    public enum MasseusePreferenceEnum
+    public enum MasseusePreference
     {
         Male,
         Female        
     }
 
-    public enum TrainingDurationEnum
+    public enum TrainingDuration
     {
         ThirtyMinutes,
         OneHour,

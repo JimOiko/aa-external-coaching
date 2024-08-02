@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.DomainObjects
 {
+    //Define alias
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public class Appointment : ICloneable
     {
 
         // Parameterless constructor
         internal Appointment() { }
 
-        public Appointment(int customerId, ServiceTypeEnum serviceType, DateTimeOffset date, string? time, string? notes)
+        public Appointment(int customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes)
         {
             CustomerId = customerId;
             ServiceType = serviceType;
@@ -28,7 +25,7 @@ namespace AppointmentManagementSystem.DomainObjects
 
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
-        public ServiceTypeEnum ServiceType { get; set; }
+        public AllEnums.ServiceType ServiceType { get; set; }
         public DateTimeOffset Date { get; set; }
         public string? Time { get; set; }
         public string? Notes { get; set; }

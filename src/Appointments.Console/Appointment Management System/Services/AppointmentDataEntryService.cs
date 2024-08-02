@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Services
 {
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public class AppointmentDataEntryService(IAppointmentRepository appointmentRepo, ICustomerRepository customerRepo) : IAppointmentDataEntryService
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
@@ -37,7 +38,7 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Invalid service type.");
                 return;
             }
-            var serviceType = (ServiceTypeEnum)(serviceTypeChoice - 1);
+            var serviceType = (AllEnums.ServiceType)(serviceTypeChoice - 1);
 
             Console.Write("Enter date (yyyy-mm-dd): ");
             DateTime date;
@@ -53,11 +54,11 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter optional notes: ");
             string? notes = Console.ReadLine() ?? "";
 
-            if (serviceType == ServiceTypeEnum.Massage)
+            if (serviceType == AllEnums.ServiceType.Massage)
             {
                 CreateMassageAppointment(customer.Id, date, time, notes);
             }
-            else if (serviceType == ServiceTypeEnum.PersonalTraining)
+            else if (serviceType == AllEnums.ServiceType.PersonalTraining)
             {
                 CreatePersonalTrainingAppointment(customer.Id, date, time, notes);
             }
@@ -73,7 +74,7 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Invalid massage service type.");
                 return;
             }
-            MassageServicesEnum massageServices = (MassageServicesEnum)(massageServiceChoice - 1);
+            AllEnums.MassageServices massageServices = (AllEnums.MassageServices)(massageServiceChoice - 1);
 
             Console.WriteLine("Masseuse Preference: 1. Male, 2. Female");
             Console.Write("Enter massage Masseuse Preference (1-2): ");
@@ -84,9 +85,9 @@ namespace AppointmentManagementSystem.Services
                 return;
             }
 
-            MasseusePreferenceEnum masseusePreference = (MasseusePreferenceEnum)(masseusePreferenceChoice - 1);
+            AllEnums.MasseusePreference masseusePreference = (AllEnums.MasseusePreference)(masseusePreferenceChoice - 1);
 
-            _appointmentRepo.Add(new MassageAppointment(customerId, ServiceTypeEnum.Massage, date, time, notes, massageServices, masseusePreference));
+            _appointmentRepo.Add(new MassageAppointment(customerId, AllEnums.ServiceType.Massage, date, time, notes, massageServices, masseusePreference));
             Console.WriteLine("Massage appointment created successfully.");
         }
 
@@ -100,7 +101,7 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Invalid training duration.");
                 return;
             }
-            TrainingDurationEnum trainingDuration = (TrainingDurationEnum)(trainingDurationChoice - 1);
+            AllEnums.TrainingDuration trainingDuration = (AllEnums.TrainingDuration)(trainingDurationChoice - 1);
 
             Console.Write("Enter customer comments: ");
             string customerComments = Console.ReadLine() ?? "";
@@ -108,7 +109,7 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter any injuries or pains: ");
             string injuriesOrPains = Console.ReadLine() ?? "";
 
-            _appointmentRepo.Add(new PersonalTrainingAppointment(customerId, ServiceTypeEnum.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains));
+            _appointmentRepo.Add(new PersonalTrainingAppointment(customerId, AllEnums.ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains));
             Console.WriteLine("Personal training appointment created successfully.");
         }
 
@@ -173,13 +174,13 @@ namespace AppointmentManagementSystem.Services
             Console.WriteLine("Service Types: 1. Massage, 2. Personal Training");
             Console.Write("Enter new service type (leave blank to keep current): ");
             string serviceTypeInput = Console.ReadLine() ?? "";
-            ServiceTypeEnum? newServiceType = null;
+            AllEnums.ServiceType? newServiceType = null;
 
             if (!string.IsNullOrWhiteSpace(serviceTypeInput))
             {
                 if (int.TryParse(serviceTypeInput, out int serviceTypeChoice) && (serviceTypeChoice == 1 || serviceTypeChoice == 2))
                 {
-                    newServiceType = (ServiceTypeEnum)(serviceTypeChoice - 1);
+                    newServiceType = (AllEnums.ServiceType)(serviceTypeChoice - 1);
                 }
                 else
                 {
@@ -189,8 +190,8 @@ namespace AppointmentManagementSystem.Services
             }
 
             UpdateCommonFields(appointment);
-            if ((string.IsNullOrWhiteSpace(serviceTypeInput) && appointment.ServiceType == ServiceTypeEnum.Massage) 
-                || (newServiceType.HasValue && newServiceType.Value == ServiceTypeEnum.Massage))
+            if ((string.IsNullOrWhiteSpace(serviceTypeInput) && appointment.ServiceType == AllEnums.ServiceType.Massage) 
+                || (newServiceType.HasValue && newServiceType.Value == AllEnums.ServiceType.Massage))
             {
                 MassageAppointment? newAppointment = null;
 
@@ -198,9 +199,9 @@ namespace AppointmentManagementSystem.Services
                 Console.Write("Enter new massage service: ");
                 string massageServiceInput = Console.ReadLine() ?? "";
                 if (string.IsNullOrWhiteSpace(massageServiceInput) || (!int.TryParse(massageServiceInput, out int massageServiceChoice)
-                       || (massageServiceChoice != (int)MassageServicesEnum.RelaxingMassage + 1
-                       && massageServiceChoice != (int)MassageServicesEnum.HotStoneTherapy + 1
-                       && massageServiceChoice != (int)MassageServicesEnum.Reflexology + 1)))
+                       || (massageServiceChoice != (int)AllEnums.MassageServices.RelaxingMassage + 1
+                       && massageServiceChoice != (int)AllEnums.MassageServices.HotStoneTherapy + 1
+                       && massageServiceChoice != (int)AllEnums.MassageServices.Reflexology + 1)))
                 { 
                     Console.WriteLine("Invalid massage service.");
                     return;
@@ -218,12 +219,12 @@ namespace AppointmentManagementSystem.Services
                 {
                     newAppointment = new MassageAppointment(
                                 appointment.CustomerId,
-                            ServiceTypeEnum.Massage,
+                            AllEnums.ServiceType.Massage,
                             appointment.Date,
                             appointment?.Time,
                             appointment?.Notes,
-                            (MassageServicesEnum)(massageServiceChoice - 1),
-                            (MasseusePreferenceEnum)(preferenceChoice - 1)
+                            (AllEnums.MassageServices)(massageServiceChoice - 1),
+                            (AllEnums.MasseusePreference)(preferenceChoice - 1)
                         );
                     _appointmentRepo.Add(newAppointment);
                     if(appointment != null)
@@ -233,8 +234,8 @@ namespace AppointmentManagementSystem.Services
                 else
                 {
                     var massageAppointment = (MassageAppointment)appointment;
-                    massageAppointment.MassageServices = (MassageServicesEnum)(massageServiceChoice - 1);
-                    massageAppointment.Preference = (MasseusePreferenceEnum)(preferenceChoice - 1);
+                    massageAppointment.MassageServices = (AllEnums.MassageServices)(massageServiceChoice - 1);
+                    massageAppointment.Preference = (AllEnums.MasseusePreference)(preferenceChoice - 1);
                     _appointmentRepo.Update(massageAppointment);
                 }
             }
@@ -248,9 +249,9 @@ namespace AppointmentManagementSystem.Services
                 var durationChoice = 0;
                 if (string.IsNullOrWhiteSpace(durationInput) ||
                     (!int.TryParse(durationInput, out durationChoice)
-                    || (durationChoice != (int)TrainingDurationEnum.ThirtyMinutes + 1
-                    && durationChoice != (int)TrainingDurationEnum.OneHour + 1
-                    && durationChoice != (int)TrainingDurationEnum.OneHourThirtyMinutes + 1)))
+                    || (durationChoice != (int)AllEnums.TrainingDuration.ThirtyMinutes + 1
+                    && durationChoice != (int)AllEnums.TrainingDuration.OneHour + 1
+                    && durationChoice != (int)AllEnums.TrainingDuration.OneHourThirtyMinutes + 1)))
                 {
                     Console.WriteLine("Invalid training duration.");
                     return;
@@ -265,11 +266,11 @@ namespace AppointmentManagementSystem.Services
                 {
                     newAppointment = new PersonalTrainingAppointment(
                                 appointment.CustomerId,
-                            ServiceTypeEnum.PersonalTraining,
+                            AllEnums.ServiceType.PersonalTraining,
                             appointment.Date,
                             appointment?.Time,
                             appointment?.Notes,
-                            (TrainingDurationEnum)(durationChoice - 1),
+                            (AllEnums.TrainingDuration)(durationChoice - 1),
                             comments,
                             injuriesOrPains
                         );
@@ -281,7 +282,7 @@ namespace AppointmentManagementSystem.Services
                 else
                 {
                     var trainingAppointment = (PersonalTrainingAppointment)appointment;
-                    trainingAppointment.TrainingDuration = (TrainingDurationEnum)(durationChoice - 1);
+                    trainingAppointment.TrainingDuration = (AllEnums.TrainingDuration)(durationChoice - 1);
                     trainingAppointment.CustomerComments = string.IsNullOrWhiteSpace(comments) ? trainingAppointment.CustomerComments : comments;
                     trainingAppointment.InjuriesOrPains = string.IsNullOrWhiteSpace(injuriesOrPains) ? trainingAppointment.InjuriesOrPains: injuriesOrPains; ;
                     _appointmentRepo.Update(trainingAppointment);
