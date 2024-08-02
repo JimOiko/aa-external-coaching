@@ -1,76 +1,79 @@
-﻿using AppointmentManagementSystem.Interfaces;
-using AppointmentManagementSystem.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using AppManagementSystem.DbObjects;
+using AppointmentManagementSystem.DomainObjects;
+using AppointmentManagementSystem.Infastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace AppointmentManagementSystem.Repositories
+namespace AppointmentManagementSystem.Infastructure
 {
-    public class AppointmentRepository : IAppointmentRepository
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    public class AppointmentRepository(AppointmentManagementContext db) : IAppointmentRepository
     {
-        private readonly List<Appointment> _appointments = [];
 
         #region CRUD
         public void Add(Appointment appointment)
         {
-            _appointments.Add(appointment);
+            db.Appointment.Add(appointment);
+            db.SaveChanges();
         }
 
         public List<Appointment> Get()
         {
-            return (List<Appointment>)_appointments.Clone();
+            return [.. db.Appointment];
         }
 
         public Appointment? GetById(string id)
         {
-            int idInt;
-            if (!int.TryParse(id, out idInt))
+            Guid idInt;
+            if (!Guid.TryParse(id, out idInt))
             {
                 // Handle invalid id here if necessary
                 return null;
             }
-            var existingCustomer = _appointments.FirstOrDefault(a => a.Id == idInt);
-            return existingCustomer;
+            
+            return db.Appointment.FirstOrDefault(a => a.AppointmentId == idInt);
+        }
+
+        public void Update(Appointment appointment)
+        {
+            db.Appointment.Update(appointment);
+            db.SaveChanges();
         }
 
         public void Delete(Appointment appointment)
         {
-            _appointments.Remove(appointment);
+            db.Appointment.Remove(appointment);
+            db.SaveChanges();
         }
         #endregion CRUD
 
         #region Reporting
         public int GetCountByDate(DateTimeOffset date)
         {
-            return _appointments.Count(a => a.Date.Date == date.Date);
+            return db.Appointment.Count(a => a.Date.Date == date.Date);
         }
 
-        public int GetCountByType(ServiceType serviceType)
+        public int GetCountByType(AllEnums.ServiceType serviceType)
         {
-            return _appointments.Where(a => a.ServiceType == serviceType).Count();
+            return db.Appointment.Where(a=>a.ServiceType == serviceType).Count();
         }
 
-        public MasseusePreference GetCommonPreferenceForMasseuseSex()
+        public AllEnums.MasseusePreference GetCommonPreferenceForMasseuseSex()
         {
-            return _appointments
+            return db.Appointment
                 .OfType<MassageAppointment>()
-                .Where(a => a.ServiceType == ServiceType.Massage)
+                .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
                 .GroupBy(a => a.Preference)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
                 .FirstOrDefault();
         }
 
-        public TrainingDuration? GetCommonPreferenceForPTDuration()
+        public AllEnums.TrainingDuration? GetCommonPreferenceForPTDuration()
         {
 
-            return _appointments
+            return db.Appointment
                 .OfType<PersonalTrainingAppointment>()
-                .Where(a => a.ServiceType == ServiceType.PersonalTraining)
+                .Where(a => a.ServiceType == AllEnums.ServiceType.PersonalTraining)
                 .GroupBy(a => a.TrainingDuration)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
@@ -80,10 +83,10 @@ namespace AppointmentManagementSystem.Repositories
         public IEnumerable<ServiceTypeMaxAppointments> GetMaxAppointmentsDateByServiceType()
         {
 
-            return Enum.GetValues(typeof(ServiceType)).Cast<ServiceType>()
+            return Enum.GetValues(typeof(AllEnums.ServiceType)).Cast<AllEnums.ServiceType>()
              .Select(serviceType =>
              {
-                 var appointment = _appointments
+                 var appointment = db.Appointment
                      .Where(a => a.ServiceType == serviceType)
                      .GroupBy(a => a.Date.Date)
                      .OrderByDescending(g => g.Count())
@@ -100,11 +103,11 @@ namespace AppointmentManagementSystem.Repositories
              .ToList();
         }
 
-        public MassageServices GetMassageTypePreference()
+        public AllEnums.MassageServices GetMassageTypePreference()
         {
-            return _appointments
+            return db.Appointment
                 .OfType<MassageAppointment>()
-                .Where(a => a.ServiceType == ServiceType.Massage)
+                .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
                 .GroupBy(a => a.MassageServices)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
@@ -113,7 +116,7 @@ namespace AppointmentManagementSystem.Repositories
 
         public (DayOfWeek Day, int Count) GetMaxAppointmentsDayOfWeek()
         {
-            var groupedByDayOfWeek = _appointments
+            var groupedByDayOfWeek = db.Appointment.AsEnumerable() //Not the best solution need to reconsider
                 .GroupBy(a => a.Date.DayOfWeek)
                 .Select(g => new { Day = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
@@ -124,7 +127,7 @@ namespace AppointmentManagementSystem.Repositories
 
         public (DayOfWeek Day, int Count) GetMinAppointmentsDayOfWeek()
         {
-            var groupedByDayOfWeek = _appointments
+            var groupedByDayOfWeek = db.Appointment.AsEnumerable()
                 .GroupBy(a => a.Date.DayOfWeek)
                 .Select(g => new { Day = g.Key, Count = g.Count() })
                 .OrderBy(g => g.Count)

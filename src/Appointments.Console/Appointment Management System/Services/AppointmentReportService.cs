@@ -1,14 +1,10 @@
-﻿using AppointmentManagementSystem.Interfaces;
-using AppointmentManagementSystem.Models;
-using AppointmentManagementSystem.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AppointmentManagementSystem.DomainObjects;
+using AppointmentManagementSystem.Infastructure.Interfaces;
+using AppointmentManagementSystem.Interfaces;
 
 namespace AppointmentManagementSystem.Services
 {
+    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public class AppointmentReportService(IAppointmentRepository appointmentRepo): IAppointmentReportService
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
@@ -21,8 +17,8 @@ namespace AppointmentManagementSystem.Services
 
         public void GetNumberOfAppointmentsByType()
         {
-            var massageCount = _appointmentRepo.GetCountByType(ServiceType.Massage);
-            var ptCount = _appointmentRepo.GetCountByType(ServiceType.PersonalTraining);
+            var massageCount = _appointmentRepo.GetCountByType(AllEnums.ServiceType.Massage);
+            var ptCount = _appointmentRepo.GetCountByType(AllEnums.ServiceType.PersonalTraining);
             Console.WriteLine($"Total Number of Massage Appointments: {massageCount}");
             Console.WriteLine($"Total Number of Persontal Training Appointments: {ptCount}");
         }

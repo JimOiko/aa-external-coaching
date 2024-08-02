@@ -1,10 +1,6 @@
-﻿using AppointmentManagementSystem.Interfaces;
-using AppointmentManagementSystem.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AppointmentManagementSystem.DomainObjects;
+using AppointmentManagementSystem.Infastructure.Interfaces;
+using AppointmentManagementSystem.Interfaces;
 
 namespace AppointmentManagementSystem.Services
 {
@@ -75,7 +71,7 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter the email of the customer to update: ");
             string email = Console.ReadLine() ?? "";
 
-            var existingCustomer = _customerRepo.GetById(email);
+            var existingCustomer = _customerRepo.GetByEmail(email);
             if (existingCustomer != null)
             {
                 Console.Write("Enter new Name: ");
@@ -104,6 +100,7 @@ namespace AppointmentManagementSystem.Services
                     Console.WriteLine("Invalid phone number. Please try again.");
                 }
                 existingCustomer.PhoneNumber = phoneNumber;
+                _customerRepo.Update(existingCustomer);
             }
             else
             {
@@ -119,7 +116,7 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter the email of the customer to delete: ");
             string email = Console.ReadLine() ?? "";
 
-            var customer = _customerRepo.GetById(email);
+            var customer = _customerRepo.GetByEmail(email);
             if (customer != null)
             {
                 _customerRepo.Delete(customer);

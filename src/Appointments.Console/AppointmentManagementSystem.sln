@@ -5,6 +5,12 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppointmentManagementSystem", "Appointment Management System\AppointmentManagementSystem.csproj", "{42FC3313-610D-4BD3-9C5C-0135A08A1566}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppointmentManagementSystem.DbObjects", "AppManagementSystem.DbObjects\AppointmentManagementSystem.DbObjects.csproj", "{46B191A3-C8CB-483E-9105-F863E68878C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppointmentManagementSystem.DomainObjects", "AppointmentManagementSystem.DomainObjects\AppointmentManagementSystem.DomainObjects.csproj", "{5959D3BD-9BAE-4B8A-AE51-4065A91AFBE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentManagementSystem.Infastructure", "AppointmentManagementSystem.Infastructure\AppointmentManagementSystem.Infastructure.csproj", "{B8715FF4-670D-4511-BB68-9F11931A61F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{42FC3313-610D-4BD3-9C5C-0135A08A1566}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42FC3313-610D-4BD3-9C5C-0135A08A1566}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42FC3313-610D-4BD3-9C5C-0135A08A1566}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46B191A3-C8CB-483E-9105-F863E68878C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46B191A3-C8CB-483E-9105-F863E68878C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46B191A3-C8CB-483E-9105-F863E68878C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46B191A3-C8CB-483E-9105-F863E68878C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5959D3BD-9BAE-4B8A-AE51-4065A91AFBE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5959D3BD-9BAE-4B8A-AE51-4065A91AFBE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5959D3BD-9BAE-4B8A-AE51-4065A91AFBE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5959D3BD-9BAE-4B8A-AE51-4065A91AFBE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8715FF4-670D-4511-BB68-9F11931A61F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8715FF4-670D-4511-BB68-9F11931A61F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8715FF4-670D-4511-BB68-9F11931A61F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8715FF4-670D-4511-BB68-9F11931A61F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

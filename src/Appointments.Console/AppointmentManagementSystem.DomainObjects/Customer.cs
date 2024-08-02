@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿
+using System.ComponentModel.DataAnnotations;
 
-namespace AppointmentManagementSystem.Models
+namespace AppointmentManagementSystem.DomainObjects
 {
     public class Customer(string name, string email, string phoneNumber, DateTimeOffset registrationDate) :ICloneable
     {
+        [Key]
+        public Guid Id { get; set; } // Primary key
+
         public string Name { get; set; } = name;
         public string Email { get; set; } = email;
         public string PhoneNumber { get; set; } = phoneNumber;

@@ -1,12 +1,24 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using AppManagementSystem.DbObjects;
 using AppointmentManagementSystem;
+using AppointmentManagementSystem.Infastructure;
+using AppointmentManagementSystem.Infastructure.Interfaces;
 using AppointmentManagementSystem.Interfaces;
-using AppointmentManagementSystem.Models;
-using AppointmentManagementSystem.Repositories;
 using AppointmentManagementSystem.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+
+var configuration = new ConfigurationBuilder()
+   .SetBasePath(Directory.GetCurrentDirectory())
+   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+   .Build();
+
 var serviceProvider = new ServiceCollection()
+      .AddSingleton<IConfiguration>(configuration)
+      .AddDbContext<AppointmentManagementContext>(options =>
+        options.UseSqlServer(configuration.GetConnectionString("AppointmentManagementDatabase")))
               .AddSingleton<ICustomerRepository, CustomerRepository>()
               .AddSingleton<IAppointmentRepository, AppointmentRepository>()
               .AddSingleton<ICustomerDataEntryService, CustomerDataEntryService>()
