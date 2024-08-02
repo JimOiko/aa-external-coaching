@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AppointmentManagementSystem.DbObjects.Migrations
 {
     /// <inheritdoc />
-    public partial class InititalCreate : Migration
+    public partial class GuidCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +17,7 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
                 name: "Customer",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -69,25 +68,24 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
                 name: "TrainingDuration",
                 columns: table => new
                 {
-                    trainingDurationId = table.Column<int>(type: "int", nullable: false),
+                    TrainingDurationId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TrainingDuration", x => x.trainingDurationId);
+                    table.PrimaryKey("PK_TrainingDuration", x => x.TrainingDurationId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Appointment",
                 columns: table => new
                 {
-                    AppointmentId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    AppointmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ServiceType = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Time = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -104,7 +102,7 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
                 name: "MassageAppointment",
                 columns: table => new
                 {
-                    AppointmentId = table.Column<int>(type: "int", nullable: false),
+                    AppointmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MassageServices = table.Column<int>(type: "int", nullable: false),
                     Preference = table.Column<int>(type: "int", nullable: false)
                 },
@@ -123,10 +121,10 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
                 name: "PersonalTrainingAppointment",
                 columns: table => new
                 {
-                    AppointmentId = table.Column<int>(type: "int", nullable: false),
-                    TrainingDuration = table.Column<int>(type: "int", nullable: false),
-                    CustomerComments = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    InjuriesOrPains = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AppointmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TrainingDuration = table.Column<int>(type: "int", nullable: true),
+                    CustomerComments = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InjuriesOrPains = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -169,7 +167,7 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
 
             migrationBuilder.InsertData(
                 table: "TrainingDuration",
-                columns: new[] { "trainingDurationId", "Name" },
+                columns: new[] { "TrainingDurationId", "Name" },
                 values: new object[,]
                 {
                     { 0, "ThirtyMinutes" },

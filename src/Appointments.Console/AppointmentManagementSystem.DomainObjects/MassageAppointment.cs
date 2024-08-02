@@ -6,7 +6,7 @@ namespace AppointmentManagementSystem.DomainObjects
     {
         private MassageAppointment() { }
 
-        public MassageAppointment(int customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
+        public MassageAppointment(Guid customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
         AllEnums.MassageServices massageServices, AllEnums.MasseusePreference preference) : base(customerId,
                                                                                serviceType,
                                                                                date,

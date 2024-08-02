@@ -11,7 +11,7 @@ namespace AppointmentManagementSystem.DomainObjects
         // Parameterless constructor
         internal Appointment() { }
 
-        public Appointment(int customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes)
+        public Appointment(Guid customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes)
         {
             CustomerId = customerId;
             ServiceType = serviceType;
@@ -21,10 +21,10 @@ namespace AppointmentManagementSystem.DomainObjects
         }
 
         [Key]
-        public int AppointmentId { get; set; } // Primary key
+        public Guid AppointmentId { get; set; } // Primary key
 
         [ForeignKey("Customer")]
-        public int CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
         public AllEnums.ServiceType ServiceType { get; set; }
         public DateTimeOffset Date { get; set; }
         public string? Time { get; set; }

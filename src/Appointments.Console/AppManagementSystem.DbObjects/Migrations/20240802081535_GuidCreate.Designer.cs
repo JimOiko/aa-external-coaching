@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppointmentManagementSystem.DbObjects.Migrations
 {
     [DbContext(typeof(AppointmentManagementContext))]
-    [Migration("20240726113657_InititalCreate")]
-    partial class InititalCreate
+    [Migration("20240802081535_GuidCreate")]
+    partial class GuidCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,27 +27,23 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
 
             modelBuilder.Entity("AppointmentManagementSystem.DomainObjects.Appointment", b =>
                 {
-                    b.Property<int>("AppointmentId")
+                    b.Property<Guid>("AppointmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Date")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ServiceType")
                         .HasColumnType("int");
 
                     b.Property<string>("Time")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AppointmentId");
@@ -61,11 +57,9 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
 
             modelBuilder.Entity("AppointmentManagementSystem.DomainObjects.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -172,31 +166,31 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
 
             modelBuilder.Entity("AppointmentManagementSystem.DomainObjects.TrainingDuration", b =>
                 {
-                    b.Property<int>("trainingDurationId")
+                    b.Property<int>("TrainingDurationId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("trainingDurationId");
+                    b.HasKey("TrainingDurationId");
 
                     b.ToTable("TrainingDuration");
 
                     b.HasData(
                         new
                         {
-                            trainingDurationId = 0,
+                            TrainingDurationId = 0,
                             Name = "ThirtyMinutes"
                         },
                         new
                         {
-                            trainingDurationId = 1,
+                            TrainingDurationId = 1,
                             Name = "OneHour"
                         },
                         new
                         {
-                            trainingDurationId = 2,
+                            TrainingDurationId = 2,
                             Name = "OneHourThirtyMinutes"
                         });
                 });
@@ -219,14 +213,12 @@ namespace AppointmentManagementSystem.DbObjects.Migrations
                     b.HasBaseType("AppointmentManagementSystem.DomainObjects.Appointment");
 
                     b.Property<string>("CustomerComments")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("InjuriesOrPains")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TrainingDuration")
+                    b.Property<int?>("TrainingDuration")
                         .HasColumnType("int");
 
                     b.ToTable("PersonalTrainingAppointment");

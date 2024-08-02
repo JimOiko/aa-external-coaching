@@ -5,7 +5,7 @@
     {
         private PersonalTrainingAppointment() { }
 
-        public PersonalTrainingAppointment(int customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
+        public PersonalTrainingAppointment(Guid customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
                                        AllEnums.TrainingDuration? trainingDuration, string? customerComments, string? injuriesOrPains)
         : base(customerId, serviceType, date, time, notes)
         {

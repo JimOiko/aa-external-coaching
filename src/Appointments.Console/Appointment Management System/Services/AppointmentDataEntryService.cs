@@ -64,7 +64,7 @@ namespace AppointmentManagementSystem.Services
             }
         }
 
-        private void CreateMassageAppointment(int customerId, DateTime date, string time, string notes)
+        private void CreateMassageAppointment(Guid customerId, DateTime date, string time, string notes)
         {
             Console.WriteLine("Massage Services: 1. Relaxing Massage, 2. Hot Stone Therapy, 3. Reflexology");
             Console.Write("Enter massage service type (1-3): ");
@@ -91,7 +91,7 @@ namespace AppointmentManagementSystem.Services
             Console.WriteLine("Massage appointment created successfully.");
         }
 
-        private void CreatePersonalTrainingAppointment(int customerId, DateTime date, string time, string notes)
+        private void CreatePersonalTrainingAppointment(Guid customerId, DateTime date, string time, string notes)
         {
             Console.WriteLine("Training Duration: 1. 30 minutes, 2. 1 hour, 3. 1 hour and 30 minutes");
             Console.Write("Enter training duration (1-3): ");

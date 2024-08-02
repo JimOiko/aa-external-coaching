@@ -18,7 +18,7 @@ namespace AppointmentManagementSystem.Infastructure
             return [.. db.Customer];
         }
 
-        public Customer? GetById(int id) => db.Customer.FirstOrDefault(c => c.Id == id);
+        public Customer? GetById(Guid id) => db.Customer.FirstOrDefault(c => c.Id == id);
 
         public Customer? GetByEmail(string email)
         {

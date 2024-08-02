@@ -23,8 +23,8 @@ namespace AppointmentManagementSystem.Infastructure
 
         public Appointment? GetById(string id)
         {
-            int idInt;
-            if (!int.TryParse(id, out idInt))
+            Guid idInt;
+            if (!Guid.TryParse(id, out idInt))
             {
                 // Handle invalid id here if necessary
                 return null;
