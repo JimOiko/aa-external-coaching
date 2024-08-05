@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using AppManagementSystem.DbObjects;
 using AppointmentManagementSystem;
+using AppointmentManagementSystem.DbObjects;
 using AppointmentManagementSystem.Infastructure;
 using AppointmentManagementSystem.Infastructure.Interfaces;
 using AppointmentManagementSystem.Interfaces;
@@ -19,6 +20,7 @@ var serviceProvider = new ServiceCollection()
       .AddSingleton<IConfiguration>(configuration)
       .AddDbContext<AppointmentManagementContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("AppointmentManagementDatabase")), ServiceLifetime.Transient)
+      .AddScoped<IDbContextFactory, DbContextFactory>()
               .AddSingleton<ICustomerRepository, CustomerRepository>()
               .AddSingleton<IAppointmentRepository, AppointmentRepository>()
               .AddSingleton<ICustomerDataEntryService, CustomerDataEntryService>()
@@ -26,7 +28,6 @@ var serviceProvider = new ServiceCollection()
               .AddSingleton<ICustomerReportService, CustomerReportService>()
               .AddSingleton<IAppointmentReportService, AppointmentReportService>()
               .BuildServiceProvider();
-
 
 var customerDataEntryService = serviceProvider.GetService<ICustomerDataEntryService>();
 var appointmentDataEntryService = serviceProvider.GetService<IAppointmentDataEntryService>();

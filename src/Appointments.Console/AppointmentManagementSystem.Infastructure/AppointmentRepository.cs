@@ -1,23 +1,27 @@
 ﻿using AppManagementSystem.DbObjects;
+using AppointmentManagementSystem.DbObjects;
 using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.Infastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace AppointmentManagementSystem.Infastructure
 {
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
-    public class AppointmentRepository(AppointmentManagementContext db) : IAppointmentRepository
+    public class AppointmentRepository(IDbContextFactory dbFactory) : IAppointmentRepository
     {
 
         #region CRUD
         public async Task AddAsync(Appointment appointment)
         {
+            using var db = dbFactory.CreateDbContext();
             await db.Appointment.AddAsync(appointment);
             await db.SaveChangesAsync();
         }
 
         public async Task<List<Appointment>> GetAsync()
         {
+            using var db = dbFactory.CreateDbContext();
             return await db.Appointment.ToListAsync();
         }
 
@@ -29,18 +33,21 @@ namespace AppointmentManagementSystem.Infastructure
                 // Handle invalid id here if necessary
                 return null;
             }
-            
+            using var db = dbFactory.CreateDbContext();
+
             return await db.Appointment.FirstOrDefaultAsync(a => a.AppointmentId == idInt);
         }
 
         public async Task UpdateAsync(Appointment appointment)
         {
+            using var db = dbFactory.CreateDbContext();
             await Task.Run(() => db.Appointment.Update(appointment));
             await db.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Appointment appointment)
         {
+            using var db = dbFactory.CreateDbContext();
             await Task.Run(() => db.Appointment.Remove(appointment));
             await db.SaveChangesAsync();
         }
@@ -49,16 +56,19 @@ namespace AppointmentManagementSystem.Infastructure
         #region Reporting
         public async Task<int> GetCountByDateAsync(DateTimeOffset date)
         {
+            using var db = dbFactory.CreateDbContext();
             return await db.Appointment.CountAsync(a => a.Date.Date == date.Date);
         }
 
         public async Task<int> GetCountByTypeAsync(AllEnums.ServiceType serviceType)
         {
+            using var db = dbFactory.CreateDbContext();
             return await db.Appointment.Where(a=>a.ServiceType == serviceType).CountAsync();
         }
 
         public async Task<AllEnums.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync()
         {
+            using var db = dbFactory.CreateDbContext();
             return await db.Appointment
                 .OfType<MassageAppointment>()
                 .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
@@ -71,6 +81,7 @@ namespace AppointmentManagementSystem.Infastructure
         public async Task<AllEnums.TrainingDuration?> GetCommonPreferenceForPTDurationAsync()
         {
 
+            using var db = dbFactory.CreateDbContext();
             return await db.Appointment
                 .OfType<PersonalTrainingAppointment>()
                 .Where(a => a.ServiceType == AllEnums.ServiceType.PersonalTraining)
@@ -86,6 +97,7 @@ namespace AppointmentManagementSystem.Infastructure
             return await Task.WhenAll(Enum.GetValues(typeof(AllEnums.ServiceType)).Cast<AllEnums.ServiceType>()
              .Select(async serviceType =>
              {
+                using var db = dbFactory.CreateDbContext();
                  var appointment = await db.Appointment
                      .Where(a => a.ServiceType == serviceType)
                      .GroupBy(a => a.Date.Date)
@@ -104,6 +116,7 @@ namespace AppointmentManagementSystem.Infastructure
 
         public async Task<AllEnums.MassageServices> GetMassageTypePreferenceAsync()
         {
+            using var db = dbFactory.CreateDbContext();
             return await db.Appointment
                 .OfType<MassageAppointment>()
                 .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
@@ -115,6 +128,7 @@ namespace AppointmentManagementSystem.Infastructure
 
         public async Task<(DayOfWeek Day, int Count)> GetMaxAppointmentsDayOfWeekAsync()
         {
+            using var db = dbFactory.CreateDbContext();
             // Retrieve all appointments from the database
             var appointments = await db.Appointment.ToListAsync();
 
@@ -130,6 +144,7 @@ namespace AppointmentManagementSystem.Infastructure
 
         public async Task<(DayOfWeek Day, int Count)> GetMinAppointmentsDayOfWeekAsync()
         {
+            using var db = dbFactory.CreateDbContext();
             // Retrieve all appointments from the database
             var appointments = await db.Appointment.ToListAsync();
 
