@@ -18,7 +18,7 @@ var configuration = new ConfigurationBuilder()
 var serviceProvider = new ServiceCollection()
       .AddSingleton<IConfiguration>(configuration)
       .AddDbContext<AppointmentManagementContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString("AppointmentManagementDatabase")))
+        options.UseSqlServer(configuration.GetConnectionString("AppointmentManagementDatabase")), ServiceLifetime.Transient)
               .AddSingleton<ICustomerRepository, CustomerRepository>()
               .AddSingleton<IAppointmentRepository, AppointmentRepository>()
               .AddSingleton<ICustomerDataEntryService, CustomerDataEntryService>()
@@ -65,38 +65,39 @@ while (true)
     Console.WriteLine();
     switch (choice)
     {
+        //can i not use the await in order to not majke the UI wait
         case "1":
-            customerDataEntryService.Create();
+            await customerDataEntryService.CreateAsync();
             break;
         case "2":
-            customerDataEntryService.Read();
+            await customerDataEntryService.ReadAsync();
             break;
         case "3":
-            customerDataEntryService.Update();
+            await customerDataEntryService.UpdateAsync();
             break;
         case "4":
-            customerDataEntryService.Delete();
+            await customerDataEntryService.DeleteAsync();
             break;
         case "5":
-            appointmentDataEntryService.Create();
+            await appointmentDataEntryService.CreateAsync();
             break;
         case "6":
-            appointmentDataEntryService.Read();
+            await appointmentDataEntryService.ReadAsync();
             break;
         case "7":
-            appointmentDataEntryService.Update();
+            await appointmentDataEntryService.UpdateAsync();
             break;
         case "8":
-            appointmentDataEntryService.Delete();
+            await appointmentDataEntryService.DeleteAsync();
             break;
         case "9":
-            customerReportService.GetRegisteredCustomer();
+            await customerReportService.GetRegisteredCustomerAsync();
             break;
         case "10":
             Console.Write("Enter the date (yyyy-MM-dd): ");
             if (DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset date))
             {
-                appointmentReportService.GetAppointmentsCountByDate(date);
+                await appointmentReportService.GetAppointmentsCountByDateAsync(date);
             }
             else
             {
@@ -104,28 +105,28 @@ while (true)
             }
             break;
         case "11":
-            appointmentReportService.GetNumberOfAppointmentsByType();
+            await appointmentReportService.GetNumberOfAppointmentsByTypeAsync();
             break;
         case "12":
-            appointmentReportService.GetCommonPreferenceForMasseuseSex();
+            await appointmentReportService.GetCommonPreferenceForMasseuseSexAsync();
             break;
         case "13":
-            appointmentReportService.GetCommonPreferenceForTrainingDuration();
+            await appointmentReportService.GetCommonPreferenceForTrainingDurationAsync();
             break;
         case "14":
-            appointmentReportService.GetMaxAppointmentsDateByServiceType();
+            await appointmentReportService.GetMaxAppointmentsDateByServiceTypeAsync();
             break;
         case "15":
-            appointmentReportService.GetMassageTypePreference();
+            await appointmentReportService.GetMassageTypePreferenceAsync();
             break;
         case "16":
-            appointmentReportService.GetAppointmentsDayOfWeekReport();
+            await appointmentReportService.GetAppointmentsDayOfWeekReportAsync();
             break;
         case "17":
             Console.Write("Enter the date (yyyy-MM-dd): ");
             if (DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset dateRegistered))
             {
-                customerReportService.GetNewCustomersByDate(dateRegistered);
+                await customerReportService.GetNewCustomersByDateAsync(dateRegistered);
             }
             else
             {

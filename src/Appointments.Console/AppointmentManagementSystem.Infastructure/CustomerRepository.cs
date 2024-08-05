@@ -1,53 +1,57 @@
 ﻿using AppManagementSystem.DbObjects;
 using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.Infastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppointmentManagementSystem.Infastructure
 {
     public class CustomerRepository(AppointmentManagementContext db) : ICustomerRepository
     {
         #region CRUD
-        public void Add(Customer customer)
+        public async Task AddAsync(Customer customer)
         {
-            db.Customer.Add(customer);
-            db.SaveChanges();
+            await db.Customer.AddAsync(customer);
+            await db.SaveChangesAsync();
         }
 
-        public List<Customer> Get()
+        public async Task<List<Customer>> GetAsync()
         {
-            return [.. db.Customer];
+            return await db.Customer.ToListAsync();
         }
 
-        public Customer? GetById(Guid id) => db.Customer.FirstOrDefault(c => c.Id == id);
-
-        public Customer? GetByEmail(string email)
+        public async Task<Customer?> GetByIdAsync(Guid id)
         {
-            return db.Customer.FirstOrDefault(c => c.Email.ToLower() == email.ToLower()); ;
+            return await db.Customer.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public void Update(Customer customer)
+        public async Task<Customer?> GetByEmailAsync(string email)
+        {
+            return await db.Customer.FirstOrDefaultAsync(c => c.Email.ToLower() == email.ToLower());
+        }
+
+        public async Task UpdateAsync(Customer customer)
         {
             db.Customer.Update(customer);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
 
-        public void Delete(Customer customer)
+        public async Task DeleteAsync(Customer customer)
         {
             db.Customer.Remove(customer);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
         #endregion CRUD
 
         #region Reporting
-        public int GetCount()
+        public async Task<int> GetCountAsync()
         {
-            return db.Customer.Count();
+            return await db.Customer.CountAsync();
         }
 
-        public List<Customer> GetNewCustomersByDate(DateTimeOffset date)
+        public async Task<List<Customer>> GetNewCustomersByDateAsync(DateTimeOffset date)
         {
-            return [.. db.Customer.Where(c => c.RegistrationDate.Date == date.Date).Select(c => c)];
+            return await db.Customer.Where(c => c.RegistrationDate.Date == date.Date).ToListAsync();
         }
+        #endregion Reporting
     }
-    #endregion Reporting
 }

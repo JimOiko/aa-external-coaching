@@ -10,18 +10,18 @@ namespace AppointmentManagementSystem.Infastructure
     {
 
         #region CRUD
-        public void Add(Appointment appointment)
+        public async Task AddAsync(Appointment appointment)
         {
-            db.Appointment.Add(appointment);
-            db.SaveChanges();
+            await db.Appointment.AddAsync(appointment);
+            await db.SaveChangesAsync();
         }
 
-        public List<Appointment> Get()
+        public async Task<List<Appointment>> GetAsync()
         {
-            return [.. db.Appointment];
+            return await db.Appointment.ToListAsync();
         }
 
-        public Appointment? GetById(string id)
+        public async Task<Appointment?> GetByIdAsync(string id)
         {
             Guid idInt;
             if (!Guid.TryParse(id, out idInt))
@@ -30,68 +30,68 @@ namespace AppointmentManagementSystem.Infastructure
                 return null;
             }
             
-            return db.Appointment.FirstOrDefault(a => a.AppointmentId == idInt);
+            return await db.Appointment.FirstOrDefaultAsync(a => a.AppointmentId == idInt);
         }
 
-        public void Update(Appointment appointment)
+        public async Task UpdateAsync(Appointment appointment)
         {
-            db.Appointment.Update(appointment);
-            db.SaveChanges();
+            await Task.Run(() => db.Appointment.Update(appointment));
+            await db.SaveChangesAsync();
         }
 
-        public void Delete(Appointment appointment)
+        public async Task DeleteAsync(Appointment appointment)
         {
-            db.Appointment.Remove(appointment);
-            db.SaveChanges();
+            await Task.Run(() => db.Appointment.Remove(appointment));
+            await db.SaveChangesAsync();
         }
         #endregion CRUD
 
         #region Reporting
-        public int GetCountByDate(DateTimeOffset date)
+        public async Task<int> GetCountByDateAsync(DateTimeOffset date)
         {
-            return db.Appointment.Count(a => a.Date.Date == date.Date);
+            return await db.Appointment.CountAsync(a => a.Date.Date == date.Date);
         }
 
-        public int GetCountByType(AllEnums.ServiceType serviceType)
+        public async Task<int> GetCountByTypeAsync(AllEnums.ServiceType serviceType)
         {
-            return db.Appointment.Where(a=>a.ServiceType == serviceType).Count();
+            return await db.Appointment.Where(a=>a.ServiceType == serviceType).CountAsync();
         }
 
-        public AllEnums.MasseusePreference GetCommonPreferenceForMasseuseSex()
+        public async Task<AllEnums.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync()
         {
-            return db.Appointment
+            return await db.Appointment
                 .OfType<MassageAppointment>()
                 .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
                 .GroupBy(a => a.Preference)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public AllEnums.TrainingDuration? GetCommonPreferenceForPTDuration()
+        public async Task<AllEnums.TrainingDuration?> GetCommonPreferenceForPTDurationAsync()
         {
 
-            return db.Appointment
+            return await db.Appointment
                 .OfType<PersonalTrainingAppointment>()
                 .Where(a => a.ServiceType == AllEnums.ServiceType.PersonalTraining)
                 .GroupBy(a => a.TrainingDuration)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public IEnumerable<ServiceTypeMaxAppointments> GetMaxAppointmentsDateByServiceType()
+        public async Task<IEnumerable<ServiceTypeMaxAppointments>> GetMaxAppointmentsDateByServiceTypeAsync()
         {
 
-            return Enum.GetValues(typeof(AllEnums.ServiceType)).Cast<AllEnums.ServiceType>()
-             .Select(serviceType =>
+            return await Task.WhenAll(Enum.GetValues(typeof(AllEnums.ServiceType)).Cast<AllEnums.ServiceType>()
+             .Select(async serviceType =>
              {
-                 var appointment = db.Appointment
+                 var appointment = await db.Appointment
                      .Where(a => a.ServiceType == serviceType)
                      .GroupBy(a => a.Date.Date)
                      .OrderByDescending(g => g.Count())
                      .Select(g => new { Date = g.Key, Count = g.Count() })
-                     .FirstOrDefault();
+                     .FirstOrDefaultAsync();
 
                  return new ServiceTypeMaxAppointments
                  {
@@ -99,24 +99,27 @@ namespace AppointmentManagementSystem.Infastructure
                      Date = appointment?.Date,
                      Count = appointment?.Count ?? 0
                  };
-             })
-             .ToList();
+             }));
         }
 
-        public AllEnums.MassageServices GetMassageTypePreference()
+        public async Task<AllEnums.MassageServices> GetMassageTypePreferenceAsync()
         {
-            return db.Appointment
+            return await db.Appointment
                 .OfType<MassageAppointment>()
                 .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
                 .GroupBy(a => a.MassageServices)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public (DayOfWeek Day, int Count) GetMaxAppointmentsDayOfWeek()
+        public async Task<(DayOfWeek Day, int Count)> GetMaxAppointmentsDayOfWeekAsync()
         {
-            var groupedByDayOfWeek = db.Appointment.AsEnumerable() //Not the best solution need to reconsider
+            // Retrieve all appointments from the database
+            var appointments = await db.Appointment.ToListAsync();
+
+            // Group by DayOfWeek in memory
+            var groupedByDayOfWeek = appointments
                 .GroupBy(a => a.Date.DayOfWeek)
                 .Select(g => new { Day = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
@@ -125,9 +128,13 @@ namespace AppointmentManagementSystem.Infastructure
             return groupedByDayOfWeek != null ? (groupedByDayOfWeek.Day, groupedByDayOfWeek.Count) : (default, 0);
         }
 
-        public (DayOfWeek Day, int Count) GetMinAppointmentsDayOfWeek()
+        public async Task<(DayOfWeek Day, int Count)> GetMinAppointmentsDayOfWeekAsync()
         {
-            var groupedByDayOfWeek = db.Appointment.AsEnumerable()
+            // Retrieve all appointments from the database
+            var appointments = await db.Appointment.ToListAsync();
+
+            // Group by DayOfWeek in memory
+            var groupedByDayOfWeek = appointments
                 .GroupBy(a => a.Date.DayOfWeek)
                 .Select(g => new { Day = g.Key, Count = g.Count() })
                 .OrderBy(g => g.Count)

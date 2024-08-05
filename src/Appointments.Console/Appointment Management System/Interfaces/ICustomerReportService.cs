@@ -8,8 +8,8 @@ namespace AppointmentManagementSystem.Interfaces
 {
     public interface ICustomerReportService
     {
-        void GetRegisteredCustomer();
-        void GetNewCustomersByDate(DateTimeOffset date);
+        Task GetRegisteredCustomerAsync();
+        Task GetNewCustomersByDateAsync(DateTimeOffset date);
 
     }
 }

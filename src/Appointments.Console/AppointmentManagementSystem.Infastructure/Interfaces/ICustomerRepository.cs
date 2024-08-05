@@ -4,13 +4,13 @@ namespace AppointmentManagementSystem.Infastructure.Interfaces
 {
     public interface ICustomerRepository
     {
-        void Add(Customer item);
-        List<Customer> Get();
-        Customer? GetById(Guid id);
-        Customer? GetByEmail(string email);
-        void Update(Customer item);
-        void Delete(Customer item);
-        int GetCount();
-        List<Customer> GetNewCustomersByDate(DateTimeOffset date);
+        Task AddAsync(Customer item);
+        Task<List<Customer>> GetAsync();
+        Task<Customer?> GetByIdAsync(Guid id);
+        Task<Customer?> GetByEmailAsync(string email);
+        Task UpdateAsync(Customer item);
+        Task DeleteAsync(Customer item);
+        Task<int> GetCountAsync();
+        Task<List<Customer>> GetNewCustomersByDateAsync(DateTimeOffset date);
     }
 }

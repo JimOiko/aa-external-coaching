@@ -15,7 +15,7 @@ namespace AppointmentManagementSystem.Services
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
         private readonly ICustomerRepository _customerRepo = customerRepo;
 
-        public void Create()
+        public async Task CreateAsync()
         {
             Console.WriteLine("Create Appointment");
             Console.WriteLine("------------------");
@@ -23,7 +23,7 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter the email of the customer: ");
             string customerEmail = Console.ReadLine() ?? "";
 
-            Customer? customer = _customerRepo.GetByEmail(customerEmail);
+            Customer? customer = await _customerRepo.GetByEmailAsync(customerEmail);
             if (customer == null)
             {
                 Console.WriteLine("Customer not found.");
@@ -64,7 +64,7 @@ namespace AppointmentManagementSystem.Services
             }
         }
 
-        private void CreateMassageAppointment(Guid customerId, DateTime date, string time, string notes)
+        private async Task CreateMassageAppointment(Guid customerId, DateTime date, string time, string notes)
         {
             Console.WriteLine("Massage Services: 1. Relaxing Massage, 2. Hot Stone Therapy, 3. Reflexology");
             Console.Write("Enter massage service type (1-3): ");
@@ -87,11 +87,11 @@ namespace AppointmentManagementSystem.Services
 
             AllEnums.MasseusePreference masseusePreference = (AllEnums.MasseusePreference)(masseusePreferenceChoice - 1);
 
-            _appointmentRepo.Add(new MassageAppointment(customerId, AllEnums.ServiceType.Massage, date, time, notes, massageServices, masseusePreference));
+            await _appointmentRepo.AddAsync(new MassageAppointment(customerId, AllEnums.ServiceType.Massage, date, time, notes, massageServices, masseusePreference));
             Console.WriteLine("Massage appointment created successfully.");
         }
 
-        private void CreatePersonalTrainingAppointment(Guid customerId, DateTime date, string time, string notes)
+        private async Task CreatePersonalTrainingAppointment(Guid customerId, DateTime date, string time, string notes)
         {
             Console.WriteLine("Training Duration: 1. 30 minutes, 2. 1 hour, 3. 1 hour and 30 minutes");
             Console.Write("Enter training duration (1-3): ");
@@ -109,15 +109,15 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter any injuries or pains: ");
             string injuriesOrPains = Console.ReadLine() ?? "";
 
-            _appointmentRepo.Add(new PersonalTrainingAppointment(customerId, AllEnums.ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains));
+            await _appointmentRepo.AddAsync(new PersonalTrainingAppointment(customerId, AllEnums.ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains));
             Console.WriteLine("Personal training appointment created successfully.");
         }
 
-        public void Read()
+        public async Task ReadAsync()
         {
             Console.WriteLine("Appointment List");
             Console.WriteLine("----------------");
-            var appointments = _appointmentRepo.Get();
+            var appointments = await _appointmentRepo.GetAsync();
 
             if (appointments.Count == 0)
             {
@@ -131,7 +131,7 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine(new string('-', 220));
                 foreach (var appointment in appointments)
                 {
-                    var customer = _customerRepo.GetById(appointment.CustomerId);
+                    var customer = await _customerRepo.GetByIdAsync(appointment.CustomerId);
                     if (appointment is MassageAppointment massageAppointment)
                     {
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
@@ -151,7 +151,7 @@ namespace AppointmentManagementSystem.Services
             }
         }
 
-        public void Delete()
+        public async Task DeleteAsync()
         {
             Console.WriteLine("Delete Appointment");
             Console.WriteLine("------------------");
@@ -164,10 +164,10 @@ namespace AppointmentManagementSystem.Services
                 return;
             }
 
-            var appointment = _appointmentRepo.GetById(id.ToString());
+            var appointment = await _appointmentRepo.GetByIdAsync(id.ToString());
             if (appointment != null)
             {
-                _appointmentRepo.Delete(appointment);
+                await _appointmentRepo.DeleteAsync(appointment);
                 Console.WriteLine("Appointment deleted successfully.");
             }
             else
