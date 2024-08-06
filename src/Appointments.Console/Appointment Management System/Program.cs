@@ -27,6 +27,9 @@ var serviceProvider = new ServiceCollection()
               .AddSingleton<IAppointmentDataEntryService, AppointmentDataEntryService>()
               .AddSingleton<ICustomerReportService, CustomerReportService>()
               .AddSingleton<IAppointmentReportService, AppointmentReportService>()
+              .AddSingleton<IDiscountService, DiscountService>()
+              .AddSingleton<INameDayApiClient, NamedayApiClient>()
+              .AddHttpClient()
               .BuildServiceProvider();
 
 var customerDataEntryService = serviceProvider.GetService<ICustomerDataEntryService>();

@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 namespace AppointmentManagementSystem.Services
 {
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
-    public partial class AppointmentDataEntryService(IAppointmentRepository appointmentRepo, ICustomerRepository customerRepo) : IAppointmentDataEntryService
+    public partial class AppointmentDataEntryService(IAppointmentRepository appointmentRepo, ICustomerRepository customerRepo, IDiscountService discountService) : IAppointmentDataEntryService
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
         private readonly ICustomerRepository _customerRepo = customerRepo;
+        private readonly IDiscountService discountService = discountService;
 
         public async Task CreateAsync()
         {
@@ -41,8 +42,8 @@ namespace AppointmentManagementSystem.Services
             var serviceType = (AllEnums.ServiceType)(serviceTypeChoice - 1);
 
             Console.Write("Enter date (yyyy-mm-dd): ");
-            DateTime date;
-            if (!DateTime.TryParse(Console.ReadLine(), out date))
+            DateTimeOffset date;
+            if (!DateTimeOffset.TryParse(Console.ReadLine(), out date))
             {
                 Console.WriteLine("Invalid date format.");
                 return;
@@ -62,9 +63,26 @@ namespace AppointmentManagementSystem.Services
             {
                 CreatePersonalTrainingAppointment(customer.Id, date, time, notes);
             }
+            try
+            {
+                var isNameday = await discountService.ProcessDiscountAsync(customer.Id, date);
+                if (isNameday)
+                {
+                    // Apply discount
+                    Console.WriteLine($"Applying discount for {customer.Name} because the appointment is on their nameday!");
+                }
+                else
+                {
+                    Console.WriteLine($"No discount applicable. The appointment on {date.Date.ToShortDateString()} is not on {customer.Name}'s nameday.");
+                }
+            }
+            catch (NullReferenceException)
+            {
+                Console.WriteLine($"Customer Does Not Exist!");
+            }
         }
 
-        private async Task CreateMassageAppointment(Guid customerId, DateTime date, string time, string notes)
+        private async Task CreateMassageAppointment(Guid customerId, DateTimeOffset date, string time, string notes)
         {
             Console.WriteLine("Massage Services: 1. Relaxing Massage, 2. Hot Stone Therapy, 3. Reflexology");
             Console.Write("Enter massage service type (1-3): ");
@@ -91,7 +109,7 @@ namespace AppointmentManagementSystem.Services
             Console.WriteLine("Massage appointment created successfully.");
         }
 
-        private async Task CreatePersonalTrainingAppointment(Guid customerId, DateTime date, string time, string notes)
+        private async Task CreatePersonalTrainingAppointment(Guid customerId, DateTimeOffset date, string time, string notes)
         {
             Console.WriteLine("Training Duration: 1. 30 minutes, 2. 1 hour, 3. 1 hour and 30 minutes");
             Console.Write("Enter training duration (1-3): ");
