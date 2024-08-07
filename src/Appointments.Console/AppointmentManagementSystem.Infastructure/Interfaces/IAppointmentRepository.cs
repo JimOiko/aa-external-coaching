@@ -18,7 +18,7 @@ namespace AppointmentManagementSystem.Infastructure.Interfaces
         Task<int> GetCountByTypeAsync(AllEnums.ServiceType serviceType);
         Task<AllEnums.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync();
         Task<AllEnums.TrainingDuration?> GetCommonPreferenceForPTDurationAsync();
-        Task<IEnumerable<ServiceTypeMaxAppointments>> GetMaxAppointmentsDateByServiceTypeAsync();
+        Task<IEnumerable<ServiceTypeMaxAppointments?>> GetMaxAppointmentsDateByServiceTypeAsync();
         Task<AllEnums.MassageServices> GetMassageTypePreferenceAsync();
         Task<(DayOfWeek Day, int Count)> GetMaxAppointmentsDayOfWeekAsync();
         Task<(DayOfWeek Day, int Count)> GetMinAppointmentsDayOfWeekAsync();

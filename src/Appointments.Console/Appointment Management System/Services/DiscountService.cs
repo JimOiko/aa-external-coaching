@@ -37,7 +37,7 @@ namespace AppointmentManagementSystem.Services
             if (customer != null)
                 return nameday.Contains(customer.Name, StringComparison.OrdinalIgnoreCase);
             else
-                throw new NullReferenceException(); 
+                throw new InvalidOperationException(); 
         }
     }
 }

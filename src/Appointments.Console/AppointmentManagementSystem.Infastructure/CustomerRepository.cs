@@ -1,4 +1,4 @@
-﻿using AppManagementSystem.DbObjects;
+﻿using AppointmentManagementSystem.DbObjects;
 using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.Infastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;

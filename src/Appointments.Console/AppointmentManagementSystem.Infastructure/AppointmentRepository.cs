@@ -1,9 +1,9 @@
-﻿using AppManagementSystem.DbObjects;
-using AppointmentManagementSystem.DbObjects;
+﻿using AppointmentManagementSystem.DbObjects;
 using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.Infastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Identity.Client;
 
 namespace AppointmentManagementSystem.Infastructure
 {
@@ -15,7 +15,7 @@ namespace AppointmentManagementSystem.Infastructure
         public async Task AddAsync(Appointment appointment)
         {
             using var db = dbFactory.CreateDbContext();
-            await db.Appointment.AddAsync(appointment);
+            db.Appointment.Add(appointment);
             await db.SaveChangesAsync();
         }
 
@@ -41,14 +41,14 @@ namespace AppointmentManagementSystem.Infastructure
         public async Task UpdateAsync(Appointment appointment)
         {
             using var db = dbFactory.CreateDbContext();
-            await Task.Run(() => db.Appointment.Update(appointment));
+            db.Appointment.Update(appointment);
             await db.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Appointment appointment)
         {
             using var db = dbFactory.CreateDbContext();
-            await Task.Run(() => db.Appointment.Remove(appointment));
+            db.Appointment.Remove(appointment);
             await db.SaveChangesAsync();
         }
         #endregion CRUD
@@ -63,7 +63,7 @@ namespace AppointmentManagementSystem.Infastructure
         public async Task<int> GetCountByTypeAsync(AllEnums.ServiceType serviceType)
         {
             using var db = dbFactory.CreateDbContext();
-            return await db.Appointment.Where(a=>a.ServiceType == serviceType).CountAsync();
+            return await db.Appointment.Where(a => a.ServiceType == serviceType).CountAsync();
         }
 
         public async Task<AllEnums.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync()
@@ -91,27 +91,25 @@ namespace AppointmentManagementSystem.Infastructure
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ServiceTypeMaxAppointments>> GetMaxAppointmentsDateByServiceTypeAsync()
+        public async Task<IEnumerable<ServiceTypeMaxAppointments?>> GetMaxAppointmentsDateByServiceTypeAsync()
         {
+            using var db = dbFactory.CreateDbContext();
 
-            return await Task.WhenAll(Enum.GetValues(typeof(AllEnums.ServiceType)).Cast<AllEnums.ServiceType>()
-             .Select(async serviceType =>
-             {
-                using var db = dbFactory.CreateDbContext();
-                 var appointment = await db.Appointment
-                     .Where(a => a.ServiceType == serviceType)
-                     .GroupBy(a => a.Date.Date)
-                     .OrderByDescending(g => g.Count())
-                     .Select(g => new { Date = g.Key, Count = g.Count() })
-                     .FirstOrDefaultAsync();
+            return await db.Appointment.GroupBy(a => new { a.ServiceType, a.Date.Date }).Select(g => new
+            {
+                g.Key.ServiceType,
+                g.Key.Date,
+                Count = g.Count()
+            }).GroupBy(g => g.ServiceType)
+            .Select(g => g.OrderByDescending(x => x.Count)
+                .Select(s => new ServiceTypeMaxAppointments
+                {
+                    ServiceType = s.ServiceType,
+                    Date = s.Date,
+                    Count = s.Count
+                }).FirstOrDefault())
+            .ToListAsync();
 
-                 return new ServiceTypeMaxAppointments
-                 {
-                     ServiceType = serviceType,
-                     Date = appointment?.Date,
-                     Count = appointment?.Count ?? 0
-                 };
-             }));
         }
 
         public async Task<AllEnums.MassageServices> GetMassageTypePreferenceAsync()

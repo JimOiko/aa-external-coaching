@@ -1,6 +1,4 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using AppManagementSystem.DbObjects;
-using AppointmentManagementSystem;
 using AppointmentManagementSystem.DbObjects;
 using AppointmentManagementSystem.Infastructure;
 using AppointmentManagementSystem.Infastructure.Interfaces;

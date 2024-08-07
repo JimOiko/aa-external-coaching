@@ -76,7 +76,7 @@ namespace AppointmentManagementSystem.Services
                     Console.WriteLine($"No discount applicable. The appointment on {date.Date.ToShortDateString()} is not on {customer.Name}'s nameday.");
                 }
             }
-            catch (NullReferenceException)
+            catch (InvalidOperationException)
             {
                 Console.WriteLine($"Customer Does Not Exist!");
             }

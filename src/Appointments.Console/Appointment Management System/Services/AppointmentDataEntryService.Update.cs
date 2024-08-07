@@ -86,7 +86,7 @@ namespace AppointmentManagementSystem.Services
                         );
                     await _appointmentRepo.AddAsync(newAppointment);
                     if (appointment != null)
-                        await _appointmentRepo.AddAsync(appointment);
+                        await _appointmentRepo.DeleteAsync(appointment);
                     Console.WriteLine("Massage Appointment updated successfully.");
                 }
                 else
@@ -94,7 +94,7 @@ namespace AppointmentManagementSystem.Services
                     var massageAppointment = (MassageAppointment)appointment;
                     massageAppointment.MassageServices = (AllEnums.MassageServices)(massageServiceChoice - 1);
                     massageAppointment.Preference = (AllEnums.MasseusePreference)(preferenceChoice - 1);
-                    await _appointmentRepo.AddAsync(massageAppointment);
+                    await _appointmentRepo.UpdateAsync(massageAppointment);
                 }
             }
             else

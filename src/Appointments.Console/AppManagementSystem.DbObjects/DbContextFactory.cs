@@ -1,4 +1,4 @@
-﻿using AppManagementSystem.DbObjects;
+﻿using AppointmentManagementSystem.DbObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
