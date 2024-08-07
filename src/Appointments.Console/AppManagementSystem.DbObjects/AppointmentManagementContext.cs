@@ -3,7 +3,7 @@ using AppointmentManagementSystem.DomainObjects;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
-namespace AppManagementSystem.DbObjects
+namespace AppointmentManagementSystem.DbObjects
 {
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
 

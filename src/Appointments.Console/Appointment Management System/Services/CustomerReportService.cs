@@ -3,6 +3,7 @@ using AppointmentManagementSystem.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,15 +13,15 @@ namespace AppointmentManagementSystem.Services
     {
         private readonly ICustomerRepository _customerRepo = customerRepo;
 
-        public void GetRegisteredCustomer()
+        public async Task GetRegisteredCustomerAsync()
         {
-            var customerCount = _customerRepo.GetCount();
+            var customerCount = await _customerRepo.GetCountAsync();
             Console.WriteLine($"Total Number of Registered Customers: {customerCount}");
         }
 
-        public void GetNewCustomersByDate(DateTimeOffset date)
+        public async Task GetNewCustomersByDateAsync(DateTimeOffset date)
         {
-            var newCustomers = _customerRepo.GetNewCustomersByDate(date);
+            var newCustomers = await _customerRepo.GetNewCustomersByDateAsync(date);
             Console.WriteLine($"New Customers Registered on {date.DateTime.ToShortDateString()}:");
             if (newCustomers.Count == 0)
             {

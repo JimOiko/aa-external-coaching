@@ -6,22 +6,22 @@ namespace AppointmentManagementSystem.Infastructure.Interfaces
     public interface IAppointmentRepository
     {
         #region CRUD
-        void Add(Appointment item);
-        List<Appointment> Get();
-        Appointment? GetById(string id);
-        void Update(Appointment item);
-        void Delete(Appointment item);
+        Task AddAsync(Appointment item);
+        Task<List<Appointment>> GetAsync();
+        Task<Appointment?> GetByIdAsync(string id);
+        Task UpdateAsync(Appointment item);
+        Task DeleteAsync(Appointment item);
         #endregion CRUD
 
         #region Reporting
-        int GetCountByDate(DateTimeOffset date);
-        int GetCountByType(AllEnums.ServiceType serviceType);
-        AllEnums.MasseusePreference GetCommonPreferenceForMasseuseSex();
-        AllEnums.TrainingDuration? GetCommonPreferenceForPTDuration();
-        IEnumerable<ServiceTypeMaxAppointments> GetMaxAppointmentsDateByServiceType();
-        AllEnums.MassageServices GetMassageTypePreference();
-        (DayOfWeek Day, int Count) GetMaxAppointmentsDayOfWeek();
-        (DayOfWeek Day, int Count) GetMinAppointmentsDayOfWeek();
+        Task<int> GetCountByDateAsync(DateTimeOffset date);
+        Task<int> GetCountByTypeAsync(AllEnums.ServiceType serviceType);
+        Task<AllEnums.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync();
+        Task<AllEnums.TrainingDuration?> GetCommonPreferenceForPTDurationAsync();
+        Task<IEnumerable<ServiceTypeMaxAppointments?>> GetMaxAppointmentsDateByServiceTypeAsync();
+        Task<AllEnums.MassageServices> GetMassageTypePreferenceAsync();
+        Task<(DayOfWeek Day, int Count)> GetMaxAppointmentsDayOfWeekAsync();
+        Task<(DayOfWeek Day, int Count)> GetMinAppointmentsDayOfWeekAsync();
         #endregion Reporting
 
     }

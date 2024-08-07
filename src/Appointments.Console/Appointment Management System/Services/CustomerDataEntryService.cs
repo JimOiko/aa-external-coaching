@@ -8,7 +8,7 @@ namespace AppointmentManagementSystem.Services
     {
         private readonly ICustomerRepository _customerRepo = customerRepo;
 
-        public void Create()
+        public async Task CreateAsync()
         {
             Console.WriteLine("Create Customer");
             Console.WriteLine("---------------");
@@ -41,12 +41,13 @@ namespace AppointmentManagementSystem.Services
             }
 
             var customer = new Customer(name, email, phoneNumber, DateTimeOffset.Now);
-            _customerRepo.Add(customer);
+            await _customerRepo.AddAsync(customer);
+            Console.WriteLine("Customer Created Successfully");
         }
 
-        public void Read()
+        public async Task ReadAsync()
         {
-            var customers = _customerRepo.Get();
+            var customers = await _customerRepo.GetAsync();
             Console.WriteLine("Customer List");
             Console.WriteLine("-------------");
             if (customers.Count == 0)
@@ -64,14 +65,14 @@ namespace AppointmentManagementSystem.Services
             }
         }
 
-        public void Update()
+        public async Task UpdateAsync()
         {
             Console.WriteLine("Update Customer");
             Console.WriteLine("---------------");
             Console.Write("Enter the email of the customer to update: ");
             string email = Console.ReadLine() ?? "";
 
-            var existingCustomer = _customerRepo.GetByEmail(email);
+            var existingCustomer = await _customerRepo.GetByEmailAsync(email);
             if (existingCustomer != null)
             {
                 Console.Write("Enter new Name: ");
@@ -100,7 +101,7 @@ namespace AppointmentManagementSystem.Services
                     Console.WriteLine("Invalid phone number. Please try again.");
                 }
                 existingCustomer.PhoneNumber = phoneNumber;
-                _customerRepo.Update(existingCustomer);
+                await _customerRepo.UpdateAsync(existingCustomer);
             }
             else
             {
@@ -108,7 +109,7 @@ namespace AppointmentManagementSystem.Services
             }
         }
 
-        public void Delete()
+        public async Task DeleteAsync()
         {
             Console.WriteLine("Delete Customer");
             Console.WriteLine("---------------");
@@ -116,10 +117,10 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter the email of the customer to delete: ");
             string email = Console.ReadLine() ?? "";
 
-            var customer = _customerRepo.GetByEmail(email);
+            var customer = await _customerRepo.GetByEmailAsync(email);
             if (customer != null)
             {
-                _customerRepo.Delete(customer);
+                await _customerRepo.DeleteAsync(customer);
                 Console.WriteLine("Customer deleted successfully.");
             }
             else

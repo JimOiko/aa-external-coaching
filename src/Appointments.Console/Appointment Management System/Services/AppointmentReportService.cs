@@ -9,37 +9,37 @@ namespace AppointmentManagementSystem.Services
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
 
-        public void GetAppointmentsCountByDate(DateTimeOffset date)
+        public async Task GetAppointmentsCountByDateAsync(DateTimeOffset date)
         {
-            var appointmentCount = _appointmentRepo.GetCountByDate(date);
+            var appointmentCount = await _appointmentRepo.GetCountByDateAsync(date);
             Console.WriteLine($"Total Number of Appointments on {date.DateTime.ToShortDateString()}: {appointmentCount}");
         }
 
-        public void GetNumberOfAppointmentsByType()
+        public async Task GetNumberOfAppointmentsByTypeAsync()
         {
-            var massageCount = _appointmentRepo.GetCountByType(AllEnums.ServiceType.Massage);
-            var ptCount = _appointmentRepo.GetCountByType(AllEnums.ServiceType.PersonalTraining);
+            var massageCount = await _appointmentRepo.GetCountByTypeAsync(AllEnums.ServiceType.Massage);
+            var ptCount = await _appointmentRepo.GetCountByTypeAsync(AllEnums.ServiceType.PersonalTraining);
             Console.WriteLine($"Total Number of Massage Appointments: {massageCount}");
             Console.WriteLine($"Total Number of Persontal Training Appointments: {ptCount}");
         }
 
-        public void GetCommonPreferenceForMasseuseSex()
+        public async Task GetCommonPreferenceForMasseuseSexAsync()
         {
-            var commonPreference = _appointmentRepo.GetCommonPreferenceForMasseuseSex();
+            var commonPreference = await _appointmentRepo.GetCommonPreferenceForMasseuseSexAsync();
             Console.WriteLine($"Most Common Preference for Masseuse Sex: {commonPreference}");
         }
-        public void GetCommonPreferenceForTrainingDuration()
+        public async Task GetCommonPreferenceForTrainingDurationAsync()
         {
-            var commonPreference = _appointmentRepo.GetCommonPreferenceForPTDuration();
+            var commonPreference = await _appointmentRepo.GetCommonPreferenceForPTDurationAsync();
             if( commonPreference != null )
                 Console.WriteLine($"Most Common Preference for Personal Training Duration: {commonPreference}");
             else
                 Console.WriteLine("Not enough Data to extract this Stat");
         }
 
-        public void GetMaxAppointmentsDateByServiceType()
+        public async Task GetMaxAppointmentsDateByServiceTypeAsync()
         {
-            var maxAppointmentsByServiceType = _appointmentRepo.GetMaxAppointmentsDateByServiceType();
+            var maxAppointmentsByServiceType = await _appointmentRepo.GetMaxAppointmentsDateByServiceTypeAsync();
 
             foreach (var maxAppointment in maxAppointmentsByServiceType)
             {
@@ -55,16 +55,21 @@ namespace AppointmentManagementSystem.Services
             }
         }
 
-        public void GetMassageTypePreference()
+        public async Task GetMassageTypePreferenceAsync()
         {
-            var massageTypePref = _appointmentRepo.GetMassageTypePreference();
+            var massageTypePref = await _appointmentRepo.GetMassageTypePreferenceAsync();
             Console.WriteLine($"Most Common Preference for Massage Service: {massageTypePref}");
         }
 
-        public void GetAppointmentsDayOfWeekReport()
+        public async Task GetAppointmentsDayOfWeekReportAsync()
         {
-            var (maxDay, maxCount) = _appointmentRepo.GetMaxAppointmentsDayOfWeek();
-            var (minDay, minCount) = _appointmentRepo.GetMinAppointmentsDayOfWeek();
+            var maxAppointmentsTask = _appointmentRepo.GetMaxAppointmentsDayOfWeekAsync();
+            var minAppointmentsTask = _appointmentRepo.GetMinAppointmentsDayOfWeekAsync();
+
+            await Task.WhenAll(maxAppointmentsTask, minAppointmentsTask);
+
+            var (maxDay, maxCount) = maxAppointmentsTask.Result;
+            var (minDay, minCount) = minAppointmentsTask.Result;
 
             Console.WriteLine($"Day with Maximum Appointments: {maxDay}, Count: {maxCount}");
             Console.WriteLine($"Day with Minimum Appointments: {minDay}, Count: {minCount}");

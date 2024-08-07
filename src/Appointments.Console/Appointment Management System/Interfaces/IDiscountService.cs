@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace AppointmentManagementSystem.Interfaces
 {
-    public interface ICustomerReportService
+    public interface IDiscountService
     {
-        Task GetRegisteredCustomerAsync();
-        Task GetNewCustomersByDateAsync(DateTimeOffset date);
-
+        Task<bool> ProcessDiscountAsync(Guid customerId, DateTimeOffset appointmentDate);
     }
 }

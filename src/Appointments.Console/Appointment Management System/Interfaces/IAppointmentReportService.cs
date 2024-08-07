@@ -3,13 +3,13 @@ namespace AppointmentManagementSystem.Interfaces
 {
     public interface IAppointmentReportService
     {
-        void GetAppointmentsCountByDate(DateTimeOffset date);
-        void GetNumberOfAppointmentsByType();
-        void GetCommonPreferenceForMasseuseSex();
-        void GetCommonPreferenceForTrainingDuration();
-        void GetMaxAppointmentsDateByServiceType();
-        void GetMassageTypePreference();
-        void GetAppointmentsDayOfWeekReport();
+        Task GetAppointmentsCountByDateAsync(DateTimeOffset date);
+        Task GetNumberOfAppointmentsByTypeAsync();
+        Task GetCommonPreferenceForMasseuseSexAsync();
+        Task GetCommonPreferenceForTrainingDurationAsync();
+        Task GetMaxAppointmentsDateByServiceTypeAsync();
+        Task GetMassageTypePreferenceAsync();
+        Task GetAppointmentsDayOfWeekReportAsync();
 
     }
 }
