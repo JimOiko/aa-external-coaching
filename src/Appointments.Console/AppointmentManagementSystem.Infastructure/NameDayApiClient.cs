@@ -1,4 +1,5 @@
 ﻿using AppointmentManagementSystem.Infastructure.Interfaces;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
@@ -12,10 +13,12 @@ namespace AppointmentManagementSystem.Infastructure
     public class NamedayApiClient:INameDayApiClient
     {
         private readonly HttpClient _httpClient;
+        private readonly ApiSettings _apiSettings;
 
-        public NamedayApiClient(HttpClient httpClient)
+        public NamedayApiClient(HttpClient httpClient, IOptions<ApiSettings> apiSettings)
         {
             _httpClient = httpClient;
+            _apiSettings = apiSettings.Value;
         }
 
         public async Task<string> GetNamedayAsync(DateTimeOffset date)
@@ -23,7 +26,8 @@ namespace AppointmentManagementSystem.Infastructure
             string day = date.Day.ToString();
             string month = date.Month.ToString();
 
-            var response = await _httpClient.GetAsync($"https://nameday.abalin.net/api/V1/getdate?day={day}&month={month}&country=gr"); //country can become dynamic
+            var url = $"{_apiSettings.NameDayApiBaseUrl}?day={day}&month={month}&country={_apiSettings.DefaultCountry}";
+            var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
 
             var jsonResponse = await response.Content.ReadAsStringAsync();

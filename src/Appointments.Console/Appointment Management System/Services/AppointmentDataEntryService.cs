@@ -57,11 +57,11 @@ namespace AppointmentManagementSystem.Services
 
             if (serviceType == AllEnums.ServiceType.Massage)
             {
-                CreateMassageAppointment(customer.Id, date, time, notes);
+                await CreateMassageAppointment(customer.Id, date, time, notes);
             }
             else if (serviceType == AllEnums.ServiceType.PersonalTraining)
             {
-                CreatePersonalTrainingAppointment(customer.Id, date, time, notes);
+               await CreatePersonalTrainingAppointment(customer.Id, date, time, notes);
             }
             try
             {

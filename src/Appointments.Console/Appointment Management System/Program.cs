@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using AppointmentManagementSystem;
 using AppointmentManagementSystem.DbObjects;
 using AppointmentManagementSystem.Infastructure;
 using AppointmentManagementSystem.Infastructure.Interfaces;
@@ -27,6 +28,7 @@ var serviceProvider = new ServiceCollection()
               .AddSingleton<IAppointmentReportService, AppointmentReportService>()
               .AddSingleton<IDiscountService, DiscountService>()
               .AddSingleton<INameDayApiClient, NamedayApiClient>()
+              .Configure<ApiSettings>(configuration.GetSection("ApiSettings"))
               .AddHttpClient()
               .BuildServiceProvider();
 
