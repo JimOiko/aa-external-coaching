@@ -3,9 +3,9 @@ namespace AppointmentManagementSystem.Interfaces
 {
     public interface IAppointmentDataEntryService
     {
-        void Create();
-        void Read();
-        void Update();
-        void Delete();
+        Task CreateAsync();
+        Task ReadAsync();
+        Task UpdateAsync();
+        Task DeleteAsync();
     }
 }

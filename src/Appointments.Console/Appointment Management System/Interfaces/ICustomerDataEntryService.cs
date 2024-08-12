@@ -2,9 +2,9 @@
 {
     public interface ICustomerDataEntryService
     {
-        void Create();
-        void Read();
-        void Update();
-        void Delete();
+        Task CreateAsync();
+        Task ReadAsync();
+        Task UpdateAsync();
+        Task DeleteAsync();
     }
 }

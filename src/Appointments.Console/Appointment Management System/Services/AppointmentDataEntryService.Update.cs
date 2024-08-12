@@ -9,7 +9,7 @@ namespace AppointmentManagementSystem.Services
 
     public partial class AppointmentDataEntryService : IAppointmentDataEntryService
     {
-        public void Update()
+        public async Task UpdateAsync()
         {
             Console.WriteLine("Update Appointment");
             Console.WriteLine("------------------");
@@ -22,7 +22,7 @@ namespace AppointmentManagementSystem.Services
                 return;
             }
 
-            var appointment = _appointmentRepo.GetById(id.ToString());
+            var appointment = await _appointmentRepo.GetByIdAsync(id.ToString());
             if (appointment == null)
             {
                 Console.WriteLine("Appointment not found.");
@@ -84,9 +84,9 @@ namespace AppointmentManagementSystem.Services
                             (AllEnums.MassageServices)(massageServiceChoice - 1),
                             (AllEnums.MasseusePreference)(preferenceChoice - 1)
                         );
-                    _appointmentRepo.Add(newAppointment);
+                    await _appointmentRepo.AddAsync(newAppointment);
                     if (appointment != null)
-                        _appointmentRepo.Delete(appointment);
+                        await _appointmentRepo.DeleteAsync(appointment);
                     Console.WriteLine("Massage Appointment updated successfully.");
                 }
                 else
@@ -94,7 +94,7 @@ namespace AppointmentManagementSystem.Services
                     var massageAppointment = (MassageAppointment)appointment;
                     massageAppointment.MassageServices = (AllEnums.MassageServices)(massageServiceChoice - 1);
                     massageAppointment.Preference = (AllEnums.MasseusePreference)(preferenceChoice - 1);
-                    _appointmentRepo.Update(massageAppointment);
+                    await _appointmentRepo.UpdateAsync(massageAppointment);
                 }
             }
             else
@@ -132,10 +132,10 @@ namespace AppointmentManagementSystem.Services
                             comments,
                             injuriesOrPains
                         );
-                    _appointmentRepo.Add(newAppointment);
+                    await _appointmentRepo.AddAsync(newAppointment);
 
                     if (appointment != null)
-                        _appointmentRepo.Delete(appointment);
+                        await _appointmentRepo.DeleteAsync(appointment);
                 }
                 else
                 {
@@ -143,7 +143,7 @@ namespace AppointmentManagementSystem.Services
                     trainingAppointment.TrainingDuration = (AllEnums.TrainingDuration)(durationChoice - 1);
                     trainingAppointment.CustomerComments = string.IsNullOrWhiteSpace(comments) ? trainingAppointment.CustomerComments : comments;
                     trainingAppointment.InjuriesOrPains = string.IsNullOrWhiteSpace(injuriesOrPains) ? trainingAppointment.InjuriesOrPains : injuriesOrPains; ;
-                    _appointmentRepo.Update(trainingAppointment);
+                    await _appointmentRepo.UpdateAsync(trainingAppointment);
                 }
             }
             Console.WriteLine("Appointment updated successfully.");
