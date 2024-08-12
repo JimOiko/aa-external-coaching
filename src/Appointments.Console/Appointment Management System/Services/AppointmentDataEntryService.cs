@@ -76,9 +76,20 @@ namespace AppointmentManagementSystem.Services
                     Console.WriteLine($"No discount applicable. The appointment on {date.Date.ToShortDateString()} is not on {customer.Name}'s nameday.");
                 }
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"Customer Does Not Exist!");
+                // Handle specific InvalidOperationException
+                Console.WriteLine("Operation failed: " + ex.Message);
+            }
+            catch (HttpRequestException ex)
+            {
+                // Handle specific HttpRequestException from nameday API
+                Console.WriteLine("Error with the nameday API: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Catch all other exceptions
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
 

@@ -27,17 +27,47 @@ namespace AppointmentManagementSystem.Services
             var customerTask = _customerRepository.GetByIdAsync(customerId);
             var namedayTask = _namedayApiClient.GetNamedayAsync(appointmentDate);
 
-            // Wait for both tasks to complete
-            await Task.WhenAll(customerTask, namedayTask);
+            Task? allTasks = null;
+            try
+            {
+                allTasks = Task.WhenAll(customerTask, namedayTask);
+                await allTasks; // awaiting the task here 
+                var customer = await customerTask;
+                var nameday = await namedayTask;
 
-            var customer = await customerTask;
-            var nameday = await namedayTask;
+                if (customer != null)
+                {
+                    return nameday.Contains(customer.Name, StringComparison.OrdinalIgnoreCase);
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+            catch (Exception ex)
+            {
+                AggregateException? exception = allTasks?.Exception;
+                foreach (var innerException in exception?.InnerExceptions)
+                {
+                    if (innerException is InvalidOperationException)
+                    {
+                        // Handle InvalidOperationException specifically
+                        throw new InvalidOperationException("Customer not found.");
+                    }
+                    else if (innerException is HttpRequestException)
+                    {
+                        // Handle HTTP request errors (likely from the NameDay API call)
+                        throw new HttpRequestException("Error occurred while calling the NameDay API.");
+                    }
+                    else
+                    {
+                        // Handle other types of exceptions
+                        throw new InvalidOperationException("An unknown error occurred.");
+                    }
+                }
 
-            // Check if the appointment date is a nameday
-            if (customer != null)
-                return nameday.Contains(customer.Name, StringComparison.OrdinalIgnoreCase);
-            else
-                throw new InvalidOperationException(); 
+                throw;
+            }
         }
     }
 }
