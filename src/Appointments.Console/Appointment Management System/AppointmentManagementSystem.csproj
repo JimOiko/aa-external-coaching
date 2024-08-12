@@ -9,6 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
@@ -18,7 +27,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppointmentManagementSystem.DomainObjects\AppointmentManagementSystem.DomainObjects.csproj" />
-    <ProjectReference Include="..\AppointmentManagementSystem.Infastructure\AppointmentManagementSystem.Infastructure.csproj" />
+    <ProjectReference Include="..\Appointments.BLL\Appointments.BLL.csproj" />
+    <ProjectReference Include="..\Appointments.DAL\Appointments.DAL.csproj" />
+    <ProjectReference Include="..\Customers.BLL\Customers.BLL.csproj" />
+    <ProjectReference Include="..\Customers.DAL\Customers.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>

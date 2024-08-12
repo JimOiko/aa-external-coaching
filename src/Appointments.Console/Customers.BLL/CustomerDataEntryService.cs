@@ -1,8 +1,8 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
-using AppointmentManagementSystem.Infastructure.Interfaces;
-using AppointmentManagementSystem.Interfaces;
-
-namespace AppointmentManagementSystem.Services
+using Customers.BLL.Interfaces;
+using Customers.DAL.Interfaces;
+using AppointmentManagementSystem;
+namespace Customers.BLL
 {
     public class CustomerDataEntryService(ICustomerRepository customerRepo): ICustomerDataEntryService
     {

@@ -1,13 +1,7 @@
-﻿using AppointmentManagementSystem.Infastructure.Interfaces;
-using AppointmentManagementSystem.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Customers.DAL.Interfaces;
+using Customers.BLL.Interfaces;
 
-namespace AppointmentManagementSystem.Services
+namespace Customers.BLL
 {
     public class CustomerReportService(ICustomerRepository customerRepo): ICustomerReportService
     {

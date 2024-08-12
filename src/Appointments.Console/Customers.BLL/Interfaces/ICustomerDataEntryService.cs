@@ -1,7 +1,6 @@
-﻿
-namespace AppointmentManagementSystem.Interfaces
+﻿namespace Customers.BLL.Interfaces
 {
-    public interface IAppointmentDataEntryService
+    public interface ICustomerDataEntryService
     {
         Task CreateAsync();
         Task ReadAsync();

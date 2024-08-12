@@ -1,11 +1,7 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
-using AppointmentManagementSystem.Infastructure.Interfaces;
-using AppointmentManagementSystem.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Appointments.BLL.Interfaces;
+using Appointments.DAL.Interfaces;
+using Customers.DAL.Interfaces;
 
 namespace AppointmentManagementSystem.Services
 {

@@ -1,6 +1,5 @@
-﻿using AppointmentManagementSystem.DomainObjects;
-using AppointmentManagementSystem.Infastructure.Interfaces;
-using AppointmentManagementSystem.Interfaces;
+﻿using Appointments.DAL.Interfaces;
+using Appointments.BLL.Interfaces;
 
 namespace AppointmentManagementSystem.Services
 {

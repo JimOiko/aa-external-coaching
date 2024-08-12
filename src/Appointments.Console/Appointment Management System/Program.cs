@@ -1,10 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using AppointmentManagementSystem;
+using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.DbObjects;
-using AppointmentManagementSystem.Infastructure;
-using AppointmentManagementSystem.Infastructure.Interfaces;
-using AppointmentManagementSystem.Interfaces;
 using AppointmentManagementSystem.Services;
+using Appointments.BLL.Interfaces;
+using Appointments.DAL;
+using Appointments.DAL.Interfaces;
+using Customers.BLL;
+using Customers.BLL.Interfaces;
+using Customers.DAL;
+using Customers.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

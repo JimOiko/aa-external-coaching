@@ -1,5 +1,5 @@
 ﻿
-namespace AppointmentManagementSystem.Interfaces
+namespace Appointments.BLL.Interfaces
 {
     public interface IAppointmentReportService
     {
