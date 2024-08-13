@@ -2,11 +2,13 @@
 using Customers.BLL.Interfaces;
 using Customers.DAL.Interfaces;
 using AppointmentManagementSystem;
+using System.Net.Http.Json;
+using Azure;
 namespace Customers.BLL
 {
-    public class CustomerDataEntryService(ICustomerRepository customerRepo): ICustomerDataEntryService
+    public class CustomerDataEntryService(HttpClient httpClient) : ICustomerDataEntryService
     {
-        private readonly ICustomerRepository _customerRepo = customerRepo;
+        private readonly HttpClient _httpClient = httpClient;
 
         public async Task CreateAsync()
         {
@@ -41,15 +43,18 @@ namespace Customers.BLL
             }
 
             var customer = new Customer(name, email, phoneNumber, DateTimeOffset.Now);
-            await _customerRepo.AddAsync(customer);
+            var response = await _httpClient.PostAsJsonAsync("https://localhost:7211/api/customers/create", customer);
+            response.EnsureSuccessStatusCode();
             Console.WriteLine("Customer Created Successfully");
         }
 
         public async Task ReadAsync()
         {
-            var customers = await _customerRepo.GetAsync();
+            var response = await _httpClient.GetAsync("https://localhost:7211/api/customers/get");
+            response.EnsureSuccessStatusCode();
             Console.WriteLine("Customer List");
             Console.WriteLine("-------------");
+            var customers = await response.Content.ReadFromJsonAsync<List<Customer>>();
             if (customers.Count == 0)
             {
                 Console.WriteLine("No customers found.");
@@ -72,7 +77,10 @@ namespace Customers.BLL
             Console.Write("Enter the email of the customer to update: ");
             string email = Console.ReadLine() ?? "";
 
-            var existingCustomer = await _customerRepo.GetByEmailAsync(email);
+            var response = await _httpClient.GetAsync($"https://localhost:7211/api/customers/getByEmail/{email}");
+            response.EnsureSuccessStatusCode();
+
+            var existingCustomer = await response.Content.ReadFromJsonAsync<Customer>();
             if (existingCustomer != null)
             {
                 Console.Write("Enter new Name: ");
@@ -101,7 +109,7 @@ namespace Customers.BLL
                     Console.WriteLine("Invalid phone number. Please try again.");
                 }
                 existingCustomer.PhoneNumber = phoneNumber;
-                await _customerRepo.UpdateAsync(existingCustomer);
+                await _httpClient.PutAsJsonAsync($"https://localhost:7211/api/customers/update/{existingCustomer.Id}", existingCustomer);
             }
             else
             {
@@ -114,19 +122,21 @@ namespace Customers.BLL
             Console.WriteLine("Delete Customer");
             Console.WriteLine("---------------");
 
-            Console.Write("Enter the email of the customer to delete: ");
-            string email = Console.ReadLine() ?? "";
+            string email;
+            while (true)
+            {
+                Console.Write("Enter new Email: ");
+                email = Console.ReadLine() ?? "";
+                if (Utilities.IsValidEmail(email))
+                {
+                    break;
+                }
+                Console.WriteLine("Invalid email format. Please try again.");
+            }
+            var deleteResponse = await _httpClient.DeleteAsync($"https://localhost:7211/api/customers/delete/{email}");
+            deleteResponse.EnsureSuccessStatusCode();
 
-            var customer = await _customerRepo.GetByEmailAsync(email);
-            if (customer != null)
-            {
-                await _customerRepo.DeleteAsync(customer);
-                Console.WriteLine("Customer deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Customer not found.");
-            }
+            Console.WriteLine("Customer deleted successfully.");
         }
     }
 }
