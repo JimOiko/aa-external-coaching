@@ -126,7 +126,7 @@ namespace Customers.API.Controllers
                 existingCustomer.Email = customerDto.Email;
                 existingCustomer.PhoneNumber = customerDto.PhoneNumber;
                 await _customerService.UpdateCustomerAsync(existingCustomer);
-                return NoContent();
+                return Ok();
             }
             catch (Exception ex)
             {
