@@ -1,16 +1,20 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
+using Appointments.BLL;
 using Appointments.BLL.Interfaces;
-using Appointments.DAL.Interfaces;
-using Customers.DAL.Interfaces;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace AppointmentManagementSystem.Services
 {
+    using static System.Net.WebRequestMethods;
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
-    public partial class AppointmentDataEntryService(IAppointmentRepository appointmentRepo, ICustomerRepository customerRepo, IDiscountService discountService) : IAppointmentDataEntryService
+    public partial class AppointmentDataEntryService(HttpClient httpClient, IDiscountService discountService) : IAppointmentDataEntryService
     {
-        private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
-        private readonly ICustomerRepository _customerRepo = customerRepo;
+        private readonly HttpClient _httpClient = httpClient;
         private readonly IDiscountService discountService = discountService;
+        // Base URLs for the APIs
+        private readonly string _customersApiUrl = "https://localhost:7211/api/customers";
+        private readonly string _appointmentsApiUrl = "https://localhost:7188/api/appointments";
 
         public async Task CreateAsync()
         {
@@ -20,7 +24,9 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter the email of the customer: ");
             string customerEmail = Console.ReadLine() ?? "";
 
-            Customer? customer = await _customerRepo.GetByEmailAsync(customerEmail);
+            var response = await _httpClient.GetAsync($"{_customersApiUrl}/getByEmail/{customerEmail}");
+            response.EnsureSuccessStatusCode();
+            var customer = await response.Content.ReadFromJsonAsync<Customer>();
             if (customer == null)
             {
                 Console.WriteLine("Customer not found.");
@@ -112,7 +118,9 @@ namespace AppointmentManagementSystem.Services
 
             AllEnums.MasseusePreference masseusePreference = (AllEnums.MasseusePreference)(masseusePreferenceChoice - 1);
 
-            await _appointmentRepo.AddAsync(new MassageAppointment(customerId, AllEnums.ServiceType.Massage, date, time, notes, massageServices, masseusePreference));
+            var appointment = new MassageAppointment(customerId, AllEnums.ServiceType.Massage, date, time, notes, massageServices, masseusePreference);
+            var response = await _httpClient.PostAsJsonAsync($"{_appointmentsApiUrl}/create", appointment);
+            response.EnsureSuccessStatusCode();
             Console.WriteLine("Massage appointment created successfully.");
         }
 
@@ -134,7 +142,9 @@ namespace AppointmentManagementSystem.Services
             Console.Write("Enter any injuries or pains: ");
             string injuriesOrPains = Console.ReadLine() ?? "";
 
-            await _appointmentRepo.AddAsync(new PersonalTrainingAppointment(customerId, AllEnums.ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains));
+            var appointment = new PersonalTrainingAppointment(customerId, AllEnums.ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains);
+            var response = await _httpClient.PostAsJsonAsync($"{_appointmentsApiUrl}/create", appointment);
+            response.EnsureSuccessStatusCode();
             Console.WriteLine("Personal training appointment created successfully.");
         }
 
@@ -142,7 +152,20 @@ namespace AppointmentManagementSystem.Services
         {
             Console.WriteLine("Appointment List");
             Console.WriteLine("----------------");
-            var appointments = await _appointmentRepo.GetAsync();
+            var response = await _httpClient.GetAsync($"{_appointmentsApiUrl}/get");
+            response.EnsureSuccessStatusCode();
+
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            using var document = JsonDocument.Parse(jsonResponse);
+            var rootElement = document.RootElement;
+
+            //var appointments = new List<Appointment>();
+            var options = new JsonSerializerOptions
+            {
+                Converters = { new AppointmentJsonConverter() },
+                PropertyNameCaseInsensitive = true
+            };
+            var appointments = System.Text.Json.JsonSerializer.Deserialize<List<Appointment>>(jsonResponse, options);
 
             if (appointments.Count == 0)
             {
@@ -156,9 +179,12 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine(new string('-', 220));
                 foreach (var appointment in appointments)
                 {
-                    var customer = await _customerRepo.GetByIdAsync(appointment.CustomerId);
-                    if (appointment is MassageAppointment massageAppointment)
+                    var customerResponse = await _httpClient.GetAsync($"{_customersApiUrl}/getById/{appointment.CustomerId}");
+                    customerResponse.EnsureSuccessStatusCode();
+                    var customer = await customerResponse.Content.ReadFromJsonAsync<Customer>();
+                    if (appointment.ServiceType == AllEnums.ServiceType.Massage )
                     {
+                        MassageAppointment massageAppointment = (MassageAppointment)appointment;
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
                                           massageAppointment.AppointmentId, customer?.Name, massageAppointment.ServiceType,
                                           massageAppointment.Date.DateTime.ToShortDateString(), massageAppointment.Time, massageAppointment.Notes,
@@ -182,24 +208,24 @@ namespace AppointmentManagementSystem.Services
             Console.WriteLine("------------------");
 
             Console.Write("Enter the appointment ID to delete: ");
-            int id;
-            if (!int.TryParse(Console.ReadLine(), out id))
+            Guid id;
+            if (!Guid.TryParse(Console.ReadLine(), out id))
             {
                 Console.WriteLine("Invalid ID format.");
                 return;
             }
 
-            var appointment = await _appointmentRepo.GetByIdAsync(id.ToString());
-            if (appointment != null)
-            {
-                await _appointmentRepo.DeleteAsync(appointment);
-                Console.WriteLine("Appointment deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Appointment not found.");
-            }
+            var response = await _httpClient.DeleteAsync($"{_appointmentsApiUrl}/delete/{id}");
+            response.EnsureSuccessStatusCode();
+            Console.WriteLine("Appointment deleted successfully.");
         }
 
+
+        private void CombineProperties(Appointment baseAppointment, Appointment specificAppointment)
+        {
+            specificAppointment.Date = baseAppointment.Date;
+            specificAppointment.Time = baseAppointment.Time;
+            specificAppointment.Notes = baseAppointment.Notes;
+        }
     }
 }

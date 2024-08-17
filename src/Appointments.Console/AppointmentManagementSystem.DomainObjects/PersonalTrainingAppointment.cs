@@ -1,5 +1,6 @@
 ﻿namespace AppointmentManagementSystem.DomainObjects
 {
+    using System.Text.Json.Serialization;
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public class PersonalTrainingAppointment : Appointment
     {
@@ -14,8 +15,13 @@
             InjuriesOrPains = injuriesOrPains;
         }
 
+        [JsonPropertyName("trainingduration")]
         public AllEnums.TrainingDuration? TrainingDuration { get; set; }
+       
+        [JsonPropertyName("customercomments")]
         public string? CustomerComments { get; set; }
+        
+        [JsonPropertyName("injuriesorpains")]
         public string? InjuriesOrPains { get; set; }
         
 

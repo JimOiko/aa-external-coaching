@@ -1,5 +1,8 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
+using Appointments.BLL;
 using Appointments.BLL.Interfaces;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace AppointmentManagementSystem.Services
 {
@@ -19,8 +22,19 @@ namespace AppointmentManagementSystem.Services
                 Console.WriteLine("Invalid ID format.");
                 return;
             }
+            var response = await _httpClient.GetAsync($"{_appointmentsApiUrl}/getById/{id}");
+            response.EnsureSuccessStatusCode();
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+            using var document = JsonDocument.Parse(jsonResponse);
+            var rootElement = document.RootElement;
 
-            var appointment = await _appointmentRepo.GetByIdAsync(id.ToString());
+            //var appointments = new List<Appointment>();
+            var options = new JsonSerializerOptions
+            {
+                Converters = { new AppointmentJsonConverter() },
+                PropertyNameCaseInsensitive = true
+            };
+            var appointment = System.Text.Json.JsonSerializer.Deserialize<Appointment>(jsonResponse, options);
             if (appointment == null)
             {
                 Console.WriteLine("Appointment not found.");
@@ -82,9 +96,10 @@ namespace AppointmentManagementSystem.Services
                             (AllEnums.MassageServices)(massageServiceChoice - 1),
                             (AllEnums.MasseusePreference)(preferenceChoice - 1)
                         );
-                    await _appointmentRepo.AddAsync(newAppointment);
+                    var addResponse = await _httpClient.PostAsJsonAsync(_appointmentsApiUrl, newAppointment);
+                    addResponse.EnsureSuccessStatusCode();
                     if (appointment != null)
-                        await _appointmentRepo.DeleteAsync(appointment);
+                        await _httpClient.DeleteAsync($"{_appointmentsApiUrl}/delete/{appointment.AppointmentId}");
                     Console.WriteLine("Massage Appointment updated successfully.");
                 }
                 else
@@ -92,7 +107,8 @@ namespace AppointmentManagementSystem.Services
                     var massageAppointment = (MassageAppointment)appointment;
                     massageAppointment.MassageServices = (AllEnums.MassageServices)(massageServiceChoice - 1);
                     massageAppointment.Preference = (AllEnums.MasseusePreference)(preferenceChoice - 1);
-                    await _appointmentRepo.UpdateAsync(massageAppointment);
+                    var updateResponse = await _httpClient.PutAsJsonAsync($"{_appointmentsApiUrl}/update/{id}", massageAppointment);
+                    updateResponse.EnsureSuccessStatusCode();
                 }
             }
             else
@@ -130,10 +146,10 @@ namespace AppointmentManagementSystem.Services
                             comments,
                             injuriesOrPains
                         );
-                    await _appointmentRepo.AddAsync(newAppointment);
-
+                    var addResponse = await _httpClient.PostAsJsonAsync(_appointmentsApiUrl, newAppointment);
+                    addResponse.EnsureSuccessStatusCode();
                     if (appointment != null)
-                        await _appointmentRepo.DeleteAsync(appointment);
+                        await _httpClient.DeleteAsync($"{_appointmentsApiUrl}/delete/{id}");
                 }
                 else
                 {
@@ -141,7 +157,8 @@ namespace AppointmentManagementSystem.Services
                     trainingAppointment.TrainingDuration = (AllEnums.TrainingDuration)(durationChoice - 1);
                     trainingAppointment.CustomerComments = string.IsNullOrWhiteSpace(comments) ? trainingAppointment.CustomerComments : comments;
                     trainingAppointment.InjuriesOrPains = string.IsNullOrWhiteSpace(injuriesOrPains) ? trainingAppointment.InjuriesOrPains : injuriesOrPains; ;
-                    await _appointmentRepo.UpdateAsync(trainingAppointment);
+                    var updateResponse = await _httpClient.PutAsJsonAsync($"{_appointmentsApiUrl}/update/{id}", trainingAppointment);
+                    updateResponse.EnsureSuccessStatusCode();
                 }
             }
             Console.WriteLine("Appointment updated successfully.");

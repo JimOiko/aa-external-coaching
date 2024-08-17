@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Emit;
+using System.Text.Json.Serialization;
 
 namespace AppointmentManagementSystem.DomainObjects
 {
@@ -24,13 +25,22 @@ namespace AppointmentManagementSystem.DomainObjects
         }
 
         [Key]
+        [JsonPropertyName("appointmentId")]
         public Guid AppointmentId { get; set; } // Primary key
 
         [ForeignKey("Customer")]
+        [JsonPropertyName("customerId")]
         public Guid CustomerId { get; set; }
+
+        [JsonPropertyName("serviceType")]
         public AllEnums.ServiceType ServiceType { get; set; }
+
+        [JsonPropertyName("date")]
         public DateTimeOffset Date { get; set; }
+
+        [JsonPropertyName("time")]
         public string? Time { get; set; }
+        [JsonPropertyName("notes")]
         public string? Notes { get; set; }
 
         public override string ToString()
