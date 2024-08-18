@@ -12,6 +12,7 @@ using Customers.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AppointmentManagementSystem.DomainObjects.Interfaces;
 
 
 var configuration = new ConfigurationBuilder()
@@ -32,6 +33,7 @@ var serviceProvider = new ServiceCollection()
               .AddSingleton<IAppointmentReportService, AppointmentReportService>()
               .AddSingleton<IDiscountService, DiscountService>()
               .AddSingleton<INameDayApiClient, NamedayApiClient>()
+              .AddSingleton<IUserInputService, UserInputService>()
               .Configure<ApiSettings>(configuration.GetSection("ApiSettings"))
               .AddHttpClient()
               .BuildServiceProvider();

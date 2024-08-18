@@ -4,25 +4,27 @@ using Customers.DAL.Interfaces;
 using AppointmentManagementSystem;
 using System.Net.Http.Json;
 using Azure;
+using AppointmentManagementSystem.DomainObjects.Interfaces;
 namespace Customers.BLL
 {
-    public class CustomerDataEntryService(HttpClient httpClient) : ICustomerDataEntryService
+    public class CustomerDataEntryService(HttpClient httpClient, IUserInputService userInputService) : ICustomerDataEntryService
     {
         private readonly HttpClient _httpClient = httpClient;
+        private readonly IUserInputService _userInputService = userInputService;
 
-        public async Task CreateAsync()
+        public async Task<object> CreateAsync()
         {
             Console.WriteLine("Create Customer");
             Console.WriteLine("---------------");
 
             Console.Write("Enter Name: ");
-            string name = Console.ReadLine() ?? "";
+            string name = _userInputService.ReadLine();
 
             string email;
             while (true)
             {
                 Console.Write("Enter Email: ");
-                email = Console.ReadLine() ?? "";
+                email = _userInputService.ReadLine();
                 if (Utilities.IsValidEmail(email))
                 {
                     break;
@@ -31,21 +33,19 @@ namespace Customers.BLL
             }
 
             string phoneNumber;
-            while (true)
+            Console.Write("Enter Phone Number: ");
+            phoneNumber = _userInputService.ReadLine();
+            if (!Utilities.IsValidPhoneNumber(phoneNumber))
             {
-                Console.Write("Enter Phone Number: ");
-                phoneNumber = Console.ReadLine() ?? "";
-                if (Utilities.IsValidPhoneNumber(phoneNumber))
-                {
-                    break;
-                }
                 Console.WriteLine("Invalid phone number. Please try again.");
+                return null;
             }
 
             var customer = new Customer(name, email, phoneNumber, DateTimeOffset.Now);
             var response = await _httpClient.PostAsJsonAsync("https://localhost:7211/api/customers/create", customer);
             response.EnsureSuccessStatusCode();
             Console.WriteLine("Customer Created Successfully");
+            return customer;
         }
 
         public async Task ReadAsync()
