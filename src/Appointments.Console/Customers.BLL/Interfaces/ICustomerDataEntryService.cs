@@ -2,7 +2,7 @@
 {
     public interface ICustomerDataEntryService
     {
-        Task<object> CreateAsync();
+        Task<object?> CreateAsync();
         Task ReadAsync();
         Task UpdateAsync();
         Task DeleteAsync();

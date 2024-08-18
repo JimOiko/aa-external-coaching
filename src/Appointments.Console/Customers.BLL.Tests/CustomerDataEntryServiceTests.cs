@@ -1,7 +1,10 @@
+using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.DomainObjects.Interfaces;
 using Customers.BLL.Interfaces;
+using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
+using System.Net.Http.Json;
 
 namespace Customers.BLL.Tests
 {
@@ -11,13 +14,29 @@ namespace Customers.BLL.Tests
         private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
         private readonly HttpClient _httpClient;
         private readonly ICustomerDataEntryService _customerDataEntryService;
+        private readonly Mock<IOptions<ApiSettings>> _apiSettingsMock;
 
         public CustomerDataEntryServiceTests()
         {
             _userInputServiceMock = new Mock<IUserInputService>();
             _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
             _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
-            _customerDataEntryService = new CustomerDataEntryService(_httpClient, _userInputServiceMock.Object);
+
+            // Mock IOptions<ApiSettings>
+            _apiSettingsMock = new Mock<IOptions<ApiSettings>>();
+            _apiSettingsMock.Setup(x => x.Value)
+                            .Returns(new ApiSettings
+                            {
+                                NameDayApiBaseUrl = "",
+                                DefaultCountry = "",
+                                AppointmentApiUrl = "",
+                                CustomerApiUrl = "https://localhost:7211/api/customers"
+                            });
+
+            // Instantiate the service with the mocked dependencies
+            _customerDataEntryService = new CustomerDataEntryService(_httpClient, _apiSettingsMock.Object, _userInputServiceMock.Object);
+
+            _customerDataEntryService = new CustomerDataEntryService(_httpClient, _apiSettingsMock.Object ,_userInputServiceMock.Object);
         }
 
         [Fact]
@@ -77,5 +96,58 @@ namespace Customers.BLL.Tests
             Assert.Null(res);
         }
 
+        [Fact]
+        public async Task UpdateAsync_Should_Update_Customer()
+        {
+            // Arrange
+            var existingCustomer = new Customer(name: "John Doe", email: "john.doe@example.com", phoneNumber: "1234567890", registrationDate: DateTimeOffset.Now);
+
+            _userInputServiceMock.SetupSequence(u => u.ReadLine())
+                .Returns("john.doe@example.com")  // Existing email
+                .Returns("John Smith")            // New Name
+                .Returns("john.smith@example.com") // New Email
+                .Returns("0987654321");            // New Phone Number
+
+            _httpMessageHandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    Content = JsonContent.Create(existingCustomer)
+                });
+
+            _httpMessageHandlerMock.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Put),
+                    ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK
+                });
+
+            // Act
+            await _customerDataEntryService.UpdateAsync();
+
+            // Assert
+            _httpMessageHandlerMock.Protected().Verify(
+                "SendAsync",
+                Times.Once(),
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.Method == HttpMethod.Put &&
+                    req.RequestUri == new System.Uri($"https://localhost:7211/api/customers/update/{existingCustomer.Id}")),
+                ItExpr.IsAny<CancellationToken>());
+
+            _httpMessageHandlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Once(),
+               ItExpr.Is<HttpRequestMessage>(req =>
+                   req.Method == HttpMethod.Get &&
+                   req.RequestUri == new System.Uri($"https://localhost:7211/api/customers/getByEmail/{existingCustomer.Email}")),
+               ItExpr.IsAny<CancellationToken>());
+        }
     }
 }
