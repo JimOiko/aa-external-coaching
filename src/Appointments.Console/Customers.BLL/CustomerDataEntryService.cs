@@ -4,11 +4,13 @@ using Customers.DAL.Interfaces;
 using AppointmentManagementSystem;
 using System.Net.Http.Json;
 using Azure;
+using Microsoft.Extensions.Options;
 namespace Customers.BLL
 {
-    public class CustomerDataEntryService(HttpClient httpClient) : ICustomerDataEntryService
+    public class CustomerDataEntryService(HttpClient httpClient, IOptions<ApiSettings> apiSettings) : ICustomerDataEntryService
     {
         private readonly HttpClient _httpClient = httpClient;
+        private readonly ApiSettings _apiSettings = apiSettings.Value;
 
         public async Task CreateAsync()
         {
@@ -43,14 +45,14 @@ namespace Customers.BLL
             }
 
             var customer = new Customer(name, email, phoneNumber, DateTimeOffset.Now);
-            var response = await _httpClient.PostAsJsonAsync("https://localhost:7211/api/customers/create", customer);
+            var response = await _httpClient.PostAsJsonAsync($"{_apiSettings.CustomerApiUrl}/create", customer);
             response.EnsureSuccessStatusCode();
             Console.WriteLine("Customer Created Successfully");
         }
 
         public async Task ReadAsync()
         {
-            var response = await _httpClient.GetAsync("https://localhost:7211/api/customers/get");
+            var response = await _httpClient.GetAsync($"{_apiSettings.CustomerApiUrl}/get");
             response.EnsureSuccessStatusCode();
             Console.WriteLine("Customer List");
             Console.WriteLine("-------------");
@@ -77,7 +79,7 @@ namespace Customers.BLL
             Console.Write("Enter the email of the customer to update: ");
             string email = Console.ReadLine() ?? "";
 
-            var response = await _httpClient.GetAsync($"https://localhost:7211/api/customers/getByEmail/{email}");
+            var response = await _httpClient.GetAsync($"{_apiSettings.CustomerApiUrl}/getByEmail/{email}");
             response.EnsureSuccessStatusCode();
 
             var existingCustomer = await response.Content.ReadFromJsonAsync<Customer>();
@@ -109,7 +111,7 @@ namespace Customers.BLL
                     Console.WriteLine("Invalid phone number. Please try again.");
                 }
                 existingCustomer.PhoneNumber = phoneNumber;
-                await _httpClient.PutAsJsonAsync($"https://localhost:7211/api/customers/update/{existingCustomer.Id}", existingCustomer);
+                await _httpClient.PutAsJsonAsync($"{_apiSettings.CustomerApiUrl}/update/{existingCustomer.Id}", existingCustomer);
             }
             else
             {
@@ -133,7 +135,7 @@ namespace Customers.BLL
                 }
                 Console.WriteLine("Invalid email format. Please try again.");
             }
-            var deleteResponse = await _httpClient.DeleteAsync($"https://localhost:7211/api/customers/delete/{email}");
+            var deleteResponse = await _httpClient.DeleteAsync($"{_apiSettings.CustomerApiUrl}/delete/{email}");
             deleteResponse.EnsureSuccessStatusCode();
 
             Console.WriteLine("Customer deleted successfully.");

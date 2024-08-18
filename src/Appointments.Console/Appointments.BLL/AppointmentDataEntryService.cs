@@ -1,6 +1,7 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
 using Appointments.BLL;
 using Appointments.BLL.Interfaces;
+using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -8,13 +9,13 @@ namespace AppointmentManagementSystem.Services
 {
     using static System.Net.WebRequestMethods;
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
-    public partial class AppointmentDataEntryService(HttpClient httpClient, IDiscountService discountService) : IAppointmentDataEntryService
+    public partial class AppointmentDataEntryService(HttpClient httpClient, IDiscountService discountService, IOptions<ApiSettings> apiSettings) : IAppointmentDataEntryService
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly IDiscountService discountService = discountService;
         // Base URLs for the APIs
-        private readonly string _customersApiUrl = "https://localhost:7211/api/customers";
-        private readonly string _appointmentsApiUrl = "https://localhost:7188/api/appointments";
+        private readonly string _customersApiUrl = apiSettings.Value.CustomerApiUrl;
+        private readonly string _appointmentsApiUrl = apiSettings.Value.AppointmentApiUrl;
 
         public async Task CreateAsync()
         {
