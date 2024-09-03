@@ -1,6 +1,5 @@
 using AppointmentManagementSystem.DomainObjects;
-using Customers.API.Interfaces;
-using Customers.DAL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Customers.API.Controllers

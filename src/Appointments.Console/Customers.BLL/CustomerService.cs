@@ -1,8 +1,7 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
-using Customers.API.Interfaces;
-using Customers.DAL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 
-namespace Customers.API.Services
+namespace Customers.BLL.Services
 {
     public class CustomerService : ICustomerService
     {

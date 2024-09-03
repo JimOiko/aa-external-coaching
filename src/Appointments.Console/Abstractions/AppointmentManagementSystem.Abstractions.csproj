@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abstractions\AppointmentManagementSystem.Abstractions.csproj" />
-    <ProjectReference Include="..\Customers.DAL\Customers.DAL.csproj" />
+    <ProjectReference Include="..\AppointmentManagementSystem.DomainObjects\AppointmentManagementSystem.DomainObjects.csproj" />
   </ItemGroup>
 
 </Project>

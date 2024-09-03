@@ -1,12 +1,10 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
-using Customers.BLL.Interfaces;
-using Customers.DAL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using AppointmentManagementSystem;
 using System.Net.Http.Json;
-using Azure;
 using Microsoft.Extensions.Options;
 using AppointmentManagementSystem.DomainObjects.Interfaces;
-namespace Customers.BLL
+namespace Customers.Client
 {
     public class CustomerDataEntryService(HttpClient httpClient, IOptions<ApiSettings> apiSettings, IUserInputService userInputService) : ICustomerDataEntryService
     {

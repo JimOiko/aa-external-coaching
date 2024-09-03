@@ -1,9 +1,8 @@
-using Customers.DAL.Interfaces;
 using Customers.DAL;
 using AppointmentManagementSystem.DbObjects;
 using Microsoft.EntityFrameworkCore;
-using Customers.API.Interfaces;
-using Customers.API.Services;
+using AppointmentManagementSystem.Abstractions;
+using Customers.BLL.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

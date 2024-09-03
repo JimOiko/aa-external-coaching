@@ -1,7 +1,6 @@
-﻿using Customers.DAL.Interfaces;
-using Customers.BLL.Interfaces;
+﻿using AppointmentManagementSystem.Abstractions;
 
-namespace Customers.BLL
+namespace Customers.Client
 {
     public class CustomerReportService(ICustomerRepository customerRepo): ICustomerReportService
     {

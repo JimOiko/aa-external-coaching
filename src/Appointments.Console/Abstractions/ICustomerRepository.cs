@@ -1,7 +1,6 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
 
-namespace Customers.DAL.Interfaces
-{
+namespace AppointmentManagementSystem.Abstractions { 
     public interface ICustomerRepository
     {
         Task AddAsync(Customer item);

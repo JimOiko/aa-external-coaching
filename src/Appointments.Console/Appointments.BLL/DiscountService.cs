@@ -1,5 +1,5 @@
 ﻿using Appointments.DAL.Interfaces;
-using Customers.DAL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Appointments.BLL.Interfaces;
 
 namespace AppointmentManagementSystem.Services

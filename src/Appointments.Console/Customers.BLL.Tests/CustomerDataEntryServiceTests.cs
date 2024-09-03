@@ -1,6 +1,7 @@
 using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.DomainObjects.Interfaces;
-using Customers.BLL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
+using Customers.Client;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
