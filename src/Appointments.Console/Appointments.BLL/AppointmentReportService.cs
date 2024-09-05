@@ -3,7 +3,7 @@ using AppointmentManagementSystem.DomainObjects;
 
 namespace Appointments.BLL
 {
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
     public class AppointmentReportService(IAppointmentRepository appointmentRepo): IAppointmentReportService
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
@@ -16,17 +16,17 @@ namespace Appointments.BLL
 
         public async Task<(int massageCount, int ptCount)> GetNumberOfAppointmentsByTypeAsync()
         {
-            var massageCount = await _appointmentRepo.GetCountByTypeAsync(AllEnums.ServiceType.Massage);
-            var ptCount = await _appointmentRepo.GetCountByTypeAsync(AllEnums.ServiceType.PersonalTraining);
+            var massageCount = await _appointmentRepo.GetCountByTypeAsync(Constants.ServiceType.Massage);
+            var ptCount = await _appointmentRepo.GetCountByTypeAsync(Constants.ServiceType.PersonalTraining);
             return (massageCount, ptCount);
         }
 
-        public async Task<AllEnums.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync()
+        public async Task<Constants.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync()
         {
             var commonPreference = await _appointmentRepo.GetCommonPreferenceForMasseuseSexAsync();
             return commonPreference;
         }
-        public async Task<AllEnums.TrainingDuration?> GetCommonPreferenceForTrainingDurationAsync()
+        public async Task<Constants.TrainingDuration?> GetCommonPreferenceForTrainingDurationAsync()
         {
             var commonPreference = await _appointmentRepo.GetCommonPreferenceForPTDurationAsync();
             return commonPreference;
@@ -38,7 +38,7 @@ namespace Appointments.BLL
             return maxAppointmentsByServiceType;
         }
 
-        public async Task<AllEnums.MassageServices> GetMassageTypePreferenceAsync()
+        public async Task<Constants.MassageServices> GetMassageTypePreferenceAsync()
         {
             var massageTypePref = await _appointmentRepo.GetMassageTypePreferenceAsync();
             return massageTypePref;

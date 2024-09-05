@@ -2,7 +2,7 @@ using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Customers.API.Controllers
+namespace Customers.API
 {
     [ApiController]
     [Route("/api/customers")]
@@ -17,7 +17,7 @@ namespace Customers.API.Controllers
             _customerService = customerService;
         }
 
-        [HttpGet("get", Name = "GetCustomers")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetAsync()
         {
             try
@@ -40,17 +40,17 @@ namespace Customers.API.Controllers
         }
 
 
-        [HttpGet("getById/{customerId}", Name = "GetCustomerById")]
-        public async Task<ActionResult<Customer>> GetByIdAsync(Guid customerId)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Customer>> GetByIdAsync(Guid id)
         {
             try
             {
-                var customer = await _customerService.GetCustomerByIdAsync(customerId);
+                var customer = await _customerService.GetCustomerByIdAsync(id);
 
                 if (customer == null)
                 {
-                    _logger.LogInformation($"Customer with ID {customerId} not found.");
-                    return NotFound($"Customer with ID {customerId} not found.");
+                    _logger.LogInformation($"Customer with ID {id} not found.");
+                    return NotFound($"Customer with ID {id} not found.");
                 }
 
                 return Ok(customer);
@@ -62,7 +62,7 @@ namespace Customers.API.Controllers
             }
         }
 
-        [HttpGet("getByEmail/{email}", Name = "GetCustomerByEmail")]
+        [HttpGet("getByEmail/{email}")]
         public async Task<ActionResult<Customer>> GetByEmailAsync(string email)
         {
             try
@@ -85,7 +85,6 @@ namespace Customers.API.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
         public async Task<IActionResult> CreateAsync(Customer customerDto)
         {
             if (customerDto == null)
@@ -105,20 +104,20 @@ namespace Customers.API.Controllers
             }
         }
 
-        [HttpPut("update/{customerId}")]
-        public async Task<IActionResult> UpdateAsync(Guid customerId, Customer customerDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync(Guid id, Customer customerDto)
         {
-            if (customerDto == null || customerId != customerDto.Id)
+            if (customerDto == null || id != customerDto.Id)
             {
                 return BadRequest("Customer data is invalid.");
             }
 
             try
             {
-                var existingCustomer = await _customerService.GetCustomerByIdAsync(customerId);
+                var existingCustomer = await _customerService.GetCustomerByIdAsync(id);
                 if (existingCustomer == null)
                 {
-                    return NotFound($"Customer with ID {customerId} not found.");
+                    return NotFound($"Customer with ID {id} not found.");
                 }
                 // Update the existing customer entity with the new data
                 existingCustomer.Name = customerDto.Name;
@@ -134,7 +133,7 @@ namespace Customers.API.Controllers
             }
         }
 
-        [HttpDelete("delete/{email}")]
+        [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteAsync(string email)
         {
             try

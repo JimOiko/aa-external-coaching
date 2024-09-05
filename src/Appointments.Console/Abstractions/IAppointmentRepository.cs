@@ -2,7 +2,7 @@
 
 namespace AppointmentManagementSystem.Abstractions
 {
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
     public interface IAppointmentRepository
     {
         #region CRUD
@@ -15,11 +15,11 @@ namespace AppointmentManagementSystem.Abstractions
 
         #region Reporting
         Task<int> GetCountByDateAsync(DateTimeOffset date);
-        Task<int> GetCountByTypeAsync(AllEnums.ServiceType serviceType);
-        Task<AllEnums.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync();
-        Task<AllEnums.TrainingDuration?> GetCommonPreferenceForPTDurationAsync();
+        Task<int> GetCountByTypeAsync(Constants.ServiceType serviceType);
+        Task<Constants.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync();
+        Task<Constants.TrainingDuration?> GetCommonPreferenceForPTDurationAsync();
         Task<IEnumerable<ServiceTypeMaxAppointments?>> GetMaxAppointmentsDateByServiceTypeAsync();
-        Task<AllEnums.MassageServices> GetMassageTypePreferenceAsync();
+        Task<Constants.MassageServices> GetMassageTypePreferenceAsync();
         Task<(DayOfWeek Day, int Count)> GetMaxAppointmentsDayOfWeekAsync();
         Task<(DayOfWeek Day, int Count)> GetMinAppointmentsDayOfWeekAsync();
         #endregion Reporting

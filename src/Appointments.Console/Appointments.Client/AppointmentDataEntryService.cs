@@ -8,8 +8,7 @@ using Appointments.BLL;
 
 namespace Appointments.Client
 {
-    using static System.Net.WebRequestMethods;
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
     public partial class AppointmentDataEntryService(HttpClient httpClient, IOptions<ApiSettings> apiSettings, IUserInputService userInputService) : IAppointmentDataEntryService
     {
         private readonly HttpClient _httpClient = httpClient;
@@ -43,7 +42,7 @@ namespace Appointments.Client
                 Console.WriteLine("Invalid service type.");
                 return null;
             }
-            var serviceType = (AllEnums.ServiceType)(serviceTypeChoice - 1);
+            var serviceType = (Constants.ServiceType)(serviceTypeChoice - 1);
 
             Console.Write("Enter date (yyyy-mm-dd): ");
             DateTimeOffset date;
@@ -60,11 +59,11 @@ namespace Appointments.Client
             string? notes = _userInputService.ReadLine();
 
             Appointment? appointment = null;
-            if (serviceType == AllEnums.ServiceType.Massage)
+            if (serviceType == Constants.ServiceType.Massage)
             {
                 appointment = await CreateMassageAppointment(customer.Id, date, time, notes);
             }
-            else if (serviceType == AllEnums.ServiceType.PersonalTraining)
+            else if (serviceType == Constants.ServiceType.PersonalTraining)
             {
                 appointment = await CreatePersonalTrainingAppointment(customer.Id, date, time, notes);
             }
@@ -72,7 +71,7 @@ namespace Appointments.Client
             if (appointment != null)
             {
                 // Make the request to create the appointment
-                var createResponse = await _httpClient.PostAsJsonAsync($"{_appointmentsApiUrl}/create", appointment);
+                var createResponse = await _httpClient.PostAsJsonAsync($"{_appointmentsApiUrl}", appointment);
 
                 if (createResponse.IsSuccessStatusCode)
                 {
@@ -123,7 +122,7 @@ namespace Appointments.Client
                 Console.WriteLine("Invalid massage service type.");
                 return null;
             }
-            AllEnums.MassageServices massageServices = (AllEnums.MassageServices)(massageServiceChoice - 1);
+            Constants.MassageServices massageServices = (Constants.MassageServices)(massageServiceChoice - 1);
 
             Console.WriteLine("Masseuse Preference: 1. Male, 2. Female");
             Console.Write("Enter massage Masseuse Preference (1-2): ");
@@ -134,9 +133,9 @@ namespace Appointments.Client
                 return null;
             }
 
-            AllEnums.MasseusePreference masseusePreference = (AllEnums.MasseusePreference)(masseusePreferenceChoice - 1);
+            Constants.MasseusePreference masseusePreference = (Constants.MasseusePreference)(masseusePreferenceChoice - 1);
 
-            var appointment = new MassageAppointment(customerId, AllEnums.ServiceType.Massage, date, time, notes, massageServices, masseusePreference);
+            var appointment = new MassageAppointment(customerId, Constants.ServiceType.Massage, date, time, notes, massageServices, masseusePreference);
 
             // Note: The actual POST request is now done in the CreateAsync method
             return appointment;
@@ -152,7 +151,7 @@ namespace Appointments.Client
                 Console.WriteLine("Invalid training duration.");
                 return null;
             }
-            AllEnums.TrainingDuration trainingDuration = (AllEnums.TrainingDuration)(trainingDurationChoice - 1);
+            Constants.TrainingDuration trainingDuration = (Constants.TrainingDuration)(trainingDurationChoice - 1);
 
             Console.Write("Enter customer comments: ");
             string customerComments = _userInputService.ReadLine();
@@ -160,7 +159,7 @@ namespace Appointments.Client
             Console.Write("Enter any injuries or pains: ");
             string injuriesOrPains = _userInputService.ReadLine();
 
-            var appointment = new PersonalTrainingAppointment(customerId, AllEnums.ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains);
+            var appointment = new PersonalTrainingAppointment(customerId, Constants.ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains);
 
             // Note: The actual POST request is now done in the CreateAsync method
             return appointment;
@@ -170,7 +169,7 @@ namespace Appointments.Client
         {
             Console.WriteLine("Appointment List");
             Console.WriteLine("----------------");
-            var response = await _httpClient.GetAsync($"{_appointmentsApiUrl}/get");
+            var response = await _httpClient.GetAsync($"{_appointmentsApiUrl}");
             response.EnsureSuccessStatusCode();
 
             var jsonResponse = await response.Content.ReadAsStringAsync();
@@ -198,10 +197,10 @@ namespace Appointments.Client
                 for (int i = 0; i < appointments?.Count; i++)
                 {
                     Appointment? appointment = appointments[i];
-                    var customerResponse = await _httpClient.GetAsync($"{_customersApiUrl}/getById/{appointment.CustomerId}");
+                    var customerResponse = await _httpClient.GetAsync($"{_customersApiUrl}/{appointment.CustomerId}");
                     customerResponse.EnsureSuccessStatusCode();
                     var customer = await customerResponse.Content.ReadFromJsonAsync<Customer>();
-                    if (appointment.ServiceType == AllEnums.ServiceType.Massage )
+                    if (appointment.ServiceType == Constants.ServiceType.Massage )
                     {
                         MassageAppointment massageAppointment = (MassageAppointment)appointment;
                         Console.WriteLine("{0,-5} {1,-20} {2,-20} {3,-12} {4,-5} {5,-20} {6,-20} {7,-20} {8,-20} {9,-30} {10,-30}",
@@ -234,7 +233,7 @@ namespace Appointments.Client
                 return;
             }
 
-            var response = await _httpClient.DeleteAsync($"{_appointmentsApiUrl}/delete/{id}");
+            var response = await _httpClient.DeleteAsync($"{_appointmentsApiUrl}/{id}");
             response.EnsureSuccessStatusCode();
             Console.WriteLine("Appointment deleted successfully.");
         }

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Text.Json;
 
-namespace Appointments.API.Controllers
+namespace Appointments.API
 {
     [ApiController]
     [Route("api/appointments")]
@@ -20,7 +20,7 @@ namespace Appointments.API.Controllers
             _appointmentsService = appointmentsService;
         }
 
-        [HttpGet("get", Name = "GetAppointments")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAsync()
         {
             try
@@ -42,7 +42,7 @@ namespace Appointments.API.Controllers
             }
         }
 
-        [HttpGet("getByID/{id}", Name = "GetAppointmentById")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Appointment>> GetByIdAsync(Guid id)
         {
             try
@@ -64,7 +64,7 @@ namespace Appointments.API.Controllers
             }
         }
 
-        [HttpPost("create", Name = "CreateAppointment")]
+        [HttpPost]
         public async Task<ActionResult<bool>> CreateAsync(JsonElement appointmentElement)
         {
             try
@@ -72,7 +72,7 @@ namespace Appointments.API.Controllers
                 Appointment appointment;
                 var settings = new JsonSerializerSettings
                 {
-                    Converters = new List<Newtonsoft.Json.JsonConverter> { new StringEnumConverter() }
+                    Converters = new List<JsonConverter> { new StringEnumConverter() }
                 };
                 var baseAppointment = JsonConvert.DeserializeObject<Appointment>(appointmentElement.GetRawText(), settings);
                 switch (baseAppointment?.ServiceType)
@@ -99,28 +99,28 @@ namespace Appointments.API.Controllers
             }
         }
 
-        [HttpPut("update/{appointmentId}", Name = "UpdateAppointment")]
-        public async Task<ActionResult> UpdateAsync(Guid appointmentId, JsonElement appointmentElement)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateAsync(Guid id, JsonElement appointmentElement)
         {
             try
             {
-                var existingAppointment = await _appointmentsService.GetAppointmentByIdAsync(appointmentId);
+                var existingAppointment = await _appointmentsService.GetAppointmentByIdAsync(id);
                 if (existingAppointment == null)
                 {
-                    _logger.LogInformation($"Appointment with ID {appointmentId} not found.");
-                    return NotFound($"Appointment with ID {appointmentId} not found.");
+                    _logger.LogInformation($"Appointment with ID {id} not found.");
+                    return NotFound($"Appointment with ID {id} not found.");
                 }
 
                 Appointment appointment;
                 var settings = new JsonSerializerSettings
                 {
-                    Converters = new List<Newtonsoft.Json.JsonConverter> { new StringEnumConverter() }
+                    Converters = new List<JsonConverter> { new StringEnumConverter() }
                 };
 
                 switch (existingAppointment.ServiceType)
                 {
                     case AppointmentManagementSystem.DomainObjects.Enums.ServiceType.PersonalTraining:
-                        appointment = JsonConvert.DeserializeObject<PersonalTrainingAppointment>(appointmentElement.GetRawText(),settings);
+                        appointment = JsonConvert.DeserializeObject<PersonalTrainingAppointment>(appointmentElement.GetRawText(), settings);
                         break;
 
                     case AppointmentManagementSystem.DomainObjects.Enums.ServiceType.Massage:
@@ -137,7 +137,7 @@ namespace Appointments.API.Controllers
                 }
 
                 // Ensure that the correct appointment ID is used.
-                appointment.AppointmentId = appointmentId;
+                appointment.AppointmentId = id;
 
                 await _appointmentsService.UpdateAppointmentAsync(appointment);
                 _logger.LogInformation("Appointment updated successfully.");
@@ -150,7 +150,7 @@ namespace Appointments.API.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}", Name = "DeleteAppointment")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
             try

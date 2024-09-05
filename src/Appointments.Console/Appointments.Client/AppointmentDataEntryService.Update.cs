@@ -6,7 +6,7 @@ using Appointments.BLL;
 
 namespace Appointments.Client
 {
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
 
     public partial class AppointmentDataEntryService : IAppointmentDataEntryService
     {
@@ -22,7 +22,7 @@ namespace Appointments.Client
                 Console.WriteLine("Invalid ID format.");
                 return;
             }
-            var response = await _httpClient.GetAsync($"{_appointmentsApiUrl}/getById/{id}");
+            var response = await _httpClient.GetAsync($"{_appointmentsApiUrl}/{id}");
             response.EnsureSuccessStatusCode();
             var jsonResponse = await response.Content.ReadAsStringAsync();
             using var document = JsonDocument.Parse(jsonResponse);
@@ -44,13 +44,13 @@ namespace Appointments.Client
             Console.WriteLine("Service Types: 1. Massage, 2. Personal Training");
             Console.Write("Enter new service type (leave blank to keep current): ");
             string serviceTypeInput = Console.ReadLine() ?? "";
-            AllEnums.ServiceType? newServiceType = null;
+            Constants.ServiceType? newServiceType = null;
 
             if (!string.IsNullOrWhiteSpace(serviceTypeInput))
             {
                 if (int.TryParse(serviceTypeInput, out int serviceTypeChoice) && (serviceTypeChoice == 1 || serviceTypeChoice == 2))
                 {
-                    newServiceType = (AllEnums.ServiceType)(serviceTypeChoice - 1);
+                    newServiceType = (Constants.ServiceType)(serviceTypeChoice - 1);
                 }
                 else
                 {
@@ -60,8 +60,8 @@ namespace Appointments.Client
             }
 
             UpdateCommonFields(appointment);
-            if ((string.IsNullOrWhiteSpace(serviceTypeInput) && appointment.ServiceType == AllEnums.ServiceType.Massage)
-                || (newServiceType.HasValue && newServiceType.Value == AllEnums.ServiceType.Massage))
+            if ((string.IsNullOrWhiteSpace(serviceTypeInput) && appointment.ServiceType == Constants.ServiceType.Massage)
+                || (newServiceType.HasValue && newServiceType.Value == Constants.ServiceType.Massage))
             {
                 MassageAppointment? newAppointment = null;
 
@@ -69,9 +69,9 @@ namespace Appointments.Client
                 Console.Write("Enter new massage service: ");
                 string massageServiceInput = Console.ReadLine() ?? "";
                 if (string.IsNullOrWhiteSpace(massageServiceInput) || (!int.TryParse(massageServiceInput, out int massageServiceChoice)
-                       || (massageServiceChoice != (int)AllEnums.MassageServices.RelaxingMassage + 1
-                       && massageServiceChoice != (int)AllEnums.MassageServices.HotStoneTherapy + 1
-                       && massageServiceChoice != (int)AllEnums.MassageServices.Reflexology + 1)))
+                       || (massageServiceChoice != (int)Constants.MassageServices.RelaxingMassage + 1
+                       && massageServiceChoice != (int)Constants.MassageServices.HotStoneTherapy + 1
+                       && massageServiceChoice != (int)Constants.MassageServices.Reflexology + 1)))
                 {
                     Console.WriteLine("Invalid massage service.");
                     return;
@@ -89,25 +89,25 @@ namespace Appointments.Client
                 {
                     newAppointment = new MassageAppointment(
                                 appointment.CustomerId,
-                            AllEnums.ServiceType.Massage,
+                            Constants.ServiceType.Massage,
                             appointment.Date,
                             appointment?.Time,
                             appointment?.Notes,
-                            (AllEnums.MassageServices)(massageServiceChoice - 1),
-                            (AllEnums.MasseusePreference)(preferenceChoice - 1)
+                            (Constants.MassageServices)(massageServiceChoice - 1),
+                            (Constants.MasseusePreference)(preferenceChoice - 1)
                         );
                     var addResponse = await _httpClient.PostAsJsonAsync(_appointmentsApiUrl, newAppointment);
                     addResponse.EnsureSuccessStatusCode();
                     if (appointment != null)
-                        await _httpClient.DeleteAsync($"{_appointmentsApiUrl}/delete/{appointment.AppointmentId}");
+                        await _httpClient.DeleteAsync($"{_appointmentsApiUrl}/{appointment.AppointmentId}");
                     Console.WriteLine("Massage Appointment updated successfully.");
                 }
                 else
                 {
                     var massageAppointment = (MassageAppointment)appointment;
-                    massageAppointment.MassageServices = (AllEnums.MassageServices)(massageServiceChoice - 1);
-                    massageAppointment.Preference = (AllEnums.MasseusePreference)(preferenceChoice - 1);
-                    var updateResponse = await _httpClient.PutAsJsonAsync($"{_appointmentsApiUrl}/update/{id}", massageAppointment);
+                    massageAppointment.MassageServices = (Constants.MassageServices)(massageServiceChoice - 1);
+                    massageAppointment.Preference = (Constants.MasseusePreference)(preferenceChoice - 1);
+                    var updateResponse = await _httpClient.PutAsJsonAsync($"{_appointmentsApiUrl}/{id}", massageAppointment);
                     updateResponse.EnsureSuccessStatusCode();
                 }
             }
@@ -121,9 +121,9 @@ namespace Appointments.Client
                 var durationChoice = 0;
                 if (string.IsNullOrWhiteSpace(durationInput) ||
                     (!int.TryParse(durationInput, out durationChoice)
-                    || (durationChoice != (int)AllEnums.TrainingDuration.ThirtyMinutes + 1
-                    && durationChoice != (int)AllEnums.TrainingDuration.OneHour + 1
-                    && durationChoice != (int)AllEnums.TrainingDuration.OneHourThirtyMinutes + 1)))
+                    || (durationChoice != (int)Constants.TrainingDuration.ThirtyMinutes + 1
+                    && durationChoice != (int)Constants.TrainingDuration.OneHour + 1
+                    && durationChoice != (int)Constants.TrainingDuration.OneHourThirtyMinutes + 1)))
                 {
                     Console.WriteLine("Invalid training duration.");
                     return;
@@ -138,11 +138,11 @@ namespace Appointments.Client
                 {
                     newAppointment = new PersonalTrainingAppointment(
                                 appointment.CustomerId,
-                            AllEnums.ServiceType.PersonalTraining,
+                            Constants.ServiceType.PersonalTraining,
                             appointment.Date,
                             appointment?.Time,
                             appointment?.Notes,
-                            (AllEnums.TrainingDuration)(durationChoice - 1),
+                            (Constants.TrainingDuration)(durationChoice - 1),
                             comments,
                             injuriesOrPains
                         );
@@ -154,7 +154,7 @@ namespace Appointments.Client
                 else
                 {
                     var trainingAppointment = (PersonalTrainingAppointment)appointment;
-                    trainingAppointment.TrainingDuration = (AllEnums.TrainingDuration)(durationChoice - 1);
+                    trainingAppointment.TrainingDuration = (Constants.TrainingDuration)(durationChoice - 1);
                     trainingAppointment.CustomerComments = string.IsNullOrWhiteSpace(comments) ? trainingAppointment.CustomerComments : comments;
                     trainingAppointment.InjuriesOrPains = string.IsNullOrWhiteSpace(injuriesOrPains) ? trainingAppointment.InjuriesOrPains : injuriesOrPains; ;
                     var updateResponse = await _httpClient.PutAsJsonAsync($"{_appointmentsApiUrl}/update/{id}", trainingAppointment);

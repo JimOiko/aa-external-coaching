@@ -1,13 +1,12 @@
 ﻿namespace AppointmentManagementSystem.DomainObjects
 {
-    using System.Text.Json.Serialization;
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
     public class PersonalTrainingAppointment : Appointment
     {
         private PersonalTrainingAppointment() { }
 
-        public PersonalTrainingAppointment(Guid customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
-                                       AllEnums.TrainingDuration? trainingDuration, string? customerComments, string? injuriesOrPains)
+        public PersonalTrainingAppointment(Guid customerId, Constants.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
+                                       Constants.TrainingDuration? trainingDuration, string? customerComments, string? injuriesOrPains)
         : base(customerId, serviceType, date, time, notes)
         {
             TrainingDuration = trainingDuration;
@@ -15,13 +14,8 @@
             InjuriesOrPains = injuriesOrPains;
         }
 
-        [JsonPropertyName("trainingduration")]
-        public AllEnums.TrainingDuration? TrainingDuration { get; set; }
-       
-        [JsonPropertyName("customercomments")]
+        public Constants.TrainingDuration? TrainingDuration { get; set; }
         public string? CustomerComments { get; set; }
-        
-        [JsonPropertyName("injuriesorpains")]
         public string? InjuriesOrPains { get; set; }
         
 
@@ -35,11 +29,11 @@
         {
             switch (TrainingDuration)
             {
-                case AllEnums.TrainingDuration.ThirtyMinutes:
+                case Constants.TrainingDuration.ThirtyMinutes:
                     return "30 minutes";
-                case AllEnums.TrainingDuration.OneHour:
+                case Constants.TrainingDuration.OneHour:
                     return "1 hour";
-                case AllEnums.TrainingDuration.OneHourThirtyMinutes:
+                case Constants.TrainingDuration.OneHourThirtyMinutes:
                     return "1 hour and 30 minutes";
                 default:
                     return "Unknown";

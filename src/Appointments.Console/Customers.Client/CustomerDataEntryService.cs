@@ -42,7 +42,7 @@ namespace Customers.Client
             }
 
             var customer = new Customer(name, email, phoneNumber, DateTimeOffset.Now);
-            var response = await _httpClient.PostAsJsonAsync($"{_apiSettings.CustomerApiUrl}/create", customer);
+            var response = await _httpClient.PostAsJsonAsync($"{_apiSettings.CustomerApiUrl}/", customer);
             response.EnsureSuccessStatusCode();
             Console.WriteLine("Customer Created Successfully");
             return customer;
@@ -50,7 +50,7 @@ namespace Customers.Client
 
         public async Task ReadAsync()
         {
-            var response = await _httpClient.GetAsync($"{_apiSettings.CustomerApiUrl}/get");
+            var response = await _httpClient.GetAsync($"{_apiSettings.CustomerApiUrl}");
             response.EnsureSuccessStatusCode();
             Console.WriteLine("Customer List");
             Console.WriteLine("-------------");
@@ -110,7 +110,7 @@ namespace Customers.Client
                     Console.WriteLine("Invalid phone number. Please try again.");
                 }
                 existingCustomer.PhoneNumber = phoneNumber;
-                await _httpClient.PutAsJsonAsync($"{_apiSettings.CustomerApiUrl}/update/{existingCustomer.Id}", existingCustomer);
+                await _httpClient.PutAsJsonAsync($"{_apiSettings.CustomerApiUrl}/{existingCustomer.Id}", existingCustomer);
             }
             else
             {
@@ -134,7 +134,7 @@ namespace Customers.Client
                 }
                 Console.WriteLine("Invalid email format. Please try again.");
             }
-            var deleteResponse = await _httpClient.DeleteAsync($"{_apiSettings.CustomerApiUrl}/delete/{email}");
+            var deleteResponse = await _httpClient.DeleteAsync($"{_apiSettings.CustomerApiUrl}/{email}");
             deleteResponse.EnsureSuccessStatusCode();
 
             Console.WriteLine("Customer deleted successfully.");

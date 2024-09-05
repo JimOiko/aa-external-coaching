@@ -5,7 +5,7 @@ using AppointmentManagementSystem.Abstractions;
 
 namespace Appointments.DAL
 {
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
     public class AppointmentRepository(IDbContextFactory dbFactory) : IAppointmentRepository
     {
 
@@ -58,31 +58,31 @@ namespace Appointments.DAL
             return await db.Appointment.CountAsync(a => a.Date.Date == date.Date);
         }
 
-        public async Task<int> GetCountByTypeAsync(AllEnums.ServiceType serviceType)
+        public async Task<int> GetCountByTypeAsync(Constants.ServiceType serviceType)
         {
             using var db = dbFactory.CreateDbContext();
             return await db.Appointment.Where(a => a.ServiceType == serviceType).CountAsync();
         }
 
-        public async Task<AllEnums.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync()
+        public async Task<Constants.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync()
         {
             using var db = dbFactory.CreateDbContext();
             return await db.Appointment
                 .OfType<MassageAppointment>()
-                .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
+                .Where(a => a.ServiceType == Constants.ServiceType.Massage)
                 .GroupBy(a => a.Preference)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<AllEnums.TrainingDuration?> GetCommonPreferenceForPTDurationAsync()
+        public async Task<Constants.TrainingDuration?> GetCommonPreferenceForPTDurationAsync()
         {
 
             using var db = dbFactory.CreateDbContext();
             return await db.Appointment
                 .OfType<PersonalTrainingAppointment>()
-                .Where(a => a.ServiceType == AllEnums.ServiceType.PersonalTraining)
+                .Where(a => a.ServiceType == Constants.ServiceType.PersonalTraining)
                 .GroupBy(a => a.TrainingDuration)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
@@ -110,12 +110,12 @@ namespace Appointments.DAL
 
         }
 
-        public async Task<AllEnums.MassageServices> GetMassageTypePreferenceAsync()
+        public async Task<Constants.MassageServices> GetMassageTypePreferenceAsync()
         {
             using var db = dbFactory.CreateDbContext();
             return await db.Appointment
                 .OfType<MassageAppointment>()
-                .Where(a => a.ServiceType == AllEnums.ServiceType.Massage)
+                .Where(a => a.ServiceType == Constants.ServiceType.Massage)
                 .GroupBy(a => a.MassageServices)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)

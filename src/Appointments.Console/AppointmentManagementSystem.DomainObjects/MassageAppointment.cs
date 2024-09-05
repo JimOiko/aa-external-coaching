@@ -1,14 +1,13 @@
-﻿
-namespace AppointmentManagementSystem.DomainObjects
+﻿namespace AppointmentManagementSystem.DomainObjects
 {
     using System.Text.Json.Serialization;
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
     public class MassageAppointment: Appointment
     {
         private MassageAppointment() { }
 
-        public MassageAppointment(Guid customerId, AllEnums.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
-        AllEnums.MassageServices massageServices, AllEnums.MasseusePreference preference) : base(customerId,
+        public MassageAppointment(Guid customerId, Constants.ServiceType serviceType, DateTimeOffset date, string? time, string? notes,
+        Constants.MassageServices massageServices, Constants.MasseusePreference preference) : base(customerId,
                                                                                serviceType,
                                                                                date,
                                                                                time,
@@ -19,10 +18,10 @@ namespace AppointmentManagementSystem.DomainObjects
         }
         
         [JsonPropertyName("massageServices")]
-        public AllEnums.MassageServices MassageServices { get; set; }
+        public Constants.MassageServices MassageServices { get; set; }
         
         [JsonPropertyName("preference")]
-        public AllEnums.MasseusePreference Preference { get; set; }
+        public Constants.MasseusePreference Preference { get; set; }
 
         public override string ToString()
         {
