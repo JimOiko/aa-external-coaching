@@ -1,4 +1,4 @@
-﻿namespace Appointments.DAL.Interfaces
+﻿namespace AppointmentManagementSystem.Abstractions
 {
     public interface INameDayApiClient
     {

@@ -1,19 +1,18 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.DomainObjects.Interfaces;
-using Appointments.BLL;
-using Appointments.BLL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Appointments.BLL;
 
-namespace AppointmentManagementSystem.Services
+namespace Appointments.Client
 {
     using static System.Net.WebRequestMethods;
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
-    public partial class AppointmentDataEntryService(HttpClient httpClient, IDiscountService discountService, IOptions<ApiSettings> apiSettings, IUserInputService userInputService) : IAppointmentDataEntryService
+    public partial class AppointmentDataEntryService(HttpClient httpClient, IOptions<ApiSettings> apiSettings, IUserInputService userInputService) : IAppointmentDataEntryService
     {
         private readonly HttpClient _httpClient = httpClient;
-        private readonly IDiscountService discountService = discountService;
         // Base URLs for the APIs
         private readonly string _customersApiUrl = apiSettings.Value.CustomerApiUrl;
         private readonly string _appointmentsApiUrl = apiSettings.Value.AppointmentApiUrl;
@@ -69,37 +68,48 @@ namespace AppointmentManagementSystem.Services
             {
                 appointment = await CreatePersonalTrainingAppointment(customer.Id, date, time, notes);
             }
-            try
+
+            if (appointment != null)
             {
-                var isNameday = await discountService.ProcessDiscountAsync(customer.Id, date);
-                if (isNameday)
+                // Make the request to create the appointment
+                var createResponse = await _httpClient.PostAsJsonAsync($"{_appointmentsApiUrl}/create", appointment);
+
+                if (createResponse.IsSuccessStatusCode)
                 {
-                    // Apply discount
-                    Console.WriteLine($"Applying discount for {customer.Name} because the appointment is on their nameday!");
+                    // Parse the response content for the isNameday flag using JsonDocument
+                    var responseContent = await createResponse.Content.ReadAsStringAsync();
+                    using (JsonDocument jsonDocument = JsonDocument.Parse(responseContent))
+                    {
+                        JsonElement root = jsonDocument.RootElement;
+
+                        if (root.TryGetProperty("isNameday", out JsonElement isNamedayElement))
+                        {
+                            bool isNameday = isNamedayElement.GetBoolean();
+
+                            if (isNameday)
+                            {
+                                Console.WriteLine($"A discount has been applied because the appointment is on {customer.Name}'s nameday.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Appointment created successfully. No discount applicable.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Response does not contain isNameday flag.");
+                        }
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"No discount applicable. The appointment on {date.Date.ToShortDateString()} is not on {customer.Name}'s nameday.");
+                    // Handle non-successful response
+                    Console.WriteLine($"Failed to create the appointment. Status code: {createResponse.StatusCode}");
+                    var errorMessage = await createResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {errorMessage}");
                 }
             }
-            catch (InvalidOperationException ex)
-            {
-                // Handle specific InvalidOperationException
-                Console.WriteLine("Operation failed: " + ex.Message);
-                return null;
-            }
-            catch (HttpRequestException ex)
-            {
-                // Handle specific HttpRequestException from nameday API
-                Console.WriteLine("Error with the nameday API: " + ex.Message);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                // Catch all other exceptions
-                Console.WriteLine("An error occurred: " + ex.Message);
-                return null;
-            }
+
             return appointment;
         }
 
@@ -127,9 +137,8 @@ namespace AppointmentManagementSystem.Services
             AllEnums.MasseusePreference masseusePreference = (AllEnums.MasseusePreference)(masseusePreferenceChoice - 1);
 
             var appointment = new MassageAppointment(customerId, AllEnums.ServiceType.Massage, date, time, notes, massageServices, masseusePreference);
-            var response = await _httpClient.PostAsJsonAsync($"{_appointmentsApiUrl}/create", appointment);
-            response.EnsureSuccessStatusCode();
-            Console.WriteLine("Massage appointment created successfully.");
+
+            // Note: The actual POST request is now done in the CreateAsync method
             return appointment;
         }
 
@@ -152,9 +161,8 @@ namespace AppointmentManagementSystem.Services
             string injuriesOrPains = _userInputService.ReadLine();
 
             var appointment = new PersonalTrainingAppointment(customerId, AllEnums.ServiceType.PersonalTraining, date, time, notes, trainingDuration, customerComments, injuriesOrPains);
-            var response = await _httpClient.PostAsJsonAsync($"{_appointmentsApiUrl}/create", appointment);
-            response.EnsureSuccessStatusCode();
-            Console.WriteLine("Personal training appointment created successfully.");
+
+            // Note: The actual POST request is now done in the CreateAsync method
             return appointment;
         }
 

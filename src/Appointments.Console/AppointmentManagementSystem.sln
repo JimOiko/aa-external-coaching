@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Customers.DAL", "Customers.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppointmentManagementSystem.DbObjects", "AppointmentManagementSystem.DbObjects\AppointmentManagementSystem.DbObjects.csproj", "{3958040F-6A3A-4F1F-8A56-D4A3D44B6D5C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Customers.API", "Customers.API\Customers.API.csproj", "{4FEB4A1F-209A-4315-A106-E01BD029F1BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.API", "Customers.API\Customers.API.csproj", "{4FEB4A1F-209A-4315-A106-E01BD029F1BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.API", "Appointments.API\Appointments.API.csproj", "{5D66D213-4ED5-42FE-8145-AB5794CCBF14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.API", "Appointments.API\Appointments.API.csproj", "{5D66D213-4ED5-42FE-8145-AB5794CCBF14}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointments.BLL.Tests", "Appointments.BLL.Tests\Appointments.BLL.Tests.csproj", "{3271C86E-8363-4FC7-BEF8-A0A570916780}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.Client", "Customers.Client\Customers.Client.csproj", "{69B54E19-7717-4C47-B1E2-76EE255CE3DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentManagementSystem.Abstractions", "Abstractions\AppointmentManagementSystem.Abstractions.csproj", "{8C9742E2-AF01-4651-A5AD-19566E6FDD41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.Client", "Appointments.Client\Appointments.Client.csproj", "{ACFA2AC5-2DDB-4931-BBFE-7F7F5811F927}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{8C9742E2-AF01-4651-A5AD-19566E6FDD41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C9742E2-AF01-4651-A5AD-19566E6FDD41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C9742E2-AF01-4651-A5AD-19566E6FDD41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACFA2AC5-2DDB-4931-BBFE-7F7F5811F927}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACFA2AC5-2DDB-4931-BBFE-7F7F5811F927}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACFA2AC5-2DDB-4931-BBFE-7F7F5811F927}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACFA2AC5-2DDB-4931-BBFE-7F7F5811F927}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

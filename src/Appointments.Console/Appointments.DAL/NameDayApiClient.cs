@@ -1,5 +1,5 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
-using Appointments.DAL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 

@@ -1,6 +1,6 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
 
-namespace Appointments.DAL.Interfaces
+namespace AppointmentManagementSystem.Abstractions
 {
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
     public interface IAppointmentRepository

@@ -1,7 +1,7 @@
 ﻿
 using AppointmentManagementSystem.DomainObjects;
 
-namespace Appointments.BLL.Interfaces
+namespace AppointmentManagementSystem.Abstractions
 {
     public interface IAppointmentDataEntryService
     {

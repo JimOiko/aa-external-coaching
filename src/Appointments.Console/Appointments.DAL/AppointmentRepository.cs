@@ -1,7 +1,7 @@
 ﻿using AppointmentManagementSystem.DbObjects;
 using AppointmentManagementSystem.DomainObjects;
 using Microsoft.EntityFrameworkCore;
-using Appointments.DAL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 
 namespace Appointments.DAL
 {

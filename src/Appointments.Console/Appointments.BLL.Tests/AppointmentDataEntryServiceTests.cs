@@ -1,12 +1,12 @@
 using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.DomainObjects.Interfaces;
-using AppointmentManagementSystem.Services;
-using Appointments.BLL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Appointments.Client;
 
 namespace Appointments.BLL.Tests
 {
@@ -37,7 +37,7 @@ namespace Appointments.BLL.Tests
                                 CustomerApiUrl = "https://localhost:7211/api/customers"
                             });
 
-            _appointmentDataEntryService = new AppointmentDataEntryService(_httpClient, _discountServiceMock.Object, _apiSettingsMock.Object, _userInputServiceMock.Object);
+            _appointmentDataEntryService = new AppointmentDataEntryService(_httpClient, _apiSettingsMock.Object, _userInputServiceMock.Object);
         }
 
         [Fact]

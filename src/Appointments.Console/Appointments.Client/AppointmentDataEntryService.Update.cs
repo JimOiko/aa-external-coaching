@@ -1,10 +1,10 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
-using Appointments.BLL;
-using Appointments.BLL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Appointments.BLL;
 
-namespace AppointmentManagementSystem.Services
+namespace Appointments.Client
 {
     using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
 

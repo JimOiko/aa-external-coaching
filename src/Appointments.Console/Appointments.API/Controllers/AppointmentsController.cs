@@ -1,5 +1,5 @@
 using AppointmentManagementSystem.DomainObjects;
-using Appointments.API.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -65,7 +65,7 @@ namespace Appointments.API.Controllers
         }
 
         [HttpPost("create", Name = "CreateAppointment")]
-        public async Task<ActionResult> CreateAsync(JsonElement appointmentElement)
+        public async Task<ActionResult<bool>> CreateAsync(JsonElement appointmentElement)
         {
             try
             {
@@ -88,9 +88,9 @@ namespace Appointments.API.Controllers
                     default:
                         return BadRequest("Unknown appointment type.");
                 }
-                await _appointmentsService.CreateAppointmentAsync(appointment);
+                var isNameday = await _appointmentsService.CreateAppointmentAsync(appointment);
                 _logger.LogInformation("Appointment created successfully.");
-                return Ok();
+                return Ok(new { IsNameday = isNameday });
             }
             catch (Exception ex)
             {
