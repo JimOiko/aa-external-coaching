@@ -1,7 +1,8 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.Abstractions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.Extensions.Logging;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Appointments.BLL
 {
@@ -27,11 +28,28 @@ namespace Appointments.BLL
             return await _appointmentRepo.GetByIdAsync(appointmentId.ToString());
         }
 
-        public async Task<bool> CreateAppointmentAsync(Appointment appointment)
+        public async Task<bool> CreateAppointmentAsync(JsonElement appointmentElement)
         {
-            await _appointmentRepo.AddAsync(appointment);
             try
             {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    Converters = { new JsonStringEnumConverter(), new AppointmentJsonConverter() } // Add the custom converter
+                };
+
+                // Deserialize the appointment using the custom converter
+                var appointment = JsonSerializer.Deserialize<Appointment>(appointmentElement.GetRawText(), options);
+
+                if (appointment == null)
+                {
+                    throw new InvalidOperationException("Invalid appointment data.");
+                }
+
+                // Add the appointment to the repository (DB)
+                await _appointmentRepo.AddAsync(appointment);
+
+                // Call the discount service to check if it's the customer's nameday
                 var isNameday = await _discountService.ProcessDiscountAsync(appointment.CustomerId, appointment.Date);
                 return isNameday;
             }
@@ -55,9 +73,32 @@ namespace Appointments.BLL
             }
         }
 
-        public async Task UpdateAppointmentAsync(Appointment appointment)
+        public async Task UpdateAppointmentAsync(JsonElement appointmentElement)
         {
-            await _appointmentRepo.UpdateAsync(appointment);
+            try
+            {
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    Converters = { new AppointmentJsonConverter() }
+                };
+
+                // Deserialize the JsonElement into an Appointment object
+                var appointment = JsonSerializer.Deserialize<Appointment>(appointmentElement.GetRawText(), options);
+
+                if (appointment == null)
+                {
+                    throw new ArgumentException("Failed to deserialize the appointment.");
+                }
+
+                // Now, proceed with updating the appointment in the repository.
+                await _appointmentRepo.UpdateAsync(appointment);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the appointment.");
+                throw;
+            }
         }
 
         public async Task DeleteAppointmentAsync(Guid appointmentId)

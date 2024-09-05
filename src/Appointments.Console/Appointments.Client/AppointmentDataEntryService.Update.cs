@@ -157,7 +157,7 @@ namespace Appointments.Client
                     trainingAppointment.TrainingDuration = (Constants.TrainingDuration)(durationChoice - 1);
                     trainingAppointment.CustomerComments = string.IsNullOrWhiteSpace(comments) ? trainingAppointment.CustomerComments : comments;
                     trainingAppointment.InjuriesOrPains = string.IsNullOrWhiteSpace(injuriesOrPains) ? trainingAppointment.InjuriesOrPains : injuriesOrPains; ;
-                    var updateResponse = await _httpClient.PutAsJsonAsync($"{_appointmentsApiUrl}/update/{id}", trainingAppointment);
+                    var updateResponse = await _httpClient.PutAsJsonAsync($"{_appointmentsApiUrl}/{id}", trainingAppointment);
                     updateResponse.EnsureSuccessStatusCode();
                 }
             }
