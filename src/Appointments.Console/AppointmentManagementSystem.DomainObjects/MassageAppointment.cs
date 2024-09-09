@@ -1,6 +1,5 @@
 ﻿namespace AppointmentManagementSystem.DomainObjects
 {
-    using System.Text.Json.Serialization;
     using Constants = AppointmentManagementSystem.DomainObjects.Enums;
     public class MassageAppointment: Appointment
     {
@@ -17,10 +16,7 @@
             Preference = preference;
         }
         
-        [JsonPropertyName("massageServices")]
         public Constants.MassageServices MassageServices { get; set; }
-        
-        [JsonPropertyName("preference")]
         public Constants.MasseusePreference Preference { get; set; }
 
         public override string ToString()
