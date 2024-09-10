@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Abstractions\AppointmentManagementSystem.Abstractions.csproj" />
     <ProjectReference Include="..\AppointmentManagementSystem.DbObjects\AppointmentManagementSystem.DbObjects.csproj" />
     <ProjectReference Include="..\AppointmentManagementSystem.DomainObjects\AppointmentManagementSystem.DomainObjects.csproj" />
   </ItemGroup>

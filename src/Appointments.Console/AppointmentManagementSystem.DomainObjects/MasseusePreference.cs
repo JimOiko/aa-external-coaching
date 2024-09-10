@@ -1,11 +1,9 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.ComponentModel.DataAnnotations;
 
 namespace AppointmentManagementSystem.DomainObjects
 {
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
 
     public class MasseusePreference
     {
@@ -16,8 +14,8 @@ namespace AppointmentManagementSystem.DomainObjects
         {
             modelBuilder.Entity<MasseusePreference>().HasKey(m => m.PreferenceId);
             modelBuilder.Entity<MasseusePreference>().HasData(
-                Enum.GetValues(typeof(AllEnums.MasseusePreference))
-                    .Cast<AllEnums.MasseusePreference>()
+                Enum.GetValues(typeof(Constants.MasseusePreference))
+                    .Cast<Constants.MasseusePreference>()
                     .Select(e => new MasseusePreference()
                     {
                         PreferenceId = e,

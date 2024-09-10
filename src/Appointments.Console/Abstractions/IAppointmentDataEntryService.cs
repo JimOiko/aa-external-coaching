@@ -1,9 +1,11 @@
 ﻿
-namespace Appointments.BLL.Interfaces
+using AppointmentManagementSystem.DomainObjects;
+
+namespace AppointmentManagementSystem.Abstractions
 {
     public interface IAppointmentDataEntryService
     {
-        Task CreateAsync();
+        Task<Appointment?> CreateAsync();
         Task ReadAsync();
         Task UpdateAsync();
         Task DeleteAsync();

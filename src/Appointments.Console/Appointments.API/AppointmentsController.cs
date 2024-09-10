@@ -1,11 +1,9 @@
 using AppointmentManagementSystem.DomainObjects;
-using Appointments.API.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Text.Json;
 
-namespace Appointments.API.Controllers
+namespace Appointments.API
 {
     [ApiController]
     [Route("api/appointments")]
@@ -20,7 +18,7 @@ namespace Appointments.API.Controllers
             _appointmentsService = appointmentsService;
         }
 
-        [HttpGet("get", Name = "GetAppointments")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAsync()
         {
             try
@@ -42,7 +40,7 @@ namespace Appointments.API.Controllers
             }
         }
 
-        [HttpGet("getByID/{id}", Name = "GetAppointmentById")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Appointment>> GetByIdAsync(Guid id)
         {
             try
@@ -64,33 +62,14 @@ namespace Appointments.API.Controllers
             }
         }
 
-        [HttpPost("create", Name = "CreateAppointment")]
-        public async Task<ActionResult> CreateAsync(JsonElement appointmentElement)
+        [HttpPost]
+        public async Task<ActionResult<bool>> CreateAsync(JsonElement appointmentElement)
         {
             try
             {
-                Appointment appointment;
-                var settings = new JsonSerializerSettings
-                {
-                    Converters = new List<Newtonsoft.Json.JsonConverter> { new StringEnumConverter() }
-                };
-                var baseAppointment = JsonConvert.DeserializeObject<Appointment>(appointmentElement.GetRawText(), settings);
-                switch (baseAppointment?.ServiceType)
-                {
-                    case AppointmentManagementSystem.DomainObjects.Enums.ServiceType.PersonalTraining:
-                        appointment = JsonConvert.DeserializeObject<PersonalTrainingAppointment>(appointmentElement.GetRawText(), settings);
-                        break;
-
-                    case AppointmentManagementSystem.DomainObjects.Enums.ServiceType.Massage:
-                        appointment = JsonConvert.DeserializeObject<MassageAppointment>(appointmentElement.GetRawText(), settings);
-                        break;
-
-                    default:
-                        return BadRequest("Unknown appointment type.");
-                }
-                await _appointmentsService.CreateAppointmentAsync(appointment);
+                var isNameday = await _appointmentsService.CreateAppointmentAsync(appointmentElement);
                 _logger.LogInformation("Appointment created successfully.");
-                return Ok();
+                return Ok(new { IsNameday = isNameday });
             }
             catch (Exception ex)
             {
@@ -99,47 +78,19 @@ namespace Appointments.API.Controllers
             }
         }
 
-        [HttpPut("update/{appointmentId}", Name = "UpdateAppointment")]
-        public async Task<ActionResult> UpdateAsync(Guid appointmentId, JsonElement appointmentElement)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateAsync(Guid id, JsonElement appointmentElement)
         {
             try
             {
-                var existingAppointment = await _appointmentsService.GetAppointmentByIdAsync(appointmentId);
+                var existingAppointment = await _appointmentsService.GetAppointmentByIdAsync(id);
                 if (existingAppointment == null)
                 {
-                    _logger.LogInformation($"Appointment with ID {appointmentId} not found.");
-                    return NotFound($"Appointment with ID {appointmentId} not found.");
+                    _logger.LogInformation($"Appointment with ID {id} not found.");
+                    return NotFound($"Appointment with ID {id} not found.");
                 }
 
-                Appointment appointment;
-                var settings = new JsonSerializerSettings
-                {
-                    Converters = new List<Newtonsoft.Json.JsonConverter> { new StringEnumConverter() }
-                };
-
-                switch (existingAppointment.ServiceType)
-                {
-                    case AppointmentManagementSystem.DomainObjects.Enums.ServiceType.PersonalTraining:
-                        appointment = JsonConvert.DeserializeObject<PersonalTrainingAppointment>(appointmentElement.GetRawText(),settings);
-                        break;
-
-                    case AppointmentManagementSystem.DomainObjects.Enums.ServiceType.Massage:
-                        appointment = JsonConvert.DeserializeObject<MassageAppointment>(appointmentElement.GetRawText(), settings);
-                        break;
-
-                    default:
-                        return BadRequest("Unknown appointment type.");
-                }
-
-                if (appointment == null)
-                {
-                    return BadRequest("Failed to deserialize the appointment.");
-                }
-
-                // Ensure that the correct appointment ID is used.
-                appointment.AppointmentId = appointmentId;
-
-                await _appointmentsService.UpdateAppointmentAsync(appointment);
+                await _appointmentsService.UpdateAppointmentAsync(appointmentElement);
                 _logger.LogInformation("Appointment updated successfully.");
                 return Ok();
             }
@@ -150,7 +101,7 @@ namespace Appointments.API.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}", Name = "DeleteAppointment")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
             try

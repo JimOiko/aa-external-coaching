@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Appointments.DAL\Appointments.DAL.csproj" />
-    <ProjectReference Include="..\Customers.DAL\Customers.DAL.csproj" />
+    <ProjectReference Include="..\Appointments.BLL\Appointments.BLL.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,14 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
+using System.Text.Json;
 
-namespace Appointments.API.Interfaces
+namespace AppointmentManagementSystem.Abstractions
 {
     public interface IAppointmentsService
     {
         Task<IEnumerable<Appointment>> GetAllAppointmentsAsync();
         Task<Appointment?> GetAppointmentByIdAsync(Guid appointmentId);
-        Task CreateAppointmentAsync(Appointment appointment);
-        Task UpdateAppointmentAsync(Appointment appointment);
+        Task<bool> CreateAppointmentAsync(JsonElement appointment);
+        Task UpdateAppointmentAsync(JsonElement appointment);
         Task DeleteAppointmentAsync(Guid appointmentId);
     }
 }

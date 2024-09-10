@@ -1,17 +1,16 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using AppointmentManagementSystem.DomainObjects;
 using AppointmentManagementSystem.DbObjects;
-using AppointmentManagementSystem.Services;
-using Appointments.BLL.Interfaces;
 using Appointments.DAL;
-using Appointments.DAL.Interfaces;
-using Customers.BLL;
-using Customers.BLL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
+using Customers.Client;
 using Customers.DAL;
-using Customers.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AppointmentManagementSystem.DomainObjects.Interfaces;
+using Appointments.Client;
+using Appointments.BLL;
 
 
 var configuration = new ConfigurationBuilder()
@@ -32,6 +31,7 @@ var serviceProvider = new ServiceCollection()
               .AddSingleton<IAppointmentReportService, AppointmentReportService>()
               .AddSingleton<IDiscountService, DiscountService>()
               .AddSingleton<INameDayApiClient, NamedayApiClient>()
+              .AddSingleton<IUserInputService, UserInputService>()
               .Configure<ApiSettings>(configuration.GetSection("ApiSettings"))
               .AddHttpClient()
               .BuildServiceProvider();
@@ -105,7 +105,8 @@ while (true)
             Console.Write("Enter the date (yyyy-MM-dd): ");
             if (DateTimeOffset.TryParse(Console.ReadLine(), out DateTimeOffset date))
             {
-                await appointmentReportService.GetAppointmentsCountByDateAsync(date);
+                var res = await appointmentReportService.GetAppointmentsCountByDateAsync(date);
+                Console.WriteLine($"Total Number of Appointments on {date.DateTime.ToShortDateString()}: {res}");
             }
             else
             {
@@ -113,22 +114,44 @@ while (true)
             }
             break;
         case "11":
-            await appointmentReportService.GetNumberOfAppointmentsByTypeAsync();
+            var (massageCount, ptCount) = await appointmentReportService.GetNumberOfAppointmentsByTypeAsync();
+            Console.WriteLine($"Massage Count: {massageCount}, Personal Training Count: {ptCount}");
             break;
         case "12":
-            await appointmentReportService.GetCommonPreferenceForMasseuseSexAsync();
+            var mPreference = await appointmentReportService.GetCommonPreferenceForMasseuseSexAsync();
+            Console.WriteLine($"Most Common Preference for Masseuse Sex: {mPreference}");
             break;
         case "13":
-            await appointmentReportService.GetCommonPreferenceForTrainingDurationAsync();
+            var tdPreference = await appointmentReportService.GetCommonPreferenceForTrainingDurationAsync();
+            if (tdPreference != null)
+                Console.WriteLine($"Most Common Preference for Personal Training Duration: {tdPreference}");
+            else
+                Console.WriteLine("Not enough Data to extract this Stat");
             break;
         case "14":
-            await appointmentReportService.GetMaxAppointmentsDateByServiceTypeAsync();
+            var max = await appointmentReportService.GetMaxAppointmentsDateByServiceTypeAsync();
+            foreach (var maxAppointment in max)
+            {
+                Console.WriteLine($"Service Type: {maxAppointment?.ServiceType}");
+                if (maxAppointment?.Count != 0)
+                {
+                    Console.WriteLine($"Date with Max Appointments: {maxAppointment?.Date?.DateTime.ToShortDateString()}, Count: {maxAppointment?.Count}");
+                }
+                else
+                {
+                    Console.WriteLine("No appointments found for this service type.");
+                }
+            }
             break;
         case "15":
-            await appointmentReportService.GetMassageTypePreferenceAsync();
+            var massageTypePref = await appointmentReportService.GetMassageTypePreferenceAsync();
+            Console.WriteLine($"Most Common Preference for Massage Service: {massageTypePref}");
             break;
+
         case "16":
-            await appointmentReportService.GetAppointmentsDayOfWeekReportAsync();
+            var (maxDay, maxCount, minDay, minCount) = await appointmentReportService.GetAppointmentsDayOfWeekReportAsync();
+            Console.WriteLine($"Day with Maximum Appointments: {maxDay}, Count: {maxCount}");
+            Console.WriteLine($"Day with Minimum Appointments: {minDay}, Count: {minCount}");
             break;
         case "17":
             Console.Write("Enter the date (yyyy-MM-dd): ");

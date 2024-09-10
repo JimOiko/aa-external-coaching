@@ -5,8 +5,6 @@ using System.Reflection;
 
 namespace AppointmentManagementSystem.DbObjects
 {
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
-
     public class AppointmentManagementContext : DbContext
     {
         public DbSet<Customer> Customer { get; set; }

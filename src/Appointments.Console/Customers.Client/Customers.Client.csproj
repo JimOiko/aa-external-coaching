@@ -8,7 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Abstractions\AppointmentManagementSystem.Abstractions.csproj" />
-    <ProjectReference Include="..\Customers.DAL\Customers.DAL.csproj" />
+    <ProjectReference Include="..\AppointmentManagementSystem.DomainObjects\AppointmentManagementSystem.DomainObjects.csproj" />
+    <ProjectReference Include="..\Customers.BLL\Customers.BLL.csproj" />
   </ItemGroup>
 
 </Project>

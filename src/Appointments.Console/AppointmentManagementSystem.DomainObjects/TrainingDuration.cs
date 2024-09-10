@@ -1,12 +1,8 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection.Emit;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace AppointmentManagementSystem.DomainObjects
 {
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
 
     public class TrainingDuration
     {
@@ -16,8 +12,8 @@ namespace AppointmentManagementSystem.DomainObjects
         protected static void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TrainingDuration>().HasData(
-                Enum.GetValues(typeof(AllEnums.TrainingDuration))
-                    .Cast<AllEnums.TrainingDuration>()
+                Enum.GetValues(typeof(Constants.TrainingDuration))
+                    .Cast<Constants.TrainingDuration>()
                     .Select(e => new TrainingDuration()
                     {
                         TrainingDurationId = e,

@@ -1,6 +1,6 @@
 ﻿using AppointmentManagementSystem.DbObjects;
 using AppointmentManagementSystem.DomainObjects;
-using Customers.DAL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 

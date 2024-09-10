@@ -1,10 +1,7 @@
-﻿using Appointments.DAL.Interfaces;
-using Customers.DAL.Interfaces;
-using Appointments.BLL.Interfaces;
+﻿using AppointmentManagementSystem.Abstractions;
 
-namespace AppointmentManagementSystem.Services
+namespace Appointments.BLL
 {
-
     public class DiscountService : IDiscountService
     {
         private readonly ICustomerRepository _customerRepository;

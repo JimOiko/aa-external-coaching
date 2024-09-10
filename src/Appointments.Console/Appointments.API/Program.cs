@@ -1,11 +1,10 @@
 using AppointmentManagementSystem.DbObjects;
-using Appointments.API.Interfaces;
-using Appointments.API.Services;
+using Appointments.BLL;
 using Appointments.DAL;
-using Appointments.DAL.Interfaces;
+using AppointmentManagementSystem.Abstractions;
 using Customers.DAL;
-using Customers.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using AppointmentManagementSystem.DomainObjects;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +18,17 @@ builder.Services.AddScoped<IDbContextFactory, DbContextFactory>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IAppointmentsService, AppointmentsService>();
+builder.Services.AddScoped<IDiscountService, DiscountService>();
+builder.Services.AddScoped<INameDayApiClient, NamedayApiClient>();
 builder.Services.AddDbContext<AppointmentManagementContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppointmentManagementDatabase")));
+builder.Services.AddHttpClient();
+var configuration = new ConfigurationBuilder()
+   .SetBasePath(Directory.GetCurrentDirectory())
+   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+   .Build();
+builder.Services.Configure<ApiSettings>(configuration.GetSection("ApiSettings"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

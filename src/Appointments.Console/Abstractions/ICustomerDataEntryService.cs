@@ -1,8 +1,8 @@
-﻿namespace Customers.BLL.Interfaces
+﻿namespace AppointmentManagementSystem.Abstractions
 {
     public interface ICustomerDataEntryService
     {
-        Task CreateAsync();
+        Task<object?> CreateAsync();
         Task ReadAsync();
         Task UpdateAsync();
         Task DeleteAsync();

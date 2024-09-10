@@ -1,7 +1,6 @@
 ﻿using AppointmentManagementSystem.DomainObjects;
 
-namespace Customers.API.Interfaces
-{
+namespace AppointmentManagementSystem.Abstractions { 
     public interface ICustomerService
     {
         Task<IEnumerable<Customer>> GetAllCustomersAsync();

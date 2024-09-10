@@ -1,5 +1,4 @@
-﻿namespace Customers.BLL.Interfaces
-{
+﻿namespace AppointmentManagementSystem.Abstractions {
     public interface ICustomerReportService
     {
         Task GetRegisteredCustomerAsync();

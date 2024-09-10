@@ -1,66 +1,50 @@
-﻿using Appointments.DAL.Interfaces;
-using Appointments.BLL.Interfaces;
+﻿using AppointmentManagementSystem.Abstractions;
+using AppointmentManagementSystem.DomainObjects;
 
-namespace AppointmentManagementSystem.Services
+namespace Appointments.BLL
 {
-    using AllEnums = AppointmentManagementSystem.DomainObjects.Enums;
+    using Constants = AppointmentManagementSystem.DomainObjects.Enums;
     public class AppointmentReportService(IAppointmentRepository appointmentRepo): IAppointmentReportService
     {
         private readonly IAppointmentRepository _appointmentRepo = appointmentRepo;
 
-        public async Task GetAppointmentsCountByDateAsync(DateTimeOffset date)
+        public async Task<int> GetAppointmentsCountByDateAsync(DateTimeOffset date)
         {
             var appointmentCount = await _appointmentRepo.GetCountByDateAsync(date);
-            Console.WriteLine($"Total Number of Appointments on {date.DateTime.ToShortDateString()}: {appointmentCount}");
+            return appointmentCount;
         }
 
-        public async Task GetNumberOfAppointmentsByTypeAsync()
+        public async Task<(int massageCount, int ptCount)> GetNumberOfAppointmentsByTypeAsync()
         {
-            var massageCount = await _appointmentRepo.GetCountByTypeAsync(AllEnums.ServiceType.Massage);
-            var ptCount = await _appointmentRepo.GetCountByTypeAsync(AllEnums.ServiceType.PersonalTraining);
-            Console.WriteLine($"Total Number of Massage Appointments: {massageCount}");
-            Console.WriteLine($"Total Number of Persontal Training Appointments: {ptCount}");
+            var massageCount = await _appointmentRepo.GetCountByTypeAsync(Constants.ServiceType.Massage);
+            var ptCount = await _appointmentRepo.GetCountByTypeAsync(Constants.ServiceType.PersonalTraining);
+            return (massageCount, ptCount);
         }
 
-        public async Task GetCommonPreferenceForMasseuseSexAsync()
+        public async Task<Constants.MasseusePreference> GetCommonPreferenceForMasseuseSexAsync()
         {
             var commonPreference = await _appointmentRepo.GetCommonPreferenceForMasseuseSexAsync();
-            Console.WriteLine($"Most Common Preference for Masseuse Sex: {commonPreference}");
+            return commonPreference;
         }
-        public async Task GetCommonPreferenceForTrainingDurationAsync()
+        public async Task<Constants.TrainingDuration?> GetCommonPreferenceForTrainingDurationAsync()
         {
             var commonPreference = await _appointmentRepo.GetCommonPreferenceForPTDurationAsync();
-            if( commonPreference != null )
-                Console.WriteLine($"Most Common Preference for Personal Training Duration: {commonPreference}");
-            else
-                Console.WriteLine("Not enough Data to extract this Stat");
+            return commonPreference;
         }
 
-        public async Task GetMaxAppointmentsDateByServiceTypeAsync()
+        public async Task<IEnumerable<ServiceTypeMaxAppointments?>> GetMaxAppointmentsDateByServiceTypeAsync()
         {
             var maxAppointmentsByServiceType = await _appointmentRepo.GetMaxAppointmentsDateByServiceTypeAsync();
-
-            foreach (var maxAppointment in maxAppointmentsByServiceType)
-            {
-                Console.WriteLine($"Service Type: {maxAppointment.ServiceType}");
-                if (maxAppointment.Count != 0)
-                {
-                    Console.WriteLine($"Date with Max Appointments: {maxAppointment.Date?.DateTime.ToShortDateString()}, Count: {maxAppointment?.Count}");
-                }
-                else
-                {
-                    Console.WriteLine("No appointments found for this service type.");
-                }
-            }
+            return maxAppointmentsByServiceType;
         }
 
-        public async Task GetMassageTypePreferenceAsync()
+        public async Task<Constants.MassageServices> GetMassageTypePreferenceAsync()
         {
             var massageTypePref = await _appointmentRepo.GetMassageTypePreferenceAsync();
-            Console.WriteLine($"Most Common Preference for Massage Service: {massageTypePref}");
+            return massageTypePref;
         }
 
-        public async Task GetAppointmentsDayOfWeekReportAsync()
+        public async Task<(DayOfWeek MaxDay, int MaxCount, DayOfWeek MinDay, int MinCount)> GetAppointmentsDayOfWeekReportAsync()
         {
             var maxAppointmentsTask = _appointmentRepo.GetMaxAppointmentsDayOfWeekAsync();
             var minAppointmentsTask = _appointmentRepo.GetMinAppointmentsDayOfWeekAsync();
@@ -70,8 +54,7 @@ namespace AppointmentManagementSystem.Services
             var (maxDay, maxCount) = maxAppointmentsTask.Result;
             var (minDay, minCount) = minAppointmentsTask.Result;
 
-            Console.WriteLine($"Day with Maximum Appointments: {maxDay}, Count: {maxCount}");
-            Console.WriteLine($"Day with Minimum Appointments: {minDay}, Count: {minCount}");
+            return (maxDay, maxCount, minDay, minCount);
         }
 
     }
